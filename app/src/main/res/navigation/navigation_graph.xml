@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/firstVideoFragment">
+
+
+    <fragment
+        android:id="@+id/firstVideoFragment"
+        android:name="com.dialupdelta.ui.intro_new_video.FirstVideoFragment"
+        android:label="fragment_first_video"
+        tools:layout="@layout/fragment_first_video" >
+        <action
+            android:id="@+id/action_firstVideoFragment_to_secondVideoFragment"
+            app:destination="@id/secondVideoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/secondVideoFragment"
+        android:name="com.dialupdelta.ui.intro_new_video.SecondVideoFragment"
+        android:label="fragment_second_video"
+        tools:layout="@layout/fragment_second_video" >
+        <action
+            android:id="@+id/action_secondVideoFragment_to_thirdVideoFragment"
+            app:destination="@id/thirdVideoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/thirdVideoFragment"
+        android:name="com.dialupdelta.ui.intro_new_video.ThirdVideoFragment"
+        android:label="fragment_third_video"
+        tools:layout="@layout/fragment_third_video" >
+        <action
+            android:id="@+id/action_thirdVideoFragment_to_fourVideoFragment"
+            app:destination="@id/fourVideoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fourVideoFragment"
+        android:name="com.dialupdelta.ui.intro_new_video.FourVideoFragment"
+        android:label="fragment_four_video"
+        tools:layout="@layout/fragment_four_video" >
+        <action
+            android:id="@+id/action_fourVideoFragment_to_fiveVideoFragment"
+            app:destination="@id/fiveVideoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fiveVideoFragment"
+        android:name="com.dialupdelta.ui.intro_new_video.FiveVideoFragment"
+        android:label="fragment_five_video"
+        tools:layout="@layout/fragment_five_video" />
+</navigation>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item android:id="@+id/getToSleep"
+    android:title="get to sleep"
+    android:icon="@drawable/yurunewicon"/>
+
+    <item android:id="@+id/sleepEnhancer"
+        android:title="Sleep Enhancer"
+        android:icon="@drawable/bottom_sleep" />
+
+    <item android:id="@+id/wakeUp"
+        android:title="Wake Up"
+        android:icon="@drawable/sunrises"/>
+
+    <item android:id="@+id/journal"
+        android:title="Journal"
+        android:icon="@drawable/bottom_journal"
+       />
+</menu>
