@@ -45,7 +45,6 @@ class SplashActivity : BaseActivity() {
         }
         getLanguageApi()
     }
-
     private fun selectLanguage() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, languageList)
         binding.spinnerLanguageSplash.adapter = adapter
@@ -69,8 +68,8 @@ class SplashActivity : BaseActivity() {
                 val languageResponse = repository.getLanguageApi()
                 Coroutines.main {
                     progress?.dismissSweet()
-                    if (languageResponse.status == 1) {
-                        languageList.addAll(languageResponse.data)
+                    if (languageResponse.status) {
+                        languageList.addAll(languageResponse.result)
                         selectLanguage()
                     }
                     return@main

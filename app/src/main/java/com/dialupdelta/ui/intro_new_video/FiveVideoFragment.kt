@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.dialupdelta.R
 import com.dialupdelta.base.BaseFragment
+import com.dialupdelta.data.network.response.intro_video_response.IntroVideo
 import com.dialupdelta.databinding.FragmentFiveVideoBinding
 import com.dialupdelta.ui.get_start_activity.GetStartActivity
+import com.dialupdelta.utils.MyKeys
 import com.dialupdelta.utils.hideStatusBar
 import com.dialupdelta.utils.setVisible
 import com.google.android.exoplayer2.MediaItem
@@ -19,8 +21,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 class FiveVideoFragment : BaseFragment() {
  private var binding:FragmentFiveVideoBinding? = null
     var player:SimpleExoPlayer? = null
-    var newUrl:String = "https://app.whyuru.com/assets/screen_video/screen_5.mp4"
-
+    //var newUrl:String = "https://app.whyuru.com/assets/screen_video/screen_5.mp4"
+    private var newUrl : String = ""
+    private lateinit var videoList: IntroVideo
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +39,8 @@ class FiveVideoFragment : BaseFragment() {
     }
 
     private fun initUI() {
-
+        videoList = arguments?.getSerializable(MyKeys.introVideoData) as IntroVideo
+        newUrl = "${videoList.base_url}${videoList.videos[4].video_file_name}"
         playVideoClick()
 
         player?.addListener(object : Player.EventListener {

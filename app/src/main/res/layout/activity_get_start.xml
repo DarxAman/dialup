@@ -169,7 +169,7 @@
                         android:layout_marginTop="@dimen/_24sdp"
                         android:text="@string/let_s_get_started" />
                 </LinearLayout>
-                <VideoView
+                <com.google.android.exoplayer2.ui.PlayerView
                     android:id="@+id/getStartedVideo"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
@@ -179,7 +179,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ll_linear"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:resize_mode="fill"
+                    app:show_buffering="never"
+                    app:use_artwork="false"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
@@ -189,6 +191,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_margin="20dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

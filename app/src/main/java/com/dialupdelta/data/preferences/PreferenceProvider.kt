@@ -20,7 +20,7 @@ class PreferenceProvider(context: Context) {
     private val gson = Gson()
 
     fun getBaseURL(): String? {
-        return preference.getString(baseURL, "https://dialupdelta.com/Api/")
+        return preference.getString(baseURL, "https://dialupdelta.com/web/api/")
     }
 
     fun setGender(id: Int?) {

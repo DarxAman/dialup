@@ -21,7 +21,16 @@
         android:theme="@style/Theme.DialUpDelta"
         tools:targetApi="31">
         <activity
-            android:name=".ui.get_to_sleep.ModulesLibraryActivity"
+            android:name=".SurveyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LibraryPlayVideoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.library.LibraryInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.library.LibraryModulesActivity"
             android:exported="false" />
         <activity
             android:name=".ui.get_to_sleep.AnimationOnLeftActivity"
@@ -43,12 +52,10 @@
             android:exported="false" />
         <activity
             android:name=".ui.get_start_activity.LowVsHighActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.get_start_activity.GetStartActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ui.intro_new_video.IntroductionVideoActivity"
             android:exported="false" />
@@ -66,12 +73,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.main_activity.MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
     </application>
 
 </manifest>

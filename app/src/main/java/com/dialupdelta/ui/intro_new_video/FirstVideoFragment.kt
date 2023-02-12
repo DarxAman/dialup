@@ -1,24 +1,29 @@
 package com.dialupdelta.ui.intro_new_video
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.MediaController
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.dialupdelta.R
 import com.dialupdelta.base.BaseFragment
+import com.dialupdelta.data.network.response.intro_video_response.IntroVideo
 import com.dialupdelta.databinding.FragmentFirstVideoBinding
+import com.dialupdelta.utils.MyKeys
 import com.dialupdelta.utils.hideStatusBar
 import com.dialupdelta.utils.setVisible
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 
 class FirstVideoFragment : BaseFragment() {
     lateinit var navController: NavController
     private var binding:FragmentFirstVideoBinding?  = null
-
+    private var simpleExoPlayer: SimpleExoPlayer? = null
+    private var newUrl : String = ""
+    private lateinit var videoList:IntroVideo
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,30 +40,52 @@ class FirstVideoFragment : BaseFragment() {
     }
 
     private fun initUI() {
-
-        videoPlay()
-
-        binding?.firstVideo?.setOnCompletionListener {
-            binding?.nextBtn?.setVisible()
-            binding?.nextBtn?.isEnabled = true
-            binding?.firstVideo?.pause()
-            binding?.firstVideo?.stopPlayback()
-        }
-
+          videoList = (activity as IntroductionVideoActivity).getVideoListUrl()
+          newUrl = "${videoList.base_url}${videoList.videos[0].video_file_name}"
+        playVideoClick()
+        simpleExoPlayer?.addListener(object : Player.EventListener {
+            override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_ENDED) {
+                    binding?.nextBtn?.setVisible()
+                }
+            }
+        })
 
         binding?.nextBtn?.setOnClickListener {
-            binding?.firstVideo?.pause()
-            binding?.firstVideo?.stopPlayback()
-            navController.navigate(R.id.action_firstVideoFragment_to_secondVideoFragment)
+            binding?.playerView?.onPause()
+            simpleExoPlayer?.pause()
+            simpleExoPlayer?.stop()
+            val bundle = Bundle()
+            bundle.putSerializable(MyKeys.introVideoData, videoList)
+            navController.navigate(R.id.action_firstVideoFragment_to_secondVideoFragment, bundle)
         }
     }
 
-    private fun videoPlay() {
-        val mediaController = MediaController(requireActivity())
-        mediaController.setMediaPlayer(binding?.firstVideo)
-        binding?.firstVideo?.setMediaController(mediaController)
-        val uri = Uri.parse("android.resource://" + requireActivity().packageName + "/R.raw/" + R.raw.offline_splash);
-        binding?.firstVideo?.setVideoURI(uri);
-        binding?.firstVideo?.start()
+    override fun onResume() {
+        super.onResume()
+        simpleExoPlayer?.playWhenReady = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        simpleExoPlayer?.playWhenReady = false
+    }
+
+    private fun playVideoClick() {
+        val mediaItem: MediaItem = newUrl.let { MediaItem.fromUri(it) }
+        simpleExoPlayer = SimpleExoPlayer.Builder(requireActivity()).build().also { it ->
+            binding?.playerView?.player = it
+            binding?.playerView?.hideController()
+            binding?.playerView?.setControllerVisibilityListener {
+                if(it == View.VISIBLE){
+                    binding?.playerView?.hideController()
+                }
+            }
+            it.setMediaItem(mediaItem)
+            it.prepare()
+            it.play()
+            simpleExoPlayer?.volume  = 0f
+
+        }
     }
 }

@@ -10,10 +10,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/textColor"
         tools:context=".ui.intro_new_video.FirstVideoFragment">
 
-        <VideoView
-            android:id="@+id/firstVideo"
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/playerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -21,7 +22,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:resize_mode="fit"
+            app:use_controller="true"
+            app:show_buffering="never"
+            app:use_artwork="false" />
 
         <Button
             android:id="@+id/skipSplash"

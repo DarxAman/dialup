@@ -3,9 +3,9 @@ package com.dialupdelta.data.repositories
 import com.dialupdelta.data.network.MyApi
 import com.dialupdelta.data.network.SafeApiRequest
 import com.dialupdelta.data.network.response.SignUpResponse
-import com.dialupdelta.data.network.response.get_age_response.AgeResponse
-import com.dialupdelta.data.network.response.get_gender_response.GenderResponse
+import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
 import com.dialupdelta.data.network.response.get_language_response.LanguageResponse
+import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResponse
 import com.dialupdelta.data.network.response.login_response.AuthData
 import com.dialupdelta.data.network.response.login_response.LoginResponse
 import com.dialupdelta.data.network.response.summary.GetSummaryResponse
@@ -59,17 +59,9 @@ class Repository(
         }
     }
 
-    suspend fun getAgeApi(): AgeResponse {
+    suspend fun getAgeGenderApi(): AgeGenderResponse {
         return apiRequest {
-            api.getAgeApi(
-                getBaseURL()
-            )
-        }
-    }
-
-    suspend fun getGenderApi():GenderResponse {
-        return apiRequest {
-            api.getGenderApi(
+            api.getAgeGenderApi(
                 getBaseURL()
             )
         }
@@ -102,6 +94,14 @@ class Repository(
         return apiRequest {
             api.apiLowHigh(
                "https://app.whyuru.com/api/question/summary"
+            )
+        }
+    }
+
+    suspend fun getIntroductionVideoApi(): IntroVideoResponse {
+        return apiRequest {
+            api.getIntroductionVideoApi(
+                getBaseURL()
             )
         }
     }

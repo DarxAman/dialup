@@ -1,14 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.journal.JournalFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@drawable/rocketback"
+        tools:context=".ui.journal.JournalFragment">
 
-</FrameLayout>
+        <VideoView
+            android:id="@+id/vids_rocketBlast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="5dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clRocketBlast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/rockettop"
+                android:layout_width="178.52dp"
+                android:layout_height="144.05dp"
+                android:layout_marginTop="32dp"
+                android:src="@drawable/rockettop1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/rocketmiddle"
+                android:layout_width="218.33dp"
+                android:layout_height="233.93dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="-16dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rocketmiddle1"
+                app:layout_constraintEnd_toEndOf="@+id/rockettop"
+                app:layout_constraintStart_toStartOf="@+id/rockettop"
+                app:layout_constraintTop_toBottomOf="@+id/rockettop" />
+
+            <VideoView
+                android:id="@+id/vidMainRocket"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_250sdp"
+                android:elevation="5dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/rocketbottom"
+                android:layout_width="300dp"
+                android:layout_height="261.22dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="-25dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rocketbottom1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rocketmiddle" />
+
+            <ImageView
+                android:id="@+id/rochetFog"
+                android:layout_width="93.57dp"
+                android:layout_height="82.9dp"
+                android:layout_marginEnd="1dp"
+                android:visibility="invisible"
+                android:background="@drawable/rocketfog"
+                app:layout_constraintEnd_toEndOf="@+id/rocketbottom"
+                app:layout_constraintStart_toStartOf="@+id/rocketbottom"
+                app:layout_constraintTop_toBottomOf="@+id/vidMainRocket" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

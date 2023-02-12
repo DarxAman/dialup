@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_8sdp"
+    android:layout_marginTop="@dimen/_4sdp"
+    android:layout_marginEnd="@dimen/_8sdp"
+    android:layout_marginBottom="@dimen/_12sdp"
+    app:cardCornerRadius="@dimen/_12sdp"
+    app:cardElevation="@dimen/_8sdp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_12sdp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#777777"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="I often feel blue." />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivStronglyDisagree"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_2sdp"
+            app:layout_constraintEnd_toStartOf="@id/ivDisagree"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvQuestion"
+            app:srcCompat="@drawable/ic_strong_disagree" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivDisagree"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginEnd="@dimen/_2sdp"
+            app:layout_constraintEnd_toStartOf="@id/ivNeutral"
+            app:layout_constraintHorizontal_weight="1.5"
+            app:layout_constraintStart_toEndOf="@id/ivStronglyDisagree"
+            app:layout_constraintTop_toTopOf="@id/ivStronglyDisagree"
+            app:srcCompat="@drawable/ic_disagree" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivNeutral"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginEnd="@dimen/_2sdp"
+            app:layout_constraintEnd_toStartOf="@id/ivAgree"
+            app:layout_constraintHorizontal_weight="1.5"
+            app:layout_constraintStart_toEndOf="@id/ivDisagree"
+            app:layout_constraintTop_toTopOf="@id/ivStronglyDisagree"
+            app:srcCompat="@drawable/ic_neutral" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivAgree"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginEnd="@dimen/_2sdp"
+            app:layout_constraintEnd_toStartOf="@id/ivStronglyAgree"
+            app:layout_constraintHorizontal_weight="1.5"
+            app:layout_constraintStart_toEndOf="@id/ivNeutral"
+            app:layout_constraintTop_toTopOf="@id/ivStronglyDisagree"
+            app:srcCompat="@drawable/ic_agree" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivStronglyAgree"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@id/ivAgree"
+            app:layout_constraintTop_toTopOf="@id/ivStronglyDisagree"
+            app:srcCompat="@drawable/ic_strong_agree" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:barrierMargin="@dimen/_12sdp"
+            app:constraint_referenced_ids="ivStronglyDisagree,ivDisagree,ivNeutral,ivAgree,ivStronglyAgree" />
+
+        <RadioGroup
+            android:id="@+id/rgQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/barrier">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rbTotallyDisagree"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_22sdp"
+                android:layout_weight="2"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_radio"
+                android:gravity="center"
+                tools:text="" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rbDisagree"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_22sdp"
+                android:layout_weight="1.5"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_radio"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rbNeutral"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_22sdp"
+                android:layout_weight="1.5"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_radio"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rbAgree"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_22sdp"
+                android:layout_weight="1.5"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_radio"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rbTotallyAgree"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_22sdp"
+                android:layout_weight="2"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_radio"
+                android:gravity="center"
+                tools:checked="true" />
+        </RadioGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

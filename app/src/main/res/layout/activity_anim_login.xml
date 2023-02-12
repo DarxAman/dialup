@@ -21,7 +21,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/AppButton"
             android:id="@+id/skipLogin"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_35sdp"

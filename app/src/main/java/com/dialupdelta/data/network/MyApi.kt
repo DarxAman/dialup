@@ -2,9 +2,10 @@ package com.dialupdelta.data.network
 
 import androidx.databinding.library.BuildConfig
 import com.dialupdelta.data.network.response.SignUpResponse
-import com.dialupdelta.data.network.response.get_age_response.AgeResponse
-import com.dialupdelta.data.network.response.get_gender_response.GenderResponse
+
+import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
 import com.dialupdelta.data.network.response.get_language_response.LanguageResponse
+import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResponse
 import com.dialupdelta.data.network.response.login_response.LoginResponse
 import com.dialupdelta.data.network.response.summary.GetSummaryResponse
 import com.github.simonpercic.oklog3.OkLogInterceptor
@@ -18,21 +19,15 @@ import java.util.concurrent.TimeUnit
 
 interface MyApi {
 
-    @GET("{baseURL}getAllLanguages")
+    @GET("{baseURL}get_all_language")
     suspend fun getLanguageApi(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
     ): Response<LanguageResponse>
 
-    @GET("{baseURL}getAllGenders")
-    suspend fun getGenderApi(
+    @GET("{baseURL}info_page_data")
+    suspend fun getAgeGenderApi(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
-    ): Response<GenderResponse>
-
-
-    @GET("{baseURL}getAllAgeGroups")
-    suspend fun getAgeApi(
-        @Path(value = "baseURL", encoded = true) baseURL: String?,
-    ): Response<AgeResponse>
+    ): Response<AgeGenderResponse>
 
     @FormUrlEncoded
     @POST("{baseURL}signup")
@@ -57,6 +52,11 @@ interface MyApi {
     suspend fun apiLowHigh(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
     ): Response<GetSummaryResponse>
+
+    @GET("{baseURL}get_intro_videos")
+    suspend fun getIntroductionVideoApi(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+    ): Response<IntroVideoResponse>
 
 
 

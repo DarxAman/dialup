@@ -270,7 +270,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Your Overall Conscientiousness Score"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_17sdp"
+                    android:textSize="@dimen/_14sdp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/desc_low" />
 
@@ -380,7 +380,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout17" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/AppButton"
                     android:id="@+id/btnLow"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

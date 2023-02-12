@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/give_test_graph"
+    app:startDestination="@id/testO">
+    <fragment
+        android:id="@+id/testO"
+        android:name="com.app.yuru.ui.test.OTestQuestionsFragment"
+        android:label="Take test"
+        tools:layout="@layout/fragment_test_questions">
+        <action
+            android:id="@+id/actionOC"
+            app:destination="@id/testC" />
+    </fragment>
+    <fragment
+        android:id="@+id/testC"
+        android:name="com.app.yuru.ui.test.CTestQuestionsFragment"
+        android:label="Take test"
+        tools:layout="@layout/fragment_test_questions">
+        <action
+            android:id="@+id/actionCE"
+            app:destination="@id/testE" />
+    </fragment>
+    <fragment
+        android:id="@+id/testE"
+        android:name="com.app.yuru.ui.test.ETestQuestionsFragment"
+        android:label="Take test"
+        tools:layout="@layout/fragment_test_questions">
+        <action
+            android:id="@+id/actionEA"
+            app:destination="@id/testA" />
+    </fragment>
+    <fragment
+        android:id="@+id/testA"
+        android:name="com.app.yuru.ui.test.ATestQuestionsFragment"
+        android:label="Take test"
+        tools:layout="@layout/fragment_test_questions">
+        <action
+            android:id="@+id/actionAN"
+            app:destination="@id/testN" />
+    </fragment>
+    <fragment
+        android:id="@+id/testN"
+        android:name="com.app.yuru.ui.test.NTestQuestionsFragment"
+        android:label="Take test"
+        tools:layout="@layout/fragment_test_questions" />
+</navigation>

@@ -9,7 +9,9 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.dialupdelta.R
 import com.dialupdelta.base.BaseFragment
+import com.dialupdelta.data.network.response.intro_video_response.IntroVideo
 import com.dialupdelta.databinding.FragmentThirdVideoBinding
+import com.dialupdelta.utils.MyKeys
 import com.dialupdelta.utils.hideStatusBar
 import com.dialupdelta.utils.setVisible
 import com.google.android.exoplayer2.MediaItem
@@ -20,7 +22,8 @@ class ThirdVideoFragment : BaseFragment() {
     private var binding:FragmentThirdVideoBinding? = null
     lateinit var navController: NavController
     var simpleExoPlayer: SimpleExoPlayer? = null
-    var newUrl: String = "https://app.whyuru.com/assets/screen_video/screen_3.mp4"
+    private var newUrl : String = ""
+    private lateinit var videoList: IntroVideo
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +41,9 @@ class ThirdVideoFragment : BaseFragment() {
     }
 
     private fun initUI() {
-
+        videoList = arguments?.getSerializable(MyKeys.introVideoData) as IntroVideo
+        newUrl = "${videoList.base_url}${videoList.videos[2].video_file_name}"
         playVideoClick()
-
         simpleExoPlayer?.addListener(object : Player.EventListener {
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_ENDED) {
@@ -53,7 +56,9 @@ class ThirdVideoFragment : BaseFragment() {
             binding?.playerView?.onPause()
             simpleExoPlayer?.pause()
             simpleExoPlayer?.stop()
-            navController.navigate(R.id.action_thirdVideoFragment_to_fourVideoFragment)
+            val bundle = Bundle()
+            bundle.putSerializable(MyKeys.introVideoData, videoList)
+            navController.navigate(R.id.action_thirdVideoFragment_to_fourVideoFragment, bundle)
         }
     }
 

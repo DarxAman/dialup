@@ -14,6 +14,8 @@ import com.dialupdelta.databinding.ActivityGetStartBinding
 
 import com.dialupdelta.utils.setGone
 import com.dialupdelta.utils.setVisible
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
 import org.kodein.di.generic.instance
 
 class GetStartActivity : BaseActivity() {
@@ -21,6 +23,7 @@ class GetStartActivity : BaseActivity() {
     private lateinit var viewModel: GetStartViewModel
     private var binding: ActivityGetStartBinding? = null
     private var selectedAge: Int = 0
+    private var simpleExoPlayer: SimpleExoPlayer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_get_start)
@@ -36,22 +39,19 @@ class GetStartActivity : BaseActivity() {
             startActivity(Intent(this, LowVsHighActivity::class.java))
             finish()
         }
-        viewModel.getAgeApi()
-        viewModel.getGenderApi()
-        videoPlay()
-
+        viewModel.getAgeGenderApi()
     }
 
     private fun setObservers(viewModel: GetStartViewModel) {
 
-        viewModel.ageSuccess.observe(this) {
+        viewModel.getStartSuccess.observe(this) {
             binding?.progressBar?.setGone()
+            selectGender()
             selectAge()
         }
 
-        viewModel.genderSuccess.observe(this) {
-            binding?.progressBar?.setGone()
-            selectGender()
+        viewModel.getStartVideoLink.observe(this){
+            videoPlay(it)
         }
 
         viewModel.isLoading.observe(this) { isLoading ->
@@ -110,12 +110,21 @@ class GetStartActivity : BaseActivity() {
             }
     }
 
-    private fun videoPlay() {
-        val mediaController = MediaController(this)
-        mediaController.setMediaPlayer(binding?.getStartedVideo)
-        val uri = Uri.parse("android.resource://" + packageName + "/R.raw/" + R.raw.getstarted)
-        binding?.getStartedVideo?.setVideoURI(uri)
-        binding?.getStartedVideo?.start()
+    private fun videoPlay(newUrl:String) {
+            val mediaItem: MediaItem = newUrl.let { MediaItem.fromUri(it) }
+            simpleExoPlayer = SimpleExoPlayer.Builder(this).build().also { it ->
+                binding?.getStartedVideo?.player = it
+                binding?.getStartedVideo?.hideController()
+                binding?.getStartedVideo?.setControllerVisibilityListener {
+                    if(it == View.VISIBLE){
+                        binding?.getStartedVideo?.hideController()
+                    }
+                }
+                it.setMediaItem(mediaItem)
+                it.prepare()
+                it.play()
+                simpleExoPlayer?.volume  = 0f
 
+            }
+        }
     }
-}
