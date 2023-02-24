@@ -14,14 +14,12 @@ import com.dialupdelta.utils.MyKeys
 import org.kodein.di.generic.instance
 
 class IntroductionVideoActivity : BaseActivity() {
-    private lateinit var allVideoListUrl: IntroVideo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction_video)
     }
 
-    fun getVideoListUrl():IntroVideo{
-        allVideoListUrl = intent.getSerializableExtra(MyKeys.introVideoData) as IntroVideo
-        return allVideoListUrl
+    fun getVideoListUrl():IntroVideo {
+        return intent.getSerializableExtra(MyKeys.introVideoData) as IntroVideo
     }
 }

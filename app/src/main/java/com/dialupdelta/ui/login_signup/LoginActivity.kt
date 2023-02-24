@@ -38,10 +38,7 @@ class LoginActivity : BaseActivity() {
             } else if (password.isEmpty()) {
                 Toast.makeText(this, "Please enter your password", Toast.LENGTH_SHORT).show()
             } else {
-                Intent(this, DiscountCodeActivity::class.java).also {
-                    startActivity(it)
-                }
-               // viewModel.loginApi(this, userEmail, password)
+                viewModel.loginApi(this, userEmail, password)
             }
         }
 
@@ -53,12 +50,6 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun setObserver(viewModel: LoginSignUpViewModel) {
-
-//        viewModel.successLogin.observe(this) {
-//            Intent(this, DiscountCodeActivity::class.java).also {
-//                startActivity(it)
-//            }
-//        }
 
         viewModel.isLoading.observe(this) { isLoading ->
             if (isLoading) {

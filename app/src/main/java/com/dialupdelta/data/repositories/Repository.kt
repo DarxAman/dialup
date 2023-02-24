@@ -2,12 +2,15 @@ package com.dialupdelta.data.repositories
 
 import com.dialupdelta.data.network.MyApi
 import com.dialupdelta.data.network.SafeApiRequest
-import com.dialupdelta.data.network.response.SignUpResponse
 import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
 import com.dialupdelta.data.network.response.get_language_response.LanguageResponse
 import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResponse
 import com.dialupdelta.data.network.response.login_response.AuthData
-import com.dialupdelta.data.network.response.login_response.LoginResponse
+import com.dialupdelta.data.network.response.login_response.SignUpLoginResponse
+import com.dialupdelta.data.network.response.ocean_response.OceanResponse
+import com.dialupdelta.data.network.response.otp_response.OtpResponse
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerProgramListResponse
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerResponse
 import com.dialupdelta.data.network.response.summary.GetSummaryResponse
 import com.dialupdelta.data.preferences.PreferenceProvider
 
@@ -36,11 +39,19 @@ class Repository(
         return prefs.getLanguage()
     }
 
+    fun setAge(id: Int?) {
+        prefs.setAge(id)
+    }
+
+    private fun getAge(): Int {
+        return prefs.getAge()
+    }
+
     fun saveAuthData(authData: AuthData?) {
         prefs.saveAuthData(authData)
         prefs.setLogIn(true)
-        authData?.languageId?.let { setLanguage(it) }
-        setGender(authData?.genderId)
+        authData?.language_id?.let { setLanguage(it) }
+        setGender(authData?.gender_id)
     }
 
     private fun getAuthData(): AuthData? {
@@ -67,7 +78,7 @@ class Repository(
         }
     }
 
-    suspend fun signUpApi(userName:String, email:String, password:String): SignUpResponse {
+    suspend fun signUpApi(userName:String, email:String, password:String): SignUpLoginResponse {
         return apiRequest {
             api.signUpApi(
                 getBaseURL(),
@@ -75,12 +86,13 @@ class Repository(
                 email,
                 password,
                 getGender(),
-                getLanguage()
+                getLanguage(),
+                getAge()
             )
         }
     }
 
-    suspend fun loginApi(email:String, password:String): LoginResponse {
+    suspend fun loginApi(email:String, password:String): SignUpLoginResponse {
         return apiRequest {
             api.loginApi(
                 getBaseURL(),
@@ -102,6 +114,52 @@ class Repository(
         return apiRequest {
             api.getIntroductionVideoApi(
                 getBaseURL()
+            )
+        }
+    }
+
+    suspend fun getOceanDataApi(traitName:String): OceanResponse {
+        return apiRequest {
+            api.getOceanDataApi(
+                getBaseURL(),
+                traitName
+            )
+        }
+    }
+
+    suspend fun sendOtpApi(): OtpResponse {
+        return apiRequest {
+            api.sendOtpApi(
+                getBaseURL(),
+                getAuthData()?.id!!
+            )
+        }
+    }
+
+    suspend fun verifyOtpApi(otp:String): OtpResponse {
+        return apiRequest {
+            api.verifyOtpApi(
+                getBaseURL(),
+                getAuthData()?.id!!,
+                otp
+            )
+        }
+    }
+
+    suspend fun getSleepEnhancerProgramList(): SleepEnhancerProgramListResponse {
+        return apiRequest {
+            api.getSleepEnhancerProgramList(
+                getBaseURL()
+            )
+        }
+    }
+
+    suspend fun getSleepEnhancerDialogList(program:Int?, duration:Int): SleepEnhancerResponse {
+        return apiRequest {
+            api.getSleepEnhancerDialogList(
+                getBaseURL(),
+                program,
+                duration
             )
         }
     }

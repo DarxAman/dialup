@@ -3,6 +3,8 @@ package com.dialupdelta.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,6 +16,7 @@ import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.databinding.ActivitySplashBinding
 import com.dialupdelta.ui.intro_screen.IntroductionFirstVideoActivity
 import com.dialupdelta.ui.login_signup.LoginActivity
+import com.dialupdelta.ui.transition.TransitionActivity
 import com.dialupdelta.utils.*
 import org.kodein.di.generic.instance
 
@@ -33,9 +36,21 @@ class SplashActivity : BaseActivity() {
     private fun initUi() {
 
         binding.buttonSplashSubmit.setOnClickListener {
-                Intent(this, IntroductionFirstVideoActivity::class.java).also {
-                    startActivity(it)
-                }
+
+ //           Handler(Looper.getMainLooper()).postDelayed({
+//                if (repository.getLogin()){
+//                    Intent(this, TransitionActivity::class.java).also {
+//                        startActivity(it)
+//                        finish()
+//                    }
+//                }
+//                else{
+                    Intent(this, IntroductionFirstVideoActivity::class.java).also {
+                        startActivity(it)
+                    }
+//                }
+//            },1000)
+
         }
 
         binding.loginOnSplash.setOnClickListener {
@@ -75,7 +90,9 @@ class SplashActivity : BaseActivity() {
                     return@main
                 }
             } catch (e: ApiException) {
+                progress?.dismissSweet()
             } catch (e: NoInternetException) {
+                progress?.dismissSweet()
             }
         }
     }

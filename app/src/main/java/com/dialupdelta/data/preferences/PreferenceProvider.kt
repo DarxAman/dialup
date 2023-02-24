@@ -13,6 +13,7 @@ private const val language = "language"
 private const val gender = "gender"
 private const val userCredential = "userCredential"
 private const val login = "login"
+private const val age = "age"
 
 
 class PreferenceProvider(context: Context) {
@@ -43,6 +44,18 @@ class PreferenceProvider(context: Context) {
 
     fun getLanguage():Int {
         return preference.getInt(language, 0)
+    }
+
+    fun setAge(id: Int?) {
+        if (id != null) {
+            preference.edit()
+                .putInt(age, id)
+                .apply()
+        }
+    }
+
+    fun getAge():Int {
+        return preference.getInt(age, 0)
     }
 
     fun saveAuthData(profile: AuthData?) {

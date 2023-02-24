@@ -5,6 +5,7 @@ import com.dialupdelta.base.BaseViewModel
 import com.dialupdelta.data.network.response.get_gender_response.AgeGroup
 import com.dialupdelta.data.network.response.get_gender_response.GenderList
 import com.dialupdelta.data.network.response.intro_video_response.IntroVideo
+import com.dialupdelta.data.network.response.ocean_response.OceanData
 import com.dialupdelta.data.network.response.summary.SummaryList
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.utils.ApiException
@@ -17,9 +18,10 @@ class GetStartViewModel(private val repository: Repository): BaseViewModel() {
     private var summaryList = MutableLiveData<ArrayList<SummaryList>>()
     var ageList = MutableLiveData<ArrayList<AgeGroup>>()
     var getStartSuccess = MutableLiveData<Boolean>()
-    var successSummaryList = MutableLiveData<Boolean>()
     var introVideoData = MutableLiveData<IntroVideo>()
     var getStartVideoLink = MutableLiveData<String>()
+    var getOceanData = MutableLiveData<OceanData>()
+
     init {
         ageList.value = ArrayList()
         genderList.value = ArrayList()
@@ -36,6 +38,10 @@ class GetStartViewModel(private val repository: Repository): BaseViewModel() {
 
     fun setGender(id: Int?) {
         repository.setGender(id)
+    }
+
+    fun setAge(id: Int?) {
+        repository.setAge(id)
     }
 
     fun getSummaryList(): ArrayList<SummaryList>? {
@@ -69,16 +75,15 @@ class GetStartViewModel(private val repository: Repository): BaseViewModel() {
         }
     }
 
-    fun apiLowHigh() {
+    fun getIntroductionVideoApi() {
         startLoading()
         Coroutines.io {
             try {
-                val summaryResponse = repository.apiLowHigh()
+                val videoResponse = repository.getIntroductionVideoApi()
                 Coroutines.main {
                     stopLoading()
-                    if (summaryResponse.valid && summaryResponse.data.isNotEmpty()) {
-                        summaryList.value?.addAll(summaryResponse.data)
-                        successSummaryList.value = true
+                    if (videoResponse.status) {
+                       introVideoData.value = videoResponse.result
                     }
                     return@main
                 }
@@ -90,15 +95,15 @@ class GetStartViewModel(private val repository: Repository): BaseViewModel() {
         }
     }
 
-    fun getIntroductionVideoApi() {
+    fun getOceanDataApi(traitName:String) {
         startLoading()
         Coroutines.io {
             try {
-                val videoResponse = repository.getIntroductionVideoApi()
+                val oceanResponse = repository.getOceanDataApi(traitName)
                 Coroutines.main {
                     stopLoading()
-                    if (videoResponse.status) {
-                       introVideoData.value = videoResponse.result
+                    if (oceanResponse.status) {
+                        getOceanData.value = oceanResponse.result
                     }
                     return@main
                 }

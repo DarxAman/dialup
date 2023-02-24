@@ -421,6 +421,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     }
 
     override fun clickIdForProgram(id: String?, position: Int) {
-        // vkokkkdvpldldlvvvlvlvlvvlvl
+
     }
 }

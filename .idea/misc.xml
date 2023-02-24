@@ -12,6 +12,9 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/drawable/button_disabled.xml" value="0.171" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/drawable/ic_facebook.xml" value="0.171" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/drawable/ic_youtube.xml" value="0.171" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/drawable/rounded_shape_design.xml" value="0.174" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/drawable/rouned_shape_layout_design.xml" value="0.174" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/drawable/rouneded_shape_design.xml" value="0.174" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/drawable/selector_button.xml" value="0.171" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/font/architects_daughter.xml" value="0.28" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_anim_login.xml" value="0.11200000000000002" />
@@ -50,9 +53,12 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_third_video.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_wake_up.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/gridsubjects.xml" value="0.1885766092475068" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_sleep_enhancer_dialog.xml" value="0.1885766092475068" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_sleep_enhancer_program_layout.xml" value="0.6" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_test_questions.xml" value="0.536" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/libraries.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/recyclersleep.xml" value="0.1885766092475068" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/sleep_enhancher_dialog.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/menu/option_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.171" />

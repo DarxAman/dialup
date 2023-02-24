@@ -1,6 +1,7 @@
 package com.dialupdelta.ui.sleep_enhancer
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -13,16 +14,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
-import android.widget.MediaController
-import android.widget.SeekBar
-import android.widget.Toast
+import android.widget.*
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dialupdelta.R
+import com.dialupdelta.`interface`.ProgramListListener
 import com.dialupdelta.base.BaseFragment
 import com.dialupdelta.databinding.FragmentSleepEnhancerBinding
+import com.dialupdelta.ui.get_start_activity.GetStartViewModel
+import com.dialupdelta.ui.get_start_activity.GetStartViewModelFactory
+import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerDialogAdapter
+import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerProgramListAdapter
+import com.dialupdelta.utils.setGone
+import com.dialupdelta.utils.setVisible
+import org.kodein.di.generic.instance
+import java.io.IOException
 import java.util.ArrayList
 
-class SleepEnhancerFragment : BaseFragment() {
+class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private lateinit var binding:FragmentSleepEnhancerBinding
     private var left1count = 0
     private var right1count = 0
@@ -43,7 +56,10 @@ class SleepEnhancerFragment : BaseFragment() {
     private var seekbarPosition = 0
     var showSetAlarmLeft = 0
     var showSetAlarmRight = 0
-
+    private lateinit var recyclerNewSleep:RecyclerView
+    private lateinit var progressBar: ProgressBar
+    private val factory: SleepEnhancerViewModelFactory by instance()
+    private lateinit var viewModel: SleepEnhancerViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -62,8 +78,11 @@ class SleepEnhancerFragment : BaseFragment() {
     }
 
     private fun initUI() {
+        viewModel = ViewModelProvider(this, factory)[SleepEnhancerViewModel::class.java]
+        setObserver(viewModel)
         hideOptions()
         hideOptionRight()
+         viewModel.getSleepEnhancerProgramList()
 
         binding.seekBar111.max = 100
         binding.seekBar111.progress = currentVolume
@@ -120,6 +139,31 @@ class SleepEnhancerFragment : BaseFragment() {
             })
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setObserver(viewModel: SleepEnhancerViewModel) {
+        viewModel.successProgramList.observe(viewLifecycleOwner){
+            val adapter = SleepEnhancerProgramListAdapter(requireContext(), viewModel.getSleepProgramList(), this)
+            binding.programRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+            binding.programRecyclerView.adapter = adapter
+        }
+
+        viewModel.audioDataList.observe(viewLifecycleOwner){
+            progressBar.setGone()
+            recyclerNewSleep.adapter?.notifyDataSetChanged()
+            val adapter = SleepEnhancerDialogAdapter(requireActivity(),this, viewModel.getSleepAudioList()?.list)
+            recyclerNewSleep.layoutManager = GridLayoutManager(requireActivity(), 2)
+            recyclerNewSleep.adapter = adapter
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                progress?.showSweetDialog()
+            } else {
+                progress?.dismissSweet()
+            }
         }
     }
 
@@ -298,7 +342,6 @@ class SleepEnhancerFragment : BaseFragment() {
     private fun hideOptionRight() {
         binding.showAns2.visibility = View.INVISIBLE
         binding.bottom2.visibility = View.INVISIBLE
-
         binding.arrowLeft2.visibility = View.INVISIBLE
         binding.arrowRight2.visibility = View.INVISIBLE
         binding.showAdd2.visibility = View.INVISIBLE
@@ -318,5 +361,64 @@ class SleepEnhancerFragment : BaseFragment() {
         binding.arrowLeft2.visibility = View.VISIBLE
         binding.arrowRight2.visibility = View.VISIBLE
         binding.showAdd2.visibility = View.VISIBLE
+    }
+
+    override fun setOnProgramItemClickListener(position: Int) {
+        sleepEnhancerDialog(position)
+    }
+
+    override fun setOnAudioClickListener(position: Int) {
+       // sleepEnhancerPlayAudio(position)
+    }
+
+    override fun setOnAudioLongClickListener(position: Int) {
+
+    }
+
+    private fun sleepEnhancerDialog(position:Int){
+       val dialog = Dialog(requireActivity())
+       dialog.setContentView(R.layout.sleep_enhancher_dialog)
+       dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+       val dialogTitle = dialog.findViewById(R.id.dialog_title) as TextView
+       val text10Min = dialog.findViewById(R.id.txt10Min) as TextView
+       val text20Min = dialog.findViewById(R.id.txt20Min) as TextView
+       val text30Min = dialog.findViewById(R.id.txt30Min) as TextView
+       progressBar = dialog.findViewById(R.id.progressBar) as ProgressBar
+       recyclerNewSleep = dialog.findViewById(R.id.recyclerNewSleep) as RecyclerView
+       dialogTitle.text = viewModel.getSleepProgramList()?.get(position)?.program_name
+       val program = viewModel.getSleepProgramList()?.get(position)?.id
+       var duration = 10
+       progressBar.setVisible()
+       viewModel.getSleepEnhancerDialogList(program, duration)
+
+//       text10Min.setOnClickListener {
+//           progressBar.setVisible()
+//           duration = 10
+//           viewModel.getSleepEnhancerDialogList(position, duration)
+//       }
+//
+//       text20Min.setOnClickListener {
+//           progressBar.setVisible()
+//           duration = 20
+//           viewModel.getSleepEnhancerDialogList(position, duration)
+//       }
+//       text30Min.setOnClickListener {
+//           progressBar.setVisible()
+//           duration = 30
+//           viewModel.getSleepEnhancerDialogList(position, duration)
+//       }
+       dialog.show()
+   }
+
+    private fun sleepEnhancerPlayAudio(position:Int) {
+        val audioBaseUrl = viewModel.getSleepAudioList()?.base_url
+        val audioSubUrl = viewModel.getSleepAudioList()?.list?.get(position)?.file_name
+        val audioUrl = audioBaseUrl+audioSubUrl
+        val mediaPlayer: MediaPlayer = MediaPlayer().apply {
+            setAudioStreamType(AudioManager.STREAM_MUSIC)
+            setDataSource(audioUrl)
+            prepare()
+            start()
+        }
     }
 }

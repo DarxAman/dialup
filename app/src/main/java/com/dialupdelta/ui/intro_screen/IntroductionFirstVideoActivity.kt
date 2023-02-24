@@ -57,13 +57,12 @@ class IntroductionFirstVideoActivity : BaseActivity() {
     }
 
     private fun setObserver(viewModel: GetStartViewModel) {
-
         viewModel.introVideoData.observe(this){
             allVideoListUrl = it
         }
     }
 
-    private fun getVideoListUrl():IntroVideo{
+    private fun getVideoListUrl():IntroVideo {
         return allVideoListUrl
     }
 }

@@ -34,7 +34,6 @@ class GetStartActivity : BaseActivity() {
     private fun initUI() {
         viewModel = ViewModelProvider(this, factory)[GetStartViewModel::class.java]
         setObservers(viewModel)
-        binding?.progressBar?.setVisible()
         binding?.btnGetStarted?.setOnClickListener {
             startActivity(Intent(this, LowVsHighActivity::class.java))
             finish()
@@ -45,7 +44,6 @@ class GetStartActivity : BaseActivity() {
     private fun setObservers(viewModel: GetStartViewModel) {
 
         viewModel.getStartSuccess.observe(this) {
-            binding?.progressBar?.setGone()
             selectGender()
             selectAge()
         }
@@ -72,15 +70,14 @@ class GetStartActivity : BaseActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         binding?.spinnerAgeGet?.adapter = adapter
-        binding?.spinnerAgeGet?.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
+        binding?.spinnerAgeGet?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parentView: AdapterView<*>?,
                     selectedItemView: View,
                     position: Int,
                     id: Long
                 ) {
-                    selectedAge = position
+                    viewModel.setAge(viewModel.getAgeList()?.get(position)?.id)
                 }
 
                 override fun onNothingSelected(parentView: AdapterView<*>?) {

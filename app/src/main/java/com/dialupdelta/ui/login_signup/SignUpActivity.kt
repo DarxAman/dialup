@@ -9,6 +9,7 @@ import androidx.lifecycle.observe
 import com.dialupdelta.R
 import com.dialupdelta.base.BaseActivity
 import com.dialupdelta.databinding.ActivitySignUpBinding
+import com.dialupdelta.ui.discount.DiscountCodeActivity
 import org.kodein.di.generic.instance
 
 class SignUpActivity : BaseActivity() {
@@ -36,21 +37,12 @@ class SignUpActivity : BaseActivity() {
             } else if (userPassword.isEmpty()) {
                 Toast.makeText(this, "Please enter your password", Toast.LENGTH_SHORT).show()
             } else {
-                Intent(this, LoginActivity::class.java).also {
-                    startActivity(it)
-                }
-                //  viewModel.signUpApi(this, userName, userEmail, userPassword)
+                viewModel.signUpApi(this, userName, userEmail, userPassword)
             }
         }
     }
 
     private fun setObserver(viewModel: LoginSignUpViewModel) {
-
-//        viewModel.successSignUp.observe(this){
-//            Intent(this, LoginActivity::class.java).also {
-//                startActivity(it)
-//            }
-//        }
 
         viewModel.isLoading.observe(this) { isLoading ->
             if (isLoading) {

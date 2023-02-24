@@ -17,9 +17,9 @@ import org.kodein.di.generic.instance
 class LowVsHighActivity : BaseActivity() {
     private var body = ""
     private var loworhigh = ""
-   // private val modelLowHighs: List<ModelLowHigh?> = ArrayList()
     private val factory: GetStartViewModelFactory by instance()
     private lateinit var viewModel: GetStartViewModel
+    private var traitName:String = "O"
     private lateinit var binding:ActivityLowVsHighBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class LowVsHighActivity : BaseActivity() {
     private fun initUi() {
         viewModel = ViewModelProvider(this, factory)[GetStartViewModel::class.java]
         setObserver(viewModel)
-        viewModel.apiLowHigh()
+       // viewModel.getOceanDataApi(traitName)
         try {
             fragmentClick()
         } catch (e: Exception) {
@@ -178,7 +178,7 @@ class LowVsHighActivity : BaseActivity() {
     }
 
     private fun setObserver(viewModel: GetStartViewModel) {
-        viewModel.successSummaryList.observe(this){
+        viewModel.getOceanData.observe(this){
             binding.titleLow.text = "Openness"
             binding.descLow.text = viewModel.getSummaryList()?.get(1)?.question_title
             binding.guideline15.setGuidelinePercent(.5f)
