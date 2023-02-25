@@ -9,6 +9,7 @@ import com.dialupdelta.data.preferences.PreferenceProvider
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.ui.get_start_activity.GetStartViewModelFactory
 import com.dialupdelta.ui.get_to_sleep.GetToSleepViewModelFactory
+import com.dialupdelta.ui.journal.JournalViewModelFactory
 import com.dialupdelta.ui.login_signup.LoginSignUpViewModelFactory
 import com.dialupdelta.ui.sleep_enhancer.SleepEnhancerViewModelFactory
 import org.kodein.di.Kodein
@@ -33,6 +34,7 @@ class MyApplication : Application(), KodeinAware {
         bind() from provider { LoginSignUpViewModelFactory(instance()) }
         bind() from provider { GetToSleepViewModelFactory(instance()) }
         bind() from provider { SleepEnhancerViewModelFactory(instance()) }
+        bind() from provider { JournalViewModelFactory(instance()) }
     }
 
     init {

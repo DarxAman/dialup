@@ -14,6 +14,7 @@ private const val gender = "gender"
 private const val userCredential = "userCredential"
 private const val login = "login"
 private const val age = "age"
+private const val sleepEnhancerUrl = "sleepEnhancerUrl"
 
 
 class PreferenceProvider(context: Context) {
@@ -77,6 +78,17 @@ class PreferenceProvider(context: Context) {
 
     fun getLogIn():Boolean{
         return preference.getBoolean(login, false)
+    }
+
+
+    fun setSleepEnhancerUrl(enhancerUrl:String){
+        preference.edit()
+            .putString(sleepEnhancerUrl, enhancerUrl)
+            .apply()
+    }
+
+    fun getSleepEnhancerUrl():String?{
+        return preference.getString(sleepEnhancerUrl, "")
     }
 
 }

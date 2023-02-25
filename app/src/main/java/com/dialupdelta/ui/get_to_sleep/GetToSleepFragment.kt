@@ -24,12 +24,15 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dialupdelta.R
 import com.dialupdelta.`interface`.ProgramClickPosition
 import com.dialupdelta.base.BaseFragment
 import com.dialupdelta.databinding.FragmentGetToSleepBinding
 import com.dialupdelta.ui.get_to_sleep.adapter.NewAdapterGetToSleep
+import com.dialupdelta.ui.library.LibraryAdapter
 import com.dialupdelta.ui.library.LibraryModulesActivity
 import com.dialupdelta.ui.login_signup.LoginActivity
 import com.dialupdelta.ui.transition.TransitionActivity
@@ -37,6 +40,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
+import org.kodein.di.generic.instance
 import java.util.ArrayList
 
 class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
@@ -51,12 +55,11 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     private var position = 0
     private var isGenderCLick = "male"
     private var userId: Int = 0
-    private var genderSelected = "male"
-    private var durationSelected = "5min"
+    private var genderSelected = 1
+    private var durationSelected = 5
     private var programSelected = ""
     private var checkFull = ""
     private var player: SimpleExoPlayer? = null
-    private var newUrl: String = ""
     private var firstAlarm = ""
     private var secondAlarm = ""
     private var thirdAlarm = ""
@@ -71,6 +74,9 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     private var programName: MutableList<String> = ArrayList()
     private var programPic: MutableList<String> = ArrayList()
     private lateinit var binding:FragmentGetToSleepBinding
+
+    private val factory: GetToSleepViewModelFactory by instance()
+    private lateinit var viewModel: GetToSleepViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,6 +93,9 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     }
 
     private fun initUI() {
+        viewModel = ViewModelProvider(this, factory)[GetToSleepViewModel::class.java]
+        setObserver(viewModel)
+        viewModel.getToSleepList()
         // add static id in list
         idforProgram.add("1")
         idforProgram.add("2")
@@ -127,24 +136,42 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             binding.tv45min.setTextColor(Color.WHITE)
 
             if (isGenderCLick == "male") {
-                durationSelected = "5min"
-                genderSelected = "male"
-                adapterNewGet()
+                durationSelected = 5
+                genderSelected = 1
+
             } else {
-                durationSelected = "5min"
-                genderSelected = "female"
-                adapterNewGet()
+                durationSelected = 5
+                genderSelected = 2
             }
         }
     }
 
-    private fun dialogShow() {
+    private fun setObserver(viewModel: GetToSleepViewModel) {
+        viewModel.getToSleepResponse.observe(viewLifecycleOwner) {
+           adapterNewGet()
+        }
+        viewModel.getToSleepVideoResponse.observe(viewLifecycleOwner) {
+          getToSleepProgramDialogShow()
+        }
+
+
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                progress?.showSweetDialog()
+            } else {
+                progress?.dismissSweet()
+            }
+        }
+    }
+
+    private fun getToSleepProgramDialogShow() {
         val dialog = context?.let { Dialog(it, android.R.style.Theme_Black_NoTitleBar_Fullscreen) }
         if (dialog != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
             dialog.setContentView(R.layout.dialog_splash)
-            dialog.show()
+
 
             val repeatDialog: Button = dialog.findViewById(R.id.repeat_dialog_tts)
             val sleepDialogTts: Button = dialog.findViewById(R.id.sleep_dialog_tts)
@@ -191,9 +218,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
                 playerView1.onPause()
                 playerView1.setKeepContentOnPlayerReset(true)
                 player?.pause()
-
-                newUrl = fileURL.get(0)
-                click()
+                dialogVideoClickPlay(playerView1)
 
                 if (countTimer == null) {
                     counter(timer, finishTime)
@@ -203,7 +228,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
                 }
             }
 
-            click()
+            dialogVideoClickPlay(playerView1)
 
             exoFullScreenIcon.setOnClickListener {
                 if (checkFull == "yes") {
@@ -211,9 +236,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
                     closeID.visibility = View.INVISIBLE
                     playerView1.visibility = View.INVISIBLE
                     exoFullScreenIcon.visibility = View.INVISIBLE
-//                    val intent = Intent(context, VideoActivity::class.java)
-//                    intent.putExtra(SyncStateContract.Constants.VIDEO_LINK, newUrl)
-                    //  requireContext().startActivity(intent)
                 }
             }
 
@@ -235,6 +257,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
                 }
             }
         }
+        dialog?.show()
     }
 
     private fun dialogShowOnStartTimer() {
@@ -358,10 +381,10 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
 
     private fun counter(timer: TextView, finishTime: Long?) {
         var timerStart = 0L
-        if (durationSelected == "5min") {
-            timerStart = 310000
+        timerStart = if (durationSelected == 5) {
+            310000
         } else {
-            timerStart = 550000
+            550000
         }
         countTimer = object : CountDownTimer(timerStart, 1000) {
             @SuppressLint("SetTextI18n")
@@ -386,15 +409,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     }
 
     private fun adapterNewGet() {
-        val transitionToSleepAdapter = NewAdapterGetToSleep(
-            context,
-            programName,
-            idforProgram,
-            genderSelected,
-            durationSelected,
-            this,
-            programPic
-        )
+        val transitionToSleepAdapter = NewAdapterGetToSleep(requireActivity(), this, viewModel.getToSleepProgramList())
         binding.transitionToSleepRecycler.setHasFixedSize(true)
         binding.transitionToSleepRecycler.layoutManager = GridLayoutManager(context, 2)
         binding.transitionToSleepRecycler.adapter = transitionToSleepAdapter
@@ -409,10 +424,13 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
         binding.videoView.setOnPreparedListener { mp -> mp.isLooping = true }
     }
 
-    private fun click() {
-        val mediaItem: MediaItem = newUrl.let { MediaItem.fromUri(it) }
+    private fun dialogVideoClickPlay(playerView: PlayerView) {
+        val videoBaseUrl = viewModel.getToSleepVideoData()?.base_url_video
+        val videoSubUrl = viewModel.getToSleepVideoData()?.list?.get(0)?.video_url
+        val completeVideoUrl =  videoBaseUrl+videoSubUrl
+        val mediaItem: MediaItem = completeVideoUrl.let { MediaItem.fromUri(it) }
         player = SimpleExoPlayer.Builder(requireContext()).build().also {
-            playerView1.player = it
+            playerView.player = it
             it.setMediaItem(mediaItem)
             it.prepare()
             it.play()
@@ -422,5 +440,10 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
 
     override fun clickIdForProgram(id: String?, position: Int) {
 
+    }
+
+    override fun getToSleepProgramItemListener(position: Int) {
+        val program = viewModel.getToSleepProgramList()?.get(position)?.id
+        viewModel.getToSleepVideoList(genderSelected, 1, program)
     }
 }

@@ -68,30 +68,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
-                <!--
-                               <ImageButton
-                                   android:id="@+id/male_videos"
-                                   android:layout_width="@dimen/_20sdp"
-                                   android:background="@drawable/male"
-                                   android:layout_height="@dimen/_25sdp"
-                                   android:layout_marginTop="8dp"
-                                   app:layout_constraintStart_toStartOf="parent"
-                                   app:layout_constraintTop_toTopOf="@+id/guideline4" />-->
-
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layout_constraintGuide_percent=".5" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.cardview.widget.CardView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

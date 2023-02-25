@@ -68,4 +68,13 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
             }
         }
     }
+
+
+    fun setSleepEnhancerUrl(enhancerUrl: String) {
+        repository.setSleepEnhancerUrl(enhancerUrl)
+    }
+
+    private fun getSleepEnhancerUrl(): String?{
+        return repository.getSleepEnhancerUrl()
+    }
 }

@@ -5,4 +5,6 @@ object MyKeys {
    const val libraryList = "libraryList"
    const val position = "position"
    const val link = "link"
+   const val journalList = "journalList"
+   const val shouldJournal = "shouldJournal"
 }

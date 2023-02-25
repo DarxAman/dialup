@@ -3,7 +3,14 @@ package com.dialupdelta.data.network
 import androidx.databinding.library.BuildConfig
 
 import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
+import com.dialupdelta.data.network.response.get_journal_response.DeleteJournalResponse
+import com.dialupdelta.data.network.response.get_journal_response.GetJournalList
+import com.dialupdelta.data.network.response.get_journal_response.GetSingleJournalList
 import com.dialupdelta.data.network.response.get_language_response.LanguageResponse
+import com.dialupdelta.data.network.response.get_library_response.LibraryResponse
+import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
+import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepListResponse
+import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepResponse
 import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResponse
 import com.dialupdelta.data.network.response.login_response.SignUpLoginResponse
 import com.dialupdelta.data.network.response.ocean_response.OceanResponse
@@ -96,6 +103,65 @@ interface MyApi {
         @Field("duration") duration: Int,
     ): Response<SleepEnhancerResponse>
 
+    @GET("{baseURL}get_sleep_programs_list")
+    suspend fun getToSleepList(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+    ): Response<GetToSleepResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}get_to_sleep")
+    suspend fun getToSleepVideoList(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("gender") gender: Int?,
+        @Field("duration") duration: Int,
+        @Field("programs") program: Int?
+    ): Response<GetToSleepListResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}get_journal")
+    suspend fun getJournalList(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") userId: Int?,
+    ): Response<GetJournalList>
+
+    @FormUrlEncoded
+    @POST("{baseURL}get_single_journal")
+    suspend fun getSingleJournalList(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") userId: Int?,
+    ): Response<GetSingleJournalList>
+
+    @FormUrlEncoded
+    @POST("{baseURL}insert_journal")
+    suspend fun setInsertJournal(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") userId: Int?,
+        @Field("title") gender: String,
+        @Field("content") duration: String
+    ): Response<GetSingleJournalList>
+
+    @FormUrlEncoded
+    @POST("{baseURL}edit_journal")
+    suspend fun editJournal(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("id") program: Int?,
+        @Field("title") gender: String,
+        @Field("content") duration: String
+    ): Response<GetSingleJournalList>
+
+    @FormUrlEncoded
+    @POST("{baseURL}delete_journal")
+    suspend fun deleteJournal(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("id") id: Int
+    ): Response<DeleteJournalResponse>
+
+    @GET("{baseURL}getYoutubeDetailsByLink")
+    suspend fun getYoutubeDetailsByLink(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+    ): Response<LibraryResponse>
+
+
 
 
     companion object {
@@ -107,7 +173,7 @@ interface MyApi {
             var logging: HttpLoggingInterceptor? = null
             var okLogInterceptor: OkLogInterceptor? = null
 
-            if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG)  {
                 logging = HttpLoggingInterceptor()
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 okLogInterceptor = OkLogInterceptor.builder().build()

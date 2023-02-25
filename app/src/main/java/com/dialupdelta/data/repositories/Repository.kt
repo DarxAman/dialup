@@ -3,7 +3,15 @@ package com.dialupdelta.data.repositories
 import com.dialupdelta.data.network.MyApi
 import com.dialupdelta.data.network.SafeApiRequest
 import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
+import com.dialupdelta.data.network.response.get_journal_response.DeleteJournal
+import com.dialupdelta.data.network.response.get_journal_response.DeleteJournalResponse
+import com.dialupdelta.data.network.response.get_journal_response.GetJournalList
+import com.dialupdelta.data.network.response.get_journal_response.GetSingleJournalList
 import com.dialupdelta.data.network.response.get_language_response.LanguageResponse
+import com.dialupdelta.data.network.response.get_library_response.LibraryResponse
+import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
+import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepListResponse
+import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepResponse
 import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResponse
 import com.dialupdelta.data.network.response.login_response.AuthData
 import com.dialupdelta.data.network.response.login_response.SignUpLoginResponse
@@ -46,6 +54,15 @@ class Repository(
     private fun getAge(): Int {
         return prefs.getAge()
     }
+
+    fun setSleepEnhancerUrl(enhancerUrl: String) {
+        prefs.setSleepEnhancerUrl(enhancerUrl)
+    }
+
+    fun getSleepEnhancerUrl(): String?{
+        return prefs.getSleepEnhancerUrl()
+    }
+
 
     fun saveAuthData(authData: AuthData?) {
         prefs.saveAuthData(authData)
@@ -160,6 +177,82 @@ class Repository(
                 getBaseURL(),
                 program,
                 duration
+            )
+        }
+    }
+
+    suspend fun getToSleepList(): GetToSleepResponse {
+        return apiRequest {
+            api.getToSleepList(
+                getBaseURL()
+            )
+        }
+    }
+
+    suspend fun getToSleepVideoList(gender:Int, duration: Int, program: Int?): GetToSleepListResponse {
+        return apiRequest {
+            api.getToSleepVideoList(
+                getBaseURL(),
+                gender,
+                duration,
+                program
+            )
+        }
+    }
+
+    suspend fun getJournalList(): GetJournalList {
+        return apiRequest {
+            api.getJournalList(
+                getBaseURL(),
+                getAuthData()?.id,
+            )
+        }
+    }
+
+    suspend fun getSingleJournalList(): GetSingleJournalList {
+        return apiRequest {
+            api.getSingleJournalList(
+                getBaseURL(),
+                getAuthData()?.id,
+            )
+        }
+    }
+
+    suspend fun setInsertJournal(title:String, content:String): GetSingleJournalList {
+        return apiRequest {
+            api.setInsertJournal(
+                getBaseURL(),
+                getAuthData()?.id,
+                title,
+                content
+            )
+        }
+    }
+
+    suspend fun editJournal(id: Int, title:String, content:String): GetSingleJournalList {
+        return apiRequest {
+            api.setInsertJournal(
+                getBaseURL(),
+                id,
+                title,
+                content
+            )
+        }
+    }
+
+    suspend fun deleteJournal(id: Int): DeleteJournalResponse {
+        return apiRequest {
+            api.deleteJournal(
+                getBaseURL(),
+                id
+            )
+        }
+    }
+
+    suspend fun getYoutubeDetailsByLink(): LibraryResponse {
+        return apiRequest {
+            api.getYoutubeDetailsByLink(
+                getBaseURL()
             )
         }
     }

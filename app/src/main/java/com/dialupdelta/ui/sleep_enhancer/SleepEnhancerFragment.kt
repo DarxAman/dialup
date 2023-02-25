@@ -368,11 +368,13 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     }
 
     override fun setOnAudioClickListener(position: Int) {
-       // sleepEnhancerPlayAudio(position)
+        sleepEnhancerPlayAudio(position)
     }
 
     override fun setOnAudioLongClickListener(position: Int) {
-
+        val audioBaseUrl = viewModel.getSleepAudioList()?.base_url
+        val audioSubUrl = viewModel.getSleepAudioList()?.list?.get(position)?.file_name
+        viewModel.setSleepEnhancerUrl(audioBaseUrl+audioSubUrl)
     }
 
     private fun sleepEnhancerDialog(position:Int){

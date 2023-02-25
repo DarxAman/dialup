@@ -34,16 +34,11 @@ class JournalFragment : BaseFragment() {
 
     private fun initUi() {
         hideStatusBar(requireActivity())
-        // val frstRckt: String = getIntent().getStringExtra("first_rocket") // from wakeup save click
-
-        // if (frstRckt.equals("journal", ignoreCase = true)) {  //from add journal save click
         val animation = TranslateAnimation(010f, 0f, 50f, 30f)
         animation.duration = 2000
         animation.fillAfter = true
         binding.rockettop.animation = animation
         binding.rockettop.animate().x(0f).y(-20f).translationYBy(-20f).duration = 1000
-        // } else if
-        //    (frstRckt.equals("cal", ignoreCase = true)) {
         binding.clRocketBlast.visibility = View.INVISIBLE
         binding.vidsRocketBlast.visibility = View.VISIBLE
         val mediaController = MediaController(requireActivity())
@@ -100,7 +95,7 @@ class JournalFragment : BaseFragment() {
             )
         }
 
-        binding.rocketbottom.setOnClickListener{
+        binding.rocketbottom.setOnClickListener {
             val animation2 = TranslateAnimation(010f, 0f, 0f, 50f)
             animation2.duration = 2000
             animation2.fillAfter = true
