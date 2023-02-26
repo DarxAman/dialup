@@ -100,4 +100,44 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
             }
         }
     }
+
+    fun getToSleepSave(genderId:Int?,durationId:Int?, programId:Int?,videoId:Int?) {
+        startLoading()
+        Coroutines.io {
+            try {
+                val sleepResponse = repository.getToSleepSave(genderId, durationId, programId, videoId)
+                Coroutines.main {
+                    stopLoading()
+                    if (sleepResponse.status) {
+                       // activity login pass
+                    }
+                    return@main
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun saveGetToSleepApi() {
+        startLoading()
+        Coroutines.io {
+            try {
+                val sleepResponse = repository.saveGetToSleepApi()
+                Coroutines.main {
+                    stopLoading()
+                    if (sleepResponse.status) {
+                        // activity login pass
+                    }
+                    return@main
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                e.printStackTrace()
+            }
+        }
+    }
 }

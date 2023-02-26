@@ -1,5 +1,6 @@
 package com.dialupdelta.ui.journal
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -63,6 +64,12 @@ class AddJournalActivity : BaseActivity() {
     }
 
     private fun setObserver(viewModel: JournalViewModel) {
+
+        viewModel.successJournal.observe(this){
+          Intent(this, JournalListActivity::class.java).also {
+              startActivity(it)
+          }
+        }
         viewModel.isLoading.observe(this) { isLoading ->
             if (isLoading) {
                 progress?.showSweetDialog()

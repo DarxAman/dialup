@@ -11,10 +11,14 @@ import com.dialupdelta.data.network.response.get_library_response.LibraryRespons
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepListResponse
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepResponse
+import com.dialupdelta.data.network.response.get_to_sleep_response.SaveGetToSleepResponse
 import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResponse
 import com.dialupdelta.data.network.response.login_response.SignUpLoginResponse
 import com.dialupdelta.data.network.response.ocean_response.OceanResponse
 import com.dialupdelta.data.network.response.otp_response.OtpResponse
+import com.dialupdelta.data.network.response.sipmle_response.SimpleResponse
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancer
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancerResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerProgramListResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerResponse
 import com.dialupdelta.data.network.response.summary.GetSummaryResponse
@@ -153,13 +157,48 @@ interface MyApi {
     @POST("{baseURL}delete_journal")
     suspend fun deleteJournal(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
-        @Field("id") id: Int
+        @Field("id") id: Int?
     ): Response<DeleteJournalResponse>
 
     @GET("{baseURL}getYoutubeDetailsByLink")
     suspend fun getYoutubeDetailsByLink(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
     ): Response<LibraryResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}get_to_sleep_saver")
+    suspend fun getToSleepSave(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?,
+        @Field("gender_id") genderId: Int?,
+        @Field("duration_id") durationId: Int?,
+        @Field("program_id") programId: Int?,
+        @Field("video_id") videoId: Int?,
+    ): Response<SimpleResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}saved_get_to_sleep")
+    suspend fun saveGetToSleepApi(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?,
+    ): Response<SaveGetToSleepResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}sleep_enhancer_saver")
+    suspend fun sleepEnhancerSaver(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?,
+        @Field("duration") genderId: Int?,
+        @Field("program_id") programId: Int?,
+        @Field("audio_id") videoId: Int?,
+    ): Response<SimpleResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}saved_sleep_enhancer")
+    suspend fun savedSleepEnhancer(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?,
+    ): Response<SavedSleepEnhancerResponse>
 
 
 

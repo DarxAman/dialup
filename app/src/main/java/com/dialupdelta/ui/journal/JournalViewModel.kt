@@ -12,6 +12,8 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
 
     private val getJournalList = MutableLiveData<ArrayList<JournalList>>()
     val successJournalList = MutableLiveData<Boolean>()
+    val successJournal = MutableLiveData<Boolean>()
+    val deleteJournal = MutableLiveData<Int>()
 
     init {
         getJournalList.value = ArrayList()
@@ -72,8 +74,7 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-//                        getProgramList.value = sleepResponse.result
-//                        successProgramList.value = true
+                        successJournal.value = true
                     }
                     return@main
                 }
@@ -93,8 +94,7 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-//                        getProgramList.value = sleepResponse.result
-//                        successProgramList.value = true
+                        successJournal.value = true
                     }
                     return@main
                 }
@@ -106,7 +106,7 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
         }
     }
 
-    fun deleteJournal(id: Int) {
+    fun deleteJournal(id: Int?, position:Int) {
         startLoading()
         Coroutines.io {
             try {
@@ -114,8 +114,7 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-//                        getProgramList.value = sleepResponse.result
-//                        successProgramList.value = true
+                        deleteJournal.value = position
                     }
                     return@main
                 }

@@ -36,6 +36,12 @@ class JournalsListAdapter(
        return journalList?.size?:0
     }
 
+    fun removeJournalList(position: Int){
+        journalList?.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, journalList?.size?:0)
+    }
+
    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val recyclerCheck = itemView.findViewById<ImageView>(R.id.recyCheck)
@@ -48,6 +54,11 @@ class JournalsListAdapter(
        init {
            clayoutRecycler.setOnClickListener {
                journalEventListener.journalItemClickListener(bindingAdapterPosition)
+           }
+
+           clayoutRecycler.setOnLongClickListener {
+               journalEventListener.journalItemRemoveClickListener(bindingAdapterPosition)
+               false
            }
        }
     }

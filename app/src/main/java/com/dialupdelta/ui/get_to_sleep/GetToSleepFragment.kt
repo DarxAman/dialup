@@ -97,6 +97,15 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
         setObserver(viewModel)
         viewModel.getToSleepList()
         // add static id in list
+
+
+        // get to sleep save api call
+       // viewModel.getToSleepSave
+
+        // get to sleep save api call
+        // viewModel.saveGetToSleepApi()
+
+
         idforProgram.add("1")
         idforProgram.add("2")
         idforProgram.add("3")
@@ -127,8 +136,17 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
                 startActivity(it)
             }
         }
+
         binding.explore.setOnClickListener {
             startActivity(Intent(context, LibraryModulesActivity::class.java))
+        }
+
+        binding.skipSleep.setOnClickListener {
+            dialogShowOnStartTimer()
+        }
+
+        binding.skipToProgram.setOnClickListener {
+            (activity as TransitionActivity).navigateToWakeUpFragment()
         }
 
         binding.tv45min.setOnClickListener {
@@ -147,9 +165,11 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     }
 
     private fun setObserver(viewModel: GetToSleepViewModel) {
+
         viewModel.getToSleepResponse.observe(viewLifecycleOwner) {
            adapterNewGet()
         }
+
         viewModel.getToSleepVideoResponse.observe(viewLifecycleOwner) {
           getToSleepProgramDialogShow()
         }
@@ -427,9 +447,9 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     private fun dialogVideoClickPlay(playerView: PlayerView) {
         val videoBaseUrl = viewModel.getToSleepVideoData()?.base_url_video
         val videoSubUrl = viewModel.getToSleepVideoData()?.list?.get(0)?.video_url
-        val completeVideoUrl =  videoBaseUrl+videoSubUrl
+        val completeVideoUrl = "$videoBaseUrl/$videoSubUrl"
         val mediaItem: MediaItem = completeVideoUrl.let { MediaItem.fromUri(it) }
-        player = SimpleExoPlayer.Builder(requireContext()).build().also {
+        player = SimpleExoPlayer.Builder(requireActivity()).build().also {
             playerView.player = it
             it.setMediaItem(mediaItem)
             it.prepare()

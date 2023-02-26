@@ -69,6 +69,42 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
         }
     }
 
+    fun sleepEnhancerSaver(durationId:Int?, programId:Int?,audioId:Int?) {
+        Coroutines.io {
+            try {
+                val sleepResponse = repository.sleepEnhancerSaver(durationId, programId, audioId)
+                Coroutines.main {
+                    if (sleepResponse.status) {
+                       // api success logic code
+                    }
+                    return@main
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun savedSleepEnhancer() {
+        Coroutines.io {
+            try {
+                val sleepResponse = repository.savedSleepEnhancer()
+                Coroutines.main {
+                    if (sleepResponse.status) {
+                        // api success logic code
+                    }
+                    return@main
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 
     fun setSleepEnhancerUrl(enhancerUrl: String) {
         repository.setSleepEnhancerUrl(enhancerUrl)

@@ -12,15 +12,20 @@ import com.dialupdelta.data.network.response.get_library_response.LibraryRespons
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepListResponse
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepResponse
+import com.dialupdelta.data.network.response.get_to_sleep_response.SaveGetToSleepResponse
 import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResponse
 import com.dialupdelta.data.network.response.login_response.AuthData
 import com.dialupdelta.data.network.response.login_response.SignUpLoginResponse
 import com.dialupdelta.data.network.response.ocean_response.OceanResponse
 import com.dialupdelta.data.network.response.otp_response.OtpResponse
+import com.dialupdelta.data.network.response.sipmle_response.SimpleResponse
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancer
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancerResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerProgramListResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerResponse
 import com.dialupdelta.data.network.response.summary.GetSummaryResponse
 import com.dialupdelta.data.preferences.PreferenceProvider
+import java.util.*
 
 class Repository(
     private val api: MyApi,
@@ -231,7 +236,7 @@ class Repository(
 
     suspend fun editJournal(id: Int, title:String, content:String): GetSingleJournalList {
         return apiRequest {
-            api.setInsertJournal(
+            api.editJournal(
                 getBaseURL(),
                 id,
                 title,
@@ -240,7 +245,7 @@ class Repository(
         }
     }
 
-    suspend fun deleteJournal(id: Int): DeleteJournalResponse {
+    suspend fun deleteJournal(id: Int?): DeleteJournalResponse {
         return apiRequest {
             api.deleteJournal(
                 getBaseURL(),
@@ -253,6 +258,48 @@ class Repository(
         return apiRequest {
             api.getYoutubeDetailsByLink(
                 getBaseURL()
+            )
+        }
+    }
+
+    suspend fun getToSleepSave(genderId:Int?,durationId:Int?, programId:Int?,videoId:Int?): SimpleResponse {
+        return apiRequest {
+            api.getToSleepSave(
+                getBaseURL(),
+                getAuthData()?.id,
+                genderId,
+                durationId,
+                programId,
+                videoId
+            )
+        }
+    }
+
+    suspend fun saveGetToSleepApi(): SaveGetToSleepResponse {
+        return apiRequest {
+            api.saveGetToSleepApi(
+                getBaseURL(),
+                getAuthData()?.id,
+            )
+        }
+    }
+    suspend fun savedSleepEnhancer(): SavedSleepEnhancerResponse {
+        return apiRequest {
+            api.savedSleepEnhancer(
+                getBaseURL(),
+                getAuthData()?.id,
+            )
+        }
+    }
+
+    suspend fun sleepEnhancerSaver(durationId:Int?, programId:Int?,audioId:Int?): SimpleResponse {
+        return apiRequest {
+            api.sleepEnhancerSaver(
+                getBaseURL(),
+                getAuthData()?.id,
+                durationId,
+                programId,
+                audioId
             )
         }
     }

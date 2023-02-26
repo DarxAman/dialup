@@ -56,4 +56,8 @@ class TransitionActivity : BaseActivity() {
     fun navigateToSleepEnhancerFragment(){
         setCurrentFragment(sleepEnhancerFragment)
     }
+
+    fun navigateToWakeUpFragment(){
+        setCurrentFragment(wakeUpFragment)
+    }
 }

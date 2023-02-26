@@ -62,13 +62,13 @@ class JournalFragment : BaseFragment() {
             binding.vidsRocketBlast.stopPlayback()
         }, 19000)
 
-        binding.rocketmiddle.setOnClickListener{
+        binding.rocketmiddle.setOnClickListener {
             val animation = TranslateAnimation(010f, 0f, 0f, 50f)
             animation.duration = 2000
             animation.fillAfter = true
             binding.rocketmiddle.animation = animation
-           // startActivity(Intent(this@MainRocket, Journals::class.java))
-            Handler(Looper.getMainLooper()).postDelayed({}, 2000)
+            startActivity(Intent(context, JournalActivity::class.java))
+           // Handler(Looper.getMainLooper()).postDelayed({}, 2000)
         }
 
         binding.rockettop.setOnClickListener {

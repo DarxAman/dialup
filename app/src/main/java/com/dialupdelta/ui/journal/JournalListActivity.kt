@@ -17,6 +17,7 @@ class JournalListActivity : BaseActivity(), JournalEventListener {
     private lateinit var binding:ActivityJournalListBinding
     private val factory: JournalViewModelFactory by instance()
     private lateinit var viewModel: JournalViewModel
+    private lateinit var journalsListAdapter: JournalsListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_journal_list)
@@ -33,8 +34,12 @@ class JournalListActivity : BaseActivity(), JournalEventListener {
     private fun setObserver(viewModel: JournalViewModel) {
 
         viewModel.successJournalList.observe(this){
-            val adapter = JournalsListAdapter(this, viewModel.getAllJournalList())
-            binding.recyclerViewJournals.adapter = adapter
+             journalsListAdapter = JournalsListAdapter(this, viewModel.getAllJournalList())
+            binding.recyclerViewJournals.adapter = journalsListAdapter
+        }
+
+        viewModel.deleteJournal.observe(this){
+            journalsListAdapter.removeJournalList(it)
         }
 
         viewModel.isLoading.observe(this) { isLoading ->
@@ -52,5 +57,10 @@ class JournalListActivity : BaseActivity(), JournalEventListener {
             it.putExtra(MyKeys.shouldJournal, true)
             startActivity(it)
         }
+    }
+
+    override fun journalItemRemoveClickListener(position: Int) {
+        val id = viewModel.getAllJournalList()?.get(position)?.id
+        viewModel.deleteJournal(id, position)
     }
 }

@@ -2,14 +2,11 @@ package com.dialupdelta.ui.sleep_enhancer
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,15 +22,11 @@ import com.dialupdelta.R
 import com.dialupdelta.`interface`.ProgramListListener
 import com.dialupdelta.base.BaseFragment
 import com.dialupdelta.databinding.FragmentSleepEnhancerBinding
-import com.dialupdelta.ui.get_start_activity.GetStartViewModel
-import com.dialupdelta.ui.get_start_activity.GetStartViewModelFactory
 import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerDialogAdapter
 import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerProgramListAdapter
 import com.dialupdelta.utils.setGone
 import com.dialupdelta.utils.setVisible
 import org.kodein.di.generic.instance
-import java.io.IOException
-import java.util.ArrayList
 
 class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private lateinit var binding:FragmentSleepEnhancerBinding
@@ -60,6 +53,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private lateinit var progressBar: ProgressBar
     private val factory: SleepEnhancerViewModelFactory by instance()
     private lateinit var viewModel: SleepEnhancerViewModel
+    lateinit var mediaPlayer: MediaPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -83,6 +77,12 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         hideOptions()
         hideOptionRight()
          viewModel.getSleepEnhancerProgramList()
+
+        // save sleep enhancer api
+       // viewModel.sleepEnhancerSaver()
+
+        // save sleep enhancer api
+       //  viewModel.savedSleepEnhancer()
 
         binding.seekBar111.max = 100
         binding.seekBar111.progress = currentVolume
@@ -413,14 +413,20 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
    }
 
     private fun sleepEnhancerPlayAudio(position:Int) {
+        mediaPlayer = MediaPlayer()
         val audioBaseUrl = viewModel.getSleepAudioList()?.base_url
         val audioSubUrl = viewModel.getSleepAudioList()?.list?.get(position)?.file_name
         val audioUrl = audioBaseUrl+audioSubUrl
-        val mediaPlayer: MediaPlayer = MediaPlayer().apply {
-            setAudioStreamType(AudioManager.STREAM_MUSIC)
-            setDataSource(audioUrl)
-            prepare()
-            start()
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        try {
+            mediaPlayer.setDataSource(audioUrl)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.prepare()
+            mediaPlayer.setOnPreparedListener {
+                it.start()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
