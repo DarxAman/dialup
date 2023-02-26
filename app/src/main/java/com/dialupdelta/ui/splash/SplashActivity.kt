@@ -37,19 +37,19 @@ class SplashActivity : BaseActivity() {
 
         binding.buttonSplashSubmit.setOnClickListener {
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (repository.getLogin()){
-                    Intent(this, TransitionActivity::class.java).also {
-                        startActivity(it)
-                        finish()
-                    }
-                }
-                else{
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                if (repository.getLogin()){
+//                    Intent(this, TransitionActivity::class.java).also {
+//                        startActivity(it)
+//                        finish()
+//                    }
+//                }
+//                else{
                     Intent(this, IntroductionFirstVideoActivity::class.java).also {
                         startActivity(it)
                     }
-                }
-            },1000)
+//                }
+//            },1000)
 
         }
 

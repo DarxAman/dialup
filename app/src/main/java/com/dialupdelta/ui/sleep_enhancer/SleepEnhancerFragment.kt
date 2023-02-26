@@ -417,11 +417,16 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         val audioBaseUrl = viewModel.getSleepAudioList()?.base_url
         val audioSubUrl = viewModel.getSleepAudioList()?.list?.get(position)?.file_name
         val audioUrl = audioBaseUrl+audioSubUrl
+        val  uriAudioUrl = Uri.parse(audioUrl)
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
         try {
-            mediaPlayer.setDataSource(audioUrl)
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+                mediaPlayer.release()
+            }
+            mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
             mediaPlayer.prepareAsync()
-            mediaPlayer.prepare()
             mediaPlayer.setOnPreparedListener {
                 it.start()
             }
