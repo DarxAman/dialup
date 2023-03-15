@@ -309,7 +309,7 @@ class Repository(
     suspend fun feedbackDetails(): FeedBackDetailsResponse {
         return apiRequest {
             api.feedbackDetails(
-                getBaseURL(),
+                 getBaseURL(),
                 getAuthData()?.id
             )
         }
