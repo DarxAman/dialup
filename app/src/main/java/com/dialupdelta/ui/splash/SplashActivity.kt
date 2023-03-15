@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import com.dialupdelta.R
 import com.dialupdelta.base.BaseActivity
-import com.dialupdelta.data.network.response.get_language_response.Data
+import com.dialupdelta.data.network.response.get_language_response.LanguageData
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.databinding.ActivitySplashBinding
 import com.dialupdelta.ui.intro_screen.IntroductionFirstVideoActivity
@@ -23,7 +23,7 @@ import org.kodein.di.generic.instance
 class SplashActivity : BaseActivity() {
     private val repository: Repository by instance()
     private lateinit var binding:ActivitySplashBinding
-    private var languageList:ArrayList<Data> = ArrayList()
+    private var languageList:ArrayList<LanguageData> = ArrayList()
     private var adapterPosition:Int? = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,20 +36,19 @@ class SplashActivity : BaseActivity() {
     private fun initUi() {
 
         binding.buttonSplashSubmit.setOnClickListener {
-
-//            Handler(Looper.getMainLooper()).postDelayed({
-//                if (repository.getLogin()){
-//                    Intent(this, TransitionActivity::class.java).also {
-//                        startActivity(it)
-//                        finish()
-//                    }
-//                }
-//                else{
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (repository.getLogin()){
+                    Intent(this, TransitionActivity::class.java).also {
+                        startActivity(it)
+                        finish()
+                    }
+                }
+                else{
                     Intent(this, IntroductionFirstVideoActivity::class.java).also {
                         startActivity(it)
                     }
-//                }
-//            },1000)
+                }
+            },1000)
 
         }
 
@@ -84,8 +83,8 @@ class SplashActivity : BaseActivity() {
                 Coroutines.main {
                     progress?.dismissSweet()
                     if (languageResponse.status) {
-                        languageList.addAll(languageResponse.result)
-                        selectLanguage()
+                            languageList.addAll(languageResponse.result.languageData)
+                            selectLanguage()
                     }
                     return@main
                 }

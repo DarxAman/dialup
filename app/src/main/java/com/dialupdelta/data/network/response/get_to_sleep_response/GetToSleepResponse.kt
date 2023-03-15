@@ -5,11 +5,15 @@ import com.google.gson.annotations.SerializedName
 data class GetToSleepResponse(
     @SerializedName("status") val status : Boolean,
     @SerializedName("msg") val msg : String,
-    @SerializedName("result") val result : List<GetToSleepList>
+    @SerializedName("result") val result : Result
+)
+
+data class Result (
+    @SerializedName("list") val list : List<GetToSleepList>
 )
 
 data class GetToSleepList (
-    @SerializedName("id") val id : Int,
+    @SerializedName("id") val id : Int? = 1,
     @SerializedName("program_name") val program_name : String,
     @SerializedName("is_active") val is_active : Int,
     @SerializedName("updated_at") val updated_at : String

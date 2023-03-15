@@ -16,6 +16,7 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
     private var getProgramList = MutableLiveData<ArrayList<ProgramList>>()
     private var getProgramAudioList = MutableLiveData<ArrayList<ProgramList>>()
     var audioDataList = MutableLiveData<AudioDataList>()
+    var noDataFound = MutableLiveData<Boolean>()
 
 
     init {
@@ -38,7 +39,7 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                        getProgramList.value = sleepResponse.result
+                        getProgramList.value?.addAll(sleepResponse.result.list)
                         successProgramList.value = true
                     }
                     return@main
@@ -52,12 +53,16 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
     }
 
     fun getSleepEnhancerDialogList(program:Int?, duration:Int) {
+        getSleepAudioList()?.list?.clear()
         Coroutines.io {
             try {
                 val sleepResponse = repository.getSleepEnhancerDialogList(program, duration)
                 Coroutines.main {
                     if (sleepResponse.status) {
                         audioDataList.value = sleepResponse.result
+                    }
+                    else{
+                        noDataFound.value = true
                     }
                     return@main
                 }

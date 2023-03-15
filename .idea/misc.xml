@@ -22,6 +22,7 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_animation_on_left.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_coupon_applied.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_discount_code.xml" value="0.16259057971014493" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_feed_back_details.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_first_introduction_video.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_get_start.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/activity_introduction_video.xml" value="0.16259057971014493" />
@@ -45,10 +46,11 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/dialogonstarttimer.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/dialogshow_options.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/dialogtransition.xml" value="0.1885766092475068" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_feed_back.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_first_video.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_five_video.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_four_video.xml" value="0.16259057971014493" />
-        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_get_to_sleep.xml" value="0.16259057971014493" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_get_to_sleep.xml" value="0.1" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_journal.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_modules_library_activity.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_second_video.xml" value="0.16259057971014493" />
@@ -57,6 +59,8 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_third_video.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/fragment_wake_up.xml" value="0.16259057971014493" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/gridsubjects.xml" value="0.1885766092475068" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_all_feedback_layout.xml" value="0.1885766092475068" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_feedback_layout.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_get_to_sleep_program_layout.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_sleep_enhancer_dialog.xml" value="0.1885766092475068" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/DialUpDelta/app/src/main/res/layout/item_sleep_enhancer_program_layout.xml" value="0.6" />

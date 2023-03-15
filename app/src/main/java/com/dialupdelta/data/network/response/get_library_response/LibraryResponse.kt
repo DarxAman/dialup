@@ -1,12 +1,17 @@
 package com.dialupdelta.data.network.response.get_library_response
 
+import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class LibraryResponse(
     @SerializedName("status") val status : Boolean,
     @SerializedName("msg") val msg : String,
-    @SerializedName("result") val result : List<LibraryModelList>
+    @SerializedName("result") val result : Result
+)
+
+data class Result (
+    @SerializedName("data") val list : List<LibraryModelList>
 )
 
 data class LibraryModelList (

@@ -2,6 +2,8 @@ package com.dialupdelta.data.repositories
 
 import com.dialupdelta.data.network.MyApi
 import com.dialupdelta.data.network.SafeApiRequest
+import com.dialupdelta.data.network.response.feedback_response.AllFeedBackListResponse
+import com.dialupdelta.data.network.response.feedback_response.FeedBackDetailsResponse
 import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
 import com.dialupdelta.data.network.response.get_journal_response.DeleteJournal
 import com.dialupdelta.data.network.response.get_journal_response.DeleteJournalResponse
@@ -300,6 +302,26 @@ class Repository(
                 durationId,
                 programId,
                 audioId
+            )
+        }
+    }
+
+    suspend fun feedbackDetails(): FeedBackDetailsResponse {
+        return apiRequest {
+            api.feedbackDetails(
+                getBaseURL(),
+                getAuthData()?.id
+            )
+        }
+    }
+
+    suspend fun allFeedbackDetails(): AllFeedBackListResponse {
+        return apiRequest {
+            api.allFeedbackDetails(
+                getBaseURL(),
+                2,
+                "2023-02-26",
+                "2023-03-02"
             )
         }
     }

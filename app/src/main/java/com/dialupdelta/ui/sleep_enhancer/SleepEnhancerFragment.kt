@@ -26,6 +26,7 @@ import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerDialogAdapter
 import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerProgramListAdapter
 import com.dialupdelta.utils.setGone
 import com.dialupdelta.utils.setVisible
+import com.dialupdelta.utils.showToastMessage
 import org.kodein.di.generic.instance
 
 class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
@@ -40,13 +41,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private var toXdelta2 = 0.0f
     private var negXdelta1 = 0.0f
     private var negXdelta2 = 0.0f
-    private var id45: MutableList<String> = ArrayList()
-    private var fileName: MutableList<String> = ArrayList()
-    private var fileURL: MutableList<String> = ArrayList()
-    private var isActive: MutableList<String> = ArrayList()
     private var currentVolume = 0
-    private lateinit var audioManager: AudioManager
-    private var seekbarPosition = 0
     var showSetAlarmLeft = 0
     var showSetAlarmRight = 0
     private lateinit var recyclerNewSleep:RecyclerView
@@ -54,6 +49,8 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private val factory: SleepEnhancerViewModelFactory by instance()
     private lateinit var viewModel: SleepEnhancerViewModel
     lateinit var mediaPlayer: MediaPlayer
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -79,10 +76,10 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
          viewModel.getSleepEnhancerProgramList()
 
         // save sleep enhancer api
-       // viewModel.sleepEnhancerSaver()
+        // viewModel.sleepEnhancerSaver()
 
         // save sleep enhancer api
-       //  viewModel.savedSleepEnhancer()
+        // viewModel.savedSleepEnhancer()
 
         binding.seekBar111.max = 100
         binding.seekBar111.progress = currentVolume
@@ -152,10 +149,18 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
 
         viewModel.audioDataList.observe(viewLifecycleOwner){
             progressBar.setGone()
+            if (it.list.isNotEmpty()){
+                recyclerNewSleep.adapter?.notifyDataSetChanged()
+                val adapter = SleepEnhancerDialogAdapter(requireActivity(),this, viewModel.getSleepAudioList()?.list)
+                recyclerNewSleep.layoutManager = GridLayoutManager(requireActivity(), 2)
+                recyclerNewSleep.adapter = adapter
+            }
+        }
+
+        viewModel.noDataFound.observe(viewLifecycleOwner){
+            progressBar.setGone()
             recyclerNewSleep.adapter?.notifyDataSetChanged()
-            val adapter = SleepEnhancerDialogAdapter(requireActivity(),this, viewModel.getSleepAudioList()?.list)
-            recyclerNewSleep.layoutManager = GridLayoutManager(requireActivity(), 2)
-            recyclerNewSleep.adapter = adapter
+           showToastMessage(requireContext(), "No Data Found")
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -391,24 +396,33 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
        val program = viewModel.getSleepProgramList()?.get(position)?.id
        var duration = 10
        progressBar.setVisible()
-       viewModel.getSleepEnhancerDialogList(program, duration)
+       viewModel.getSleepEnhancerDialogList(1, duration)
 
-//       text10Min.setOnClickListener {
-//           progressBar.setVisible()
-//           duration = 10
-//           viewModel.getSleepEnhancerDialogList(position, duration)
-//       }
-//
-//       text20Min.setOnClickListener {
-//           progressBar.setVisible()
-//           duration = 20
-//           viewModel.getSleepEnhancerDialogList(position, duration)
-//       }
-//       text30Min.setOnClickListener {
-//           progressBar.setVisible()
-//           duration = 30
-//           viewModel.getSleepEnhancerDialogList(position, duration)
-//       }
+       text10Min.setOnClickListener {
+           text10Min.setTextColor(Color.WHITE)
+           text20Min.setTextColor(Color.GRAY)
+           text30Min.setTextColor(Color.GRAY)
+           progressBar.setVisible()
+           duration = 10
+           viewModel.getSleepEnhancerDialogList(1, duration)
+       }
+
+       text20Min.setOnClickListener {
+           text10Min.setTextColor(Color.GRAY)
+           text20Min.setTextColor(Color.WHITE)
+           text30Min.setTextColor(Color.GRAY)
+           progressBar.setVisible()
+           duration = 20
+           viewModel.getSleepEnhancerDialogList(1, duration)
+       }
+       text30Min.setOnClickListener {
+           text10Min.setTextColor(Color.GRAY)
+           text20Min.setTextColor(Color.GRAY)
+           text30Min.setTextColor(Color.WHITE)
+           progressBar.setVisible()
+           duration = 30
+           viewModel.getSleepEnhancerDialogList(1, duration)
+       }
        dialog.show()
    }
 

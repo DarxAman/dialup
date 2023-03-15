@@ -44,20 +44,10 @@ import org.kodein.di.generic.instance
 import java.util.ArrayList
 
 class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
-    private var idC: MutableList<String> = ArrayList()
-    private var fileName: MutableList<String> = ArrayList()
-    private var genderL: MutableList<String> = ArrayList()
-    private var languages: MutableList<String> = ArrayList()
-    private var durationL: MutableList<String> = ArrayList()
-    private var thumb: MutableList<String> = ArrayList()
-    private var fileURL: MutableList<String> = ArrayList()
     private  var wakeupTrait:String = ""
-    private var position = 0
-    private var isGenderCLick = "male"
     private var userId: Int = 0
     private var genderSelected = 1
     private var durationSelected = 5
-    private var programSelected = ""
     private var checkFull = ""
     private var player: SimpleExoPlayer? = null
     private var firstAlarm = ""
@@ -67,12 +57,9 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     private var trait1 = ""
     private var trait2 = ""
     private var dat = ""
-    private var clickedImageURL = ""
+    private var programId = 1
+    private var videoId = 1
     private lateinit var countTimer: CountDownTimer
-    private lateinit var playerView1: PlayerView
-    private var idforProgram: MutableList<String> = ArrayList()
-    private var programName: MutableList<String> = ArrayList()
-    private var programPic: MutableList<String> = ArrayList()
     private lateinit var binding:FragmentGetToSleepBinding
 
     private val factory: GetToSleepViewModelFactory by instance()
@@ -96,35 +83,10 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
         viewModel = ViewModelProvider(this, factory)[GetToSleepViewModel::class.java]
         setObserver(viewModel)
         viewModel.getToSleepList()
-        // add static id in list
 
-
-        // get to sleep save api call
-       // viewModel.getToSleepSave
-
-        // get to sleep save api call
-        // viewModel.saveGetToSleepApi()
-
-
-        idforProgram.add("1")
-        idforProgram.add("2")
-        idforProgram.add("3")
-        idforProgram.add("4")
-
-        // add static program name in list
-        programName.add("Program A")
-        programName.add("Program B")
-        programName.add("Program C")
-        programName.add("Program D")
-
-        // add static images in list
-        programPic.add("https://projectblinkit.s3.ap-south-1.amazonaws.com/imageA.png")
-        programPic.add("https://projectblinkit.s3.ap-south-1.amazonaws.com/imageB.png")
-        programPic.add("https://projectblinkit.s3.ap-south-1.amazonaws.com/imageC.png")
-        programPic.add("https://projectblinkit.s3.ap-south-1.amazonaws.com/imageD.png")
+        viewModel.saveGetToSleepApi()
 
         videoPlay()
-
         binding.leftArrowSleep.setOnClickListener {
              Intent(requireActivity(), AnimationOnLeftActivity::class.java).also {
                  startActivity(it)
@@ -150,17 +112,19 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
         }
 
         binding.tv45min.setOnClickListener {
-            binding.tv90min.setTextColor(Color.GRAY)
-            binding.tv45min.setTextColor(Color.WHITE)
+            selected5Mint()
+        }
 
-            if (isGenderCLick == "male") {
-                durationSelected = 5
-                genderSelected = 1
+        binding.tv90min.setOnClickListener {
+            selected9Mint()
+        }
 
-            } else {
-                durationSelected = 5
-                genderSelected = 2
-            }
+        binding.sleepFemale.setOnClickListener {
+            selectedFemale()
+        }
+
+        binding.sleepMale.setOnClickListener {
+            selectedMale()
         }
     }
 
@@ -174,8 +138,20 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
           getToSleepProgramDialogShow()
         }
 
-
-
+        viewModel.getSaveSleepResponse.observe(viewLifecycleOwner){
+            if (it.duration_id == 9){
+                selected9Mint()
+            }
+            else{
+                selected5Mint()
+            }
+            if (it.gender_id == 1){
+                selectedMale()
+            }
+            else{
+                selectedFemale()
+            }
+        }
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 progress?.showSweetDialog()
@@ -191,7 +167,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
             dialog.setContentView(R.layout.dialog_splash)
-
 
             val repeatDialog: Button = dialog.findViewById(R.id.repeat_dialog_tts)
             val sleepDialogTts: Button = dialog.findViewById(R.id.sleep_dialog_tts)
@@ -287,8 +262,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             dialog.setCancelable(false)
             dialog.setContentView(R.layout.dialogonstarttimer)
             dialog.show()
-
-
             val constraintLayout18 : ConstraintLayout = dialog.findViewById(R.id.constraintLayout18)
             val constraintLayout19 : ConstraintLayout = dialog.findViewById(R.id.constraintLayout19)
             val constraintLayout20 : ConstraintLayout = dialog.findViewById(R.id.constraintLayout20)
@@ -318,17 +291,11 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             tv_3.text = thirdAlarm
             tv_4.text = forthAlarm
 
-
             val iv_wakeup_: ImageView = dialog.findViewById(R.id.iv_wakeup_s)
             val tc_wakeup_: TextView = dialog.findViewById(R.id.tc_wakeup_s)
             val iv2_wakeup_: ImageView = dialog.findViewById(R.id.iv2_wakeup_s)
-
             setImageToDashboard(iv_wakeup_, wakeupTrait)
-
-            //Picasso.get().load(clickedImageURL).fit().centerCrop().noFade().into(iv2_wakeup_)
-
             tc_wakeup_.text = dat
-
             Handler(Looper.getMainLooper()).postDelayed({
                 constraintLayout18.visibility = View.GONE
                 constraintLayout19.visibility = View.GONE
@@ -337,43 +304,10 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             }, 30000)
 
             sleep_dialog_tts1.setOnClickListener {
-
-                val sharedPreferences: SharedPreferences =
-                    requireActivity().getSharedPreferences("share", Context.MODE_PRIVATE)
-                val time1 = sharedPreferences.getString("se_time1", "")
-                val time2 = sharedPreferences.getString("se_time2", "")
-                val url1 = sharedPreferences.getString("se_url", "")
-
-                val time3 = sharedPreferences.getString("ep_time1", "")
-                val time4 = sharedPreferences.getString("ep_time2", "")
-                val url2 = sharedPreferences.getString("ep1_url", "")
-                val url3 = sharedPreferences.getString("ep2_url", "")
-
-                if(Integer.parseInt(time1) != 0){
-//                    go(Integer.parseInt(time1), url1, "sleep1")
-                }
-                if(Integer.parseInt(time2) != 0){
-//                    go(Integer.parseInt(time2), url1, "sleep1")
-                }
-
-                //            if (url2 != null) {
-                if(Integer.parseInt(time3) != 0  /*&& url2.equals("0")*/){
-//                    go(Integer.parseInt(time3 ), url2, "sleep_enhancer_2")
-                }
-//            }
-
-//            if (url3 != null) {
-                if(Integer.parseInt(time4) != 0  /*&& url3.equals("0")*/){
-//                    go(Integer.parseInt(time4 ), url3, "sleep_enhancer_2")
-                }
-
-//                go(Integer.parseInt(time3), url2)
-//                go(Integer.parseInt(time4), url3)
-
                 dialog.dismiss()
-
             }
         }
+        viewModel.getToSleepSave(genderSelected, durationSelected, programId, 1)
     }
 
     private fun setImageToDashboard(imageView_3: ImageView, trait1: String) {
@@ -463,7 +397,32 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     }
 
     override fun getToSleepProgramItemListener(position: Int) {
-        val program = viewModel.getToSleepProgramList()?.get(position)?.id
-        viewModel.getToSleepVideoList(genderSelected, 1, program)
+        programId = viewModel.getToSleepProgramList()?.get(position)?.id!!
+        viewModel.getToSleepVideoList(genderSelected, 1, programId)
+    }
+
+
+    private fun selectedFemale(){
+        binding.sleepMale.setTextColor(Color.GRAY)
+        binding.sleepFemale.setTextColor(Color.WHITE)
+        genderSelected = 2
+    }
+
+    private fun selectedMale(){
+        binding.sleepMale.setTextColor(Color.WHITE)
+        binding.sleepFemale.setTextColor(Color.GRAY)
+        genderSelected = 1
+    }
+
+    private fun selected5Mint(){
+        binding.tv90min.setTextColor(Color.GRAY)
+        binding.tv45min.setTextColor(Color.WHITE)
+        durationSelected = 5
+    }
+
+    private fun selected9Mint() {
+        binding.tv45min.setTextColor(Color.GRAY)
+        binding.tv90min.setTextColor(Color.WHITE)
+        durationSelected = 9
     }
 }

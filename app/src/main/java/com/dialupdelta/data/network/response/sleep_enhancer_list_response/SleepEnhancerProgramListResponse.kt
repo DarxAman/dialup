@@ -5,7 +5,11 @@ import com.google.gson.annotations.SerializedName
 data class SleepEnhancerProgramListResponse(
     @SerializedName("status") val status : Boolean,
     @SerializedName("msg") val msg : String,
-    @SerializedName("result") val result : ArrayList<ProgramList>?
+    @SerializedName("result") val result : Result
+)
+
+data class Result (
+    @SerializedName("list") val list : List<ProgramList>
 )
 
 data class ProgramList (

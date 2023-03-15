@@ -6,6 +6,7 @@ import com.dialupdelta.data.network.response.get_library_response.LibraryModelLi
 import com.dialupdelta.data.network.response.get_library_response.LibraryResponse
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepVideoData
+import com.dialupdelta.data.network.response.get_to_sleep_response.SaveGetToSleep
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.ProgramList
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.utils.ApiException
@@ -20,6 +21,7 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
     var successLibraryResonse = MutableLiveData<Boolean>()
     var getToSleepResponse = MutableLiveData<Boolean>()
     var getToSleepVideoResponse = MutableLiveData<Boolean>()
+    var getSaveSleepResponse = MutableLiveData<SaveGetToSleep>()
 
     init {
         getToSleepProgramList.value = ArrayList()
@@ -45,7 +47,7 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                        getToSleepProgramList.value?.addAll(sleepResponse.result)
+                        getToSleepProgramList.value?.addAll(sleepResponse.result.list)
                         getToSleepResponse.value = true
                     }
                     return@main
@@ -88,7 +90,7 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                      getToSleepLibraryList.value?.addAll(sleepResponse.result)
+                      getToSleepLibraryList.value?.addAll(sleepResponse.result.list)
                         successLibraryResonse.value = true
                     }
                     return@main
@@ -129,7 +131,7 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                        // activity login pass
+                        getSaveSleepResponse.value = sleepResponse.result
                     }
                     return@main
                 }

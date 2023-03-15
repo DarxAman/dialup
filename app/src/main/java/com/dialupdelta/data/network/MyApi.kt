@@ -1,6 +1,8 @@
 package com.dialupdelta.data.network
 
 import androidx.databinding.library.BuildConfig
+import com.dialupdelta.data.network.response.feedback_response.AllFeedBackListResponse
+import com.dialupdelta.data.network.response.feedback_response.FeedBackDetailsResponse
 
 import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
 import com.dialupdelta.data.network.response.get_journal_response.DeleteJournalResponse
@@ -200,7 +202,21 @@ interface MyApi {
         @Field("user_id") id: Int?,
     ): Response<SavedSleepEnhancerResponse>
 
+    @FormUrlEncoded
+    @POST("{baseURL}feedback_details")
+    suspend fun feedbackDetails(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?
+    ): Response<FeedBackDetailsResponse>
 
+    @FormUrlEncoded
+    @POST("{baseURL}single_feedback_details")
+    suspend fun allFeedbackDetails(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?,
+        @Field("date_from") dateForm: String,
+        @Field("date_to") dateTo: String
+    ): Response<AllFeedBackListResponse>
 
 
     companion object {

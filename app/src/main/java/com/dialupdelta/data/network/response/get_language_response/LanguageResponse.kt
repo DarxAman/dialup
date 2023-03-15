@@ -5,10 +5,14 @@ import com.google.gson.annotations.SerializedName
 data class LanguageResponse(
     @SerializedName("status") val status : Boolean,
     @SerializedName("msg") val msg : String,
-    @SerializedName("result") val result : List<Data>
+    @SerializedName("result") val result : Result
 )
 
-data class Data (
+data class Result (
+    @SerializedName("languageData") val languageData : List<LanguageData>
+)
+
+data class LanguageData (
     @SerializedName("id") val id : Int,
     @SerializedName("slug") val slug : String,
     @SerializedName("language_name") val language_name : String
