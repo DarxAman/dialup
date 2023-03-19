@@ -23,10 +23,6 @@ class FeedBackFragment : BaseFragment(), FeedBackItemClickListener {
     private val factory: FeedBackViewModelFactory by instance()
     private lateinit var viewModel: FeedBackViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
