@@ -5,13 +5,11 @@ import com.dialupdelta.data.network.SafeApiRequest
 import com.dialupdelta.data.network.response.feedback_response.AllFeedBackListResponse
 import com.dialupdelta.data.network.response.feedback_response.FeedBackDetailsResponse
 import com.dialupdelta.data.network.response.get_gender_response.AgeGenderResponse
-import com.dialupdelta.data.network.response.get_journal_response.DeleteJournal
 import com.dialupdelta.data.network.response.get_journal_response.DeleteJournalResponse
 import com.dialupdelta.data.network.response.get_journal_response.GetJournalList
 import com.dialupdelta.data.network.response.get_journal_response.GetSingleJournalList
 import com.dialupdelta.data.network.response.get_language_response.LanguageResponse
 import com.dialupdelta.data.network.response.get_library_response.LibraryResponse
-import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepListResponse
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepResponse
 import com.dialupdelta.data.network.response.get_to_sleep_response.SaveGetToSleepResponse
@@ -20,14 +18,15 @@ import com.dialupdelta.data.network.response.login_response.AuthData
 import com.dialupdelta.data.network.response.login_response.SignUpLoginResponse
 import com.dialupdelta.data.network.response.ocean_response.OceanResponse
 import com.dialupdelta.data.network.response.otp_response.OtpResponse
-import com.dialupdelta.data.network.response.sipmle_response.SimpleResponse
-import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancer
+import com.dialupdelta.data.network.response.simple_response.SimpleResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancerResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerProgramListResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerResponse
 import com.dialupdelta.data.network.response.summary.GetSummaryResponse
+import com.dialupdelta.data.network.response.wake_up_response.FetchWakeUpSavedResponse
+import com.dialupdelta.data.network.response.wake_up_response.WakeUpProgramResponse
+import com.dialupdelta.data.network.response.wake_up_response.WakeUpResponse
 import com.dialupdelta.data.preferences.PreferenceProvider
-import java.util.*
 
 class Repository(
     private val api: MyApi,
@@ -322,6 +321,47 @@ class Repository(
                 2,
                 "2023-02-26",
                 "2023-03-02"
+            )
+        }
+    }
+
+    suspend fun getWakeUpProgramList(): WakeUpProgramResponse {
+        return apiRequest {
+            api.getWakeUpProgramList(
+                getBaseURL(),
+                getAuthData()?.id
+            )
+        }
+    }
+    suspend fun getWakeUpList(gender:Int, program:Int?): WakeUpResponse {
+        return apiRequest {
+            api.getWakeUpList(
+                getBaseURL(),
+                getAuthData()?.id,
+                gender,
+                program
+            )
+        }
+    }
+
+    suspend fun fetchWakeUpSaved(): FetchWakeUpSavedResponse{
+        return apiRequest {
+            api.fetchWakeUpSaved(
+                getBaseURL(),
+                getAuthData()?.id
+            )
+        }
+    }
+
+    suspend fun wakeUpSaver(gender:String, program:String, thumbUrl:String, videoUrl:String): SimpleResponse {
+        return apiRequest {
+            api.wakeUpSaver(
+                getBaseURL(),
+                getAuthData()?.id,
+                gender,
+                program,
+                thumbUrl,
+                videoUrl
             )
         }
     }

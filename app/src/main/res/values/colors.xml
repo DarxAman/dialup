@@ -29,5 +29,6 @@
     <color name="calendar_range_middle_unavailable_bg">#F44336</color>
     // this is for Deactivated dates
     <color name="calendar_range_middle_deactivated_bg">#673AB7</color>
+    <color name="colorLightGrayMore">#673AB7</color>
 
 </resources>

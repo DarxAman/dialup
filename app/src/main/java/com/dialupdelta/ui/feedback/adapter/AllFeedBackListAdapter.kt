@@ -19,13 +19,13 @@ class AllFeedBackListAdapter(private val context: Context, private val allFeedBa
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val allFeedBack = allFeedBackList?.get(position)
-        holder.program1.text = allFeedBack?.program_1
-        holder.program2.text = allFeedBack?.program_2
-        holder.duration1.text = allFeedBack?.duration_1
-        holder.duration2.text = allFeedBack?.duration_2
-        holder.day.text = allFeedBack?.day
-        holder.totalSlept.text = allFeedBack?.totalSlept.toString()
-        holder.cycleCount.text = allFeedBack?.cycleCount.toString()
+        holder.program1.text = "Program1: ${allFeedBack?.program_1}"
+        holder.program2.text = "Program2: ${allFeedBack?.program_2}"
+        holder.duration1.text = "Duration1: ${allFeedBack?.duration_1}"
+        holder.duration2.text = "Duration2: ${allFeedBack?.duration_2}"
+        holder.day.text = "day: ${allFeedBack?.day}"
+        holder.totalSlept.text = "TotalSlept: ${allFeedBack?.totalSlept}"
+        holder.cycleCount.text = "CycleCount: ${allFeedBack?.cycleCount}"
     }
 
     override fun getItemCount(): Int {

@@ -2,17 +2,13 @@ package com.dialupdelta.ui.get_to_sleep
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.provider.SyncStateContract
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +28,6 @@ import com.dialupdelta.`interface`.ProgramClickPosition
 import com.dialupdelta.base.BaseFragment
 import com.dialupdelta.databinding.FragmentGetToSleepBinding
 import com.dialupdelta.ui.get_to_sleep.adapter.NewAdapterGetToSleep
-import com.dialupdelta.ui.library.LibraryAdapter
 import com.dialupdelta.ui.library.LibraryModulesActivity
 import com.dialupdelta.ui.login_signup.LoginActivity
 import com.dialupdelta.ui.transition.TransitionActivity
@@ -41,7 +36,6 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import org.kodein.di.generic.instance
-import java.util.ArrayList
 
 class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     private  var wakeupTrait:String = ""
@@ -58,7 +52,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     private var trait2 = ""
     private var dat = ""
     private var programId = 1
-    private var videoId = 1
     private lateinit var countTimer: CountDownTimer
     private lateinit var binding:FragmentGetToSleepBinding
 
@@ -68,7 +61,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_get_to_sleep, container, false)
        return binding.root
     }

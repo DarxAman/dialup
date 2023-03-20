@@ -62,7 +62,7 @@ class IntroductionFirstVideoActivity : BaseActivity() {
         }
     }
 
-    private fun getVideoListUrl():IntroVideo {
+    private fun getVideoListUrl():IntroVideo? {
         return allVideoListUrl
     }
 }

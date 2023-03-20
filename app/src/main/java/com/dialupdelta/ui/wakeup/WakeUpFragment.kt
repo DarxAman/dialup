@@ -16,29 +16,31 @@ import android.widget.MediaController
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dialupdelta.R
 import com.dialupdelta.`interface`.ClickInterface
+import com.dialupdelta.`interface`.GetToSleepClickListener
 import com.dialupdelta.`interface`.LongPressSleep2
 import com.dialupdelta.base.BaseFragment
+import com.dialupdelta.data.network.response.wake_up_response.WakeUp
+import com.dialupdelta.databinding.ActivityJournalListBinding
 import com.dialupdelta.databinding.FragmentWakeUpBinding
+import com.dialupdelta.ui.journal.JournalViewModel
+import com.dialupdelta.ui.journal.JournalViewModelFactory
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import de.hdodenhof.circleimageview.CircleImageView
+import org.kodein.di.generic.instance
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2 {
+class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSleepClickListener {
     private lateinit var binding:FragmentWakeUpBinding
     private lateinit var recyclerView: RecyclerView
-    private var id1Male: MutableList<String> = ArrayList()
-    private var fileURL: MutableList<String> = ArrayList()
-    private var thumb: MutableList<String> = ArrayList()
-    private var durationL: MutableList<String> = ArrayList()
-    private var traits: MutableList<String> = ArrayList()
-    private var fileName: MutableList<String> = ArrayList()
     private var id45: MutableList<String> = ArrayList()
     private var traint45: MutableList<String> = ArrayList()
     private var duration45: MutableList<String> = ArrayList()
@@ -47,30 +49,23 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2 {
     private lateinit var playerView1: PlayerView
     var player: SimpleExoPlayer? = null
     var newUrl: String = "0"
-    var isFull: String = ""
     lateinit var closeID: ImageView
     var timeNew: Int = 5
-    var choosedTraits = "O"
-    private var clickedUrl = "0"
-    private var videoType = "sub"
-    private var chooseWakeupVideotime = ""
     private var chooseRepeatDays = ""
-    private var clickedImageUrl = ""
     private var day = 0
     private var month: Int = 0
     private var year: Int = 0
-    private val sec = 0
     private var hours = 0
     private var minutes = 0
-    private var choosedProgram = ""
-    private var choosedUrl = ""
     lateinit var exo_fullscreen_icon: ImageView
-    lateinit var exo_fullscreen_icon_tts: ImageView
     private var clickedVideoTime = "45sec"
+    private var genderSelected = 1
+    private val factory: WakeUpViewModelFactory by instance()
+    private lateinit var viewModel: WakeUpViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wake_up, container, false)
         return binding.root
     }
@@ -81,7 +76,12 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2 {
     }
 
     private fun initUI() {
+        viewModel = ViewModelProvider(this, factory)[WakeUpViewModel::class.java]
         videoPlay()
+        setObserver(viewModel)
+
+        viewModel.getWakeProgramList()
+
         //exo_fullscreen_icon = findViewById(R.id.exo_fullscreen_icon)
         binding.timeTv.setOnClickListener {
             val calendar: Calendar = Calendar.getInstance()
@@ -96,7 +96,6 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2 {
 
                 binding.timeTv.text = SimpleDateFormat("HH:mm").format(calendar.time)
                 var timeX = SimpleDateFormat("HH:mm").format(calendar.time)
-//                timeNew = Integer.parseInt(timeX)
                 hours = hour
                 minutes = minute
                 timeNew = toMins(timeX)
@@ -126,7 +125,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2 {
                     dialog.dismiss()
                 }
 
-                val dialog_ok: TextView = dialog.findViewById<TextView>(R.id.dialog_ok)
+                val dialog_ok: TextView = dialog.findViewById(R.id.dialog_ok)
                 dialog_ok.setOnClickListener {
                     dialog.dismiss()
                 }
@@ -158,41 +157,16 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2 {
                     binding.dayOfAlarm,
                     showval
                 )
-
-
             }
         }
-    }
 
-    private fun setData() {
-        id1Male.add("1")
-        fileName.add("Program1")
-        traits.add("")
-        durationL.add("")
-        thumb.add("https://app.whyuru.com/assets/uploads/wakeUp/screen_1665407723.png")
-        fileURL.add("Program 1")
+        binding.male.setOnClickListener {
+            selectedMale()
+        }
 
-        id1Male.add("2")
-        fileName.add("Program2")
-        traits.add("")
-        durationL.add("")
-        thumb.add("https://app.whyuru.com/assets/uploads/wakeUp/screen_1665407868.png")
-        fileURL.add("Program 2")
-
-        id1Male.add("3")
-        fileName.add("Program3")
-        traits.add("")
-        durationL.add("")
-        thumb.add("https://app.whyuru.com/assets/uploads/wakeUp/screen_1665407774.png")
-        fileURL.add("Program 3")
-
-        id1Male.add("4")
-        fileName.add("Program4")
-        traits.add("")
-        durationL.add("")
-        thumb.add("https://app.whyuru.com/assets/uploads/wakeUp/screen_1665407845.png")
-        fileURL.add("Program 4")
-       // adapterConnects()
+        binding.female.setOnClickListener {
+            selectedFemale()
+        }
     }
 
     private fun toMins(s: String): Int {
@@ -521,5 +495,57 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2 {
     }
     override fun urlGet(url: String?, clickImageUrl: String?) {
 
+    }
+
+    override fun getToSleepProgramItemListener(position: Int) {
+        val program = viewModel.getWakeUpProgramList()?.get(position)?.id
+        viewModel.getWakeList(genderSelected, program)
+    }
+
+    private fun setObserver(viewModel: WakeUpViewModel) {
+
+        viewModel.successWakeUpProgram.observe(viewLifecycleOwner){
+            val adapter = WakeUpAdapter(requireContext(), this, viewModel.getWakeUpProgramList())
+            binding.wakeUpRecyclerView.layoutManager  =  GridLayoutManager(context, 2)
+            binding.wakeUpRecyclerView.adapter = adapter
+        }
+
+        viewModel.wakeUpProgramResponse.observe(viewLifecycleOwner){
+           openWakeUpDialog(it)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                progress?.showSweetDialog()
+            } else {
+                progress?.dismissSweet()
+            }
+        }
+    }
+
+    private fun openWakeUpDialog(wakeUp: WakeUp){
+        val dialog = context?.let { Dialog(it, android.R.style.Theme_Holo_Light) }
+        if (dialog != null) {
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.dialogtransition)
+            val closeBtnDialog = dialog.findViewById(R.id.closebtndialog) as ImageView
+            closeBtnDialog.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
+    }
+
+    private fun selectedFemale(){
+        binding.male.setTextColor(Color.GRAY)
+        binding.female.setTextColor(Color.WHITE)
+        genderSelected = 2
+    }
+
+    private fun selectedMale(){
+        binding.male.setTextColor(Color.WHITE)
+        binding.female.setTextColor(Color.GRAY)
+        genderSelected = 1
     }
 }

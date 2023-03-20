@@ -392,11 +392,18 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
        val text30Min = dialog.findViewById(R.id.txt30Min) as TextView
        progressBar = dialog.findViewById(R.id.progressBar) as ProgressBar
        recyclerNewSleep = dialog.findViewById(R.id.recyclerNewSleep) as RecyclerView
+
+        val closeBtnDialog = dialog.findViewById(R.id.closebtndialog) as ImageView
+        closeBtnDialog.setOnClickListener {
+            dialog.dismiss()
+        }
        dialogTitle.text = viewModel.getSleepProgramList()?.get(position)?.program_name
        val program = viewModel.getSleepProgramList()?.get(position)?.id
        var duration = 10
        progressBar.setVisible()
        viewModel.getSleepEnhancerDialogList(1, duration)
+
+
 
        text10Min.setOnClickListener {
            text10Min.setTextColor(Color.WHITE)

@@ -10,7 +10,6 @@ import com.dialupdelta.data.network.response.get_journal_response.GetJournalList
 import com.dialupdelta.data.network.response.get_journal_response.GetSingleJournalList
 import com.dialupdelta.data.network.response.get_language_response.LanguageResponse
 import com.dialupdelta.data.network.response.get_library_response.LibraryResponse
-import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepList
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepListResponse
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepResponse
 import com.dialupdelta.data.network.response.get_to_sleep_response.SaveGetToSleepResponse
@@ -18,12 +17,14 @@ import com.dialupdelta.data.network.response.intro_video_response.IntroVideoResp
 import com.dialupdelta.data.network.response.login_response.SignUpLoginResponse
 import com.dialupdelta.data.network.response.ocean_response.OceanResponse
 import com.dialupdelta.data.network.response.otp_response.OtpResponse
-import com.dialupdelta.data.network.response.sipmle_response.SimpleResponse
-import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancer
+import com.dialupdelta.data.network.response.simple_response.SimpleResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancerResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerProgramListResponse
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SleepEnhancerResponse
 import com.dialupdelta.data.network.response.summary.GetSummaryResponse
+import com.dialupdelta.data.network.response.wake_up_response.FetchWakeUpSavedResponse
+import com.dialupdelta.data.network.response.wake_up_response.WakeUpProgramResponse
+import com.dialupdelta.data.network.response.wake_up_response.WakeUpResponse
 import com.github.simonpercic.oklog3.OkLogInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -217,6 +218,41 @@ interface MyApi {
         @Field("date_from") dateForm: String,
         @Field("date_to") dateTo: String
     ): Response<AllFeedBackListResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}wake_up_programs")
+    suspend fun getWakeUpProgramList(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?
+    ): Response<WakeUpProgramResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}wake_up_list")
+    suspend fun getWakeUpList(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?,
+        @Field("gender") gender: Int?,
+        @Field("program") program: Int?
+    ): Response<WakeUpResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}fetch_wake_up_saved")
+    suspend fun fetchWakeUpSaved(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?
+    ): Response<FetchWakeUpSavedResponse>
+
+    @FormUrlEncoded
+    @POST("{baseURL}wake_up_saver")
+    suspend fun wakeUpSaver(
+        @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") id: Int?,
+        @Field("gender") gender: String?,
+        @Field("program") program: String?,
+        @Field("thumbURL") thumbUrl: String?,
+        @Field("videoURL") videoUrl: String?
+    ): Response<SimpleResponse>
+
 
 
     companion object {

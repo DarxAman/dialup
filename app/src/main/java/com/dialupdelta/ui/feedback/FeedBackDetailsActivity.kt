@@ -25,6 +25,10 @@ class FeedBackDetailsActivity : BaseActivity() {
         viewModel = ViewModelProvider(this, factory)[FeedBackViewModel::class.java]
         setObserver(viewModel)
         viewModel.allFeedbackDetails()
+
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setObserver(viewModel: FeedBackViewModel) {

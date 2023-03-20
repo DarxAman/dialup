@@ -1,4 +1,4 @@
-package com.dialupdelta.data.network.response.sipmle_response
+package com.dialupdelta.data.network.response.simple_response
 
 import com.google.gson.annotations.SerializedName
 
