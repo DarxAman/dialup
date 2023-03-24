@@ -14,6 +14,8 @@ private const val userCredential = "userCredential"
 private const val login = "login"
 private const val age = "age"
 private const val sleepEnhancerUrl = "sleepEnhancerUrl"
+private const val wakeUpVideoData = "wakeUpVideoData"
+private const val wakeUpThumbData = "wakeUpThumbData"
 
 
 class PreferenceProvider(context: Context) {
@@ -88,6 +90,27 @@ class PreferenceProvider(context: Context) {
 
     fun getSleepEnhancerUrl():String?{
         return preference.getString(sleepEnhancerUrl, "")
+    }
+
+    fun setWakeUpVideoData(localData:String){
+        preference.edit()
+            .putString(wakeUpVideoData, localData)
+            .apply()
+    }
+
+    fun getWakeUpVideoData():String?{
+        return preference.getString(wakeUpVideoData, "")
+    }
+
+
+    fun setWakeUpThumbData(localData:String){
+        preference.edit()
+            .putString(wakeUpThumbData, localData)
+            .apply()
+    }
+
+    fun getWakeUpThumbData():String?{
+        return preference.getString(wakeUpThumbData, "")
     }
 
 }

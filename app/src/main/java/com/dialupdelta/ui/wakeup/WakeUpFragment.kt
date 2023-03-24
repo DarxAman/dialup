@@ -30,6 +30,8 @@ import com.dialupdelta.databinding.ActivityJournalListBinding
 import com.dialupdelta.databinding.FragmentWakeUpBinding
 import com.dialupdelta.ui.journal.JournalViewModel
 import com.dialupdelta.ui.journal.JournalViewModelFactory
+import com.dialupdelta.utils.setUserImage
+import com.dialupdelta.utils.setVisible
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
@@ -57,9 +59,9 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
     private var year: Int = 0
     private var hours = 0
     private var minutes = 0
+    private val localWakeUpSaveData = LocalWakeUpSaveData()
     lateinit var exo_fullscreen_icon: ImageView
     private var clickedVideoTime = "45sec"
-    private var genderSelected = 1
     private val factory: WakeUpViewModelFactory by instance()
     private lateinit var viewModel: WakeUpViewModel
     override fun onCreateView(
@@ -81,6 +83,8 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         setObserver(viewModel)
 
         viewModel.getWakeProgramList()
+
+        viewModel.fetchWakeUpSaved()
 
         //exo_fullscreen_icon = findViewById(R.id.exo_fullscreen_icon)
         binding.timeTv.setOnClickListener {
@@ -166,6 +170,12 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
 
         binding.female.setOnClickListener {
             selectedFemale()
+        }
+
+        binding.saveWakeup.setOnClickListener {
+            localWakeUpSaveData.thumbUrl = viewModel.getWakeUpThumbData()
+            localWakeUpSaveData.videoUrl = viewModel.getWakeUpVideoData()
+            viewModel.wakeUpSaver(localWakeUpSaveData)
         }
     }
 
@@ -498,8 +508,8 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
     }
 
     override fun getToSleepProgramItemListener(position: Int) {
-        val program = viewModel.getWakeUpProgramList()?.get(position)?.id
-        viewModel.getWakeList(genderSelected, program)
+         localWakeUpSaveData.program = viewModel.getWakeUpProgramList()?.get(position)?.id
+        viewModel.getWakeList(localWakeUpSaveData.gender, localWakeUpSaveData.program)
     }
 
     private fun setObserver(viewModel: WakeUpViewModel) {
@@ -514,6 +524,14 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
            openWakeUpDialog(it)
         }
 
+        viewModel.successWakeUp.observe(viewLifecycleOwner){
+            if (it.gender == 1){
+                selectedMale()
+            }
+            else{
+                selectedFemale()
+            }
+        }
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 progress?.showSweetDialog()
@@ -527,9 +545,65 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         val dialog = context?.let { Dialog(it, android.R.style.Theme_Holo_Light) }
         if (dialog != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setCancelable(false)
-            dialog.setContentView(R.layout.dialogtransition)
-            val closeBtnDialog = dialog.findViewById(R.id.closebtndialog) as ImageView
+            dialog.setContentView(R.layout.dialogwakeupandevening)
+            val closeBtnDialog = dialog.findViewById(R.id.canceldialog) as ImageView
+            val firstImage = dialog.findViewById(R.id.firstImage) as ImageView
+            val secondImage = dialog.findViewById(R.id.secondImage) as ImageView
+            val thirdImage = dialog.findViewById(R.id.thirdImage) as ImageView
+            val videoPlay = dialog.findViewById(R.id.videoPlay) as PlayerView
+
+            firstImage.setUserImage(requireContext(), wakeUp.base_url_image+wakeUp.list[0].thumb1)
+            secondImage.setUserImage(requireContext(), wakeUp.base_url_image+wakeUp.list[1].thumb1)
+            thirdImage.setUserImage(requireContext(), wakeUp.base_url_image+wakeUp.list[2].thumb1)
+
+            var position: Int
+            firstImage.setOnClickListener {
+                 position = 0
+                dialogVideoPlay(videoPlay, wakeUp, position)
+            }
+
+            secondImage.setOnClickListener {
+                position = 1
+                dialogVideoPlay(videoPlay, wakeUp, position)
+            }
+
+            thirdImage.setOnClickListener {
+                position = 2
+                dialogVideoPlay(videoPlay, wakeUp, position)
+            }
+
+            firstImage.setOnLongClickListener{
+                val videoSubUrl = wakeUp.list[0].sub1Url
+                val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
+                val thumbSubUrl = wakeUp.list[0].thumb1
+                val completeThumbUrl = "${wakeUp.base_url_image}/$thumbSubUrl"
+                 viewModel.setWakeUpThumbData(completeThumbUrl)
+                 viewModel.setWakeUpVideoData(completeVideoUrl)
+                true
+            }
+
+            secondImage.setOnLongClickListener{
+                val videoSubUrl = wakeUp.list[1].sub1Url
+                val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
+                viewModel.setWakeUpVideoData(completeVideoUrl)
+
+                val thumbSubUrl = wakeUp.list[1].thumb1
+                val completeThumbUrl = "${wakeUp.base_url_image}/$thumbSubUrl"
+                viewModel.setWakeUpThumbData(completeThumbUrl)
+                true
+            }
+
+            thirdImage.setOnLongClickListener{
+                val videoSubUrl = wakeUp.list[2].sub1Url
+                val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
+                viewModel.setWakeUpVideoData(completeVideoUrl)
+
+                val thumbSubUrl = wakeUp.list[2].thumb1
+                val completeThumbUrl = "${wakeUp.base_url_image}/$thumbSubUrl"
+                viewModel.setWakeUpThumbData(completeThumbUrl)
+                true
+            }
+
             closeBtnDialog.setOnClickListener {
                 dialog.dismiss()
             }
@@ -537,15 +611,33 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         }
     }
 
+    private fun dialogVideoPlay(videoPlay: PlayerView, wakeUp: WakeUp, position: Int) {
+        videoPlay.setVisible()
+        val videoSubUrl = wakeUp.list[position].sub1Url
+        val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
+        val mediaItem: MediaItem = completeVideoUrl.let { MediaItem.fromUri(it) }
+        player = SimpleExoPlayer.Builder(requireActivity()).build().also {
+            if (it.isPlaying){
+                it.pause()
+                it.stop()
+            }
+            videoPlay.player = it
+            it.setMediaItem(mediaItem)
+            it.prepare()
+            it.play()
+            player?.volume = 10f
+        }
+    }
+
     private fun selectedFemale(){
         binding.male.setTextColor(Color.GRAY)
         binding.female.setTextColor(Color.WHITE)
-        genderSelected = 2
+        localWakeUpSaveData.gender = 2
     }
 
     private fun selectedMale(){
         binding.male.setTextColor(Color.WHITE)
         binding.female.setTextColor(Color.GRAY)
-        genderSelected = 1
+        localWakeUpSaveData.gender = 1
     }
 }

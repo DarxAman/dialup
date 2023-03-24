@@ -247,8 +247,8 @@ interface MyApi {
     suspend fun wakeUpSaver(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
         @Field("user_id") id: Int?,
-        @Field("gender") gender: String?,
-        @Field("program") program: String?,
+        @Field("gender") gender: Int?,
+        @Field("program") program: Int?,
         @Field("thumbURL") thumbUrl: String?,
         @Field("videoURL") videoUrl: String?
     ): Response<SimpleResponse>

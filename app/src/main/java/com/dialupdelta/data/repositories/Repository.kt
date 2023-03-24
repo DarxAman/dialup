@@ -27,6 +27,7 @@ import com.dialupdelta.data.network.response.wake_up_response.FetchWakeUpSavedRe
 import com.dialupdelta.data.network.response.wake_up_response.WakeUpProgramResponse
 import com.dialupdelta.data.network.response.wake_up_response.WakeUpResponse
 import com.dialupdelta.data.preferences.PreferenceProvider
+import com.dialupdelta.ui.wakeup.LocalWakeUpSaveData
 
 class Repository(
     private val api: MyApi,
@@ -67,6 +68,22 @@ class Repository(
 
     fun getSleepEnhancerUrl(): String?{
         return prefs.getSleepEnhancerUrl()
+    }
+
+    fun setWakeUpVideoData(enhancerUrl: String) {
+        prefs.setWakeUpVideoData(enhancerUrl)
+    }
+
+    fun getWakeUpVideoData(): String?{
+        return prefs.getWakeUpVideoData()
+    }
+
+    fun setWakeUpThumbData(enhancerUrl: String) {
+        prefs.setWakeUpThumbData(enhancerUrl)
+    }
+
+    fun getWakeUpThumbData(): String?{
+        return prefs.getWakeUpThumbData()
     }
 
 
@@ -333,7 +350,7 @@ class Repository(
             )
         }
     }
-    suspend fun getWakeUpList(gender:Int, program:Int?): WakeUpResponse {
+    suspend fun getWakeUpList(gender:Int?, program:Int?): WakeUpResponse {
         return apiRequest {
             api.getWakeUpList(
                 getBaseURL(),
@@ -353,15 +370,15 @@ class Repository(
         }
     }
 
-    suspend fun wakeUpSaver(gender:String, program:String, thumbUrl:String, videoUrl:String): SimpleResponse {
+    suspend fun wakeUpSaver(localWakeUpSaveData: LocalWakeUpSaveData): SimpleResponse {
         return apiRequest {
             api.wakeUpSaver(
                 getBaseURL(),
                 getAuthData()?.id,
-                gender,
-                program,
-                thumbUrl,
-                videoUrl
+                localWakeUpSaveData.gender,
+                localWakeUpSaveData.program,
+                localWakeUpSaveData.thumbUrl,
+                localWakeUpSaveData.videoUrl
             )
         }
     }

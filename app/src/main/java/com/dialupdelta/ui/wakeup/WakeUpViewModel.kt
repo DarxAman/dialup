@@ -2,6 +2,7 @@ package com.dialupdelta.ui.wakeup
 
 import androidx.lifecycle.MutableLiveData
 import com.dialupdelta.base.BaseViewModel
+import com.dialupdelta.data.network.response.wake_up_response.FetchWakeUpSaved
 import com.dialupdelta.data.network.response.wake_up_response.WakeUp
 import com.dialupdelta.data.network.response.wake_up_response.WakeUpProgramList
 import com.dialupdelta.data.repositories.Repository
@@ -13,7 +14,7 @@ class WakeUpViewModel(private val repository: Repository): BaseViewModel() {
 
     private val wakeUpProgramList = MutableLiveData<ArrayList<WakeUpProgramList>>()
     val successWakeUpProgram = MutableLiveData<Boolean>()
-    val successWakeUp = MutableLiveData<Boolean>()
+    val successWakeUp = MutableLiveData<FetchWakeUpSaved>()
     val wakeUpProgramResponse = MutableLiveData<WakeUp>()
 
     init {
@@ -50,7 +51,7 @@ class WakeUpViewModel(private val repository: Repository): BaseViewModel() {
         }
     }
 
-    fun getWakeList(gender:Int, program:Int?) {
+    fun getWakeList(gender:Int?, program:Int?) {
         startLoading()
         Coroutines.io {
             try {
@@ -78,7 +79,7 @@ class WakeUpViewModel(private val repository: Repository): BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                        // all login code
+                        successWakeUp.value = sleepResponse.result
                     }
                     return@main
                 }
@@ -90,15 +91,15 @@ class WakeUpViewModel(private val repository: Repository): BaseViewModel() {
         }
     }
 
-    fun wakeUpSaver(gender:String, program:String, thumbUrl:String, videoUrl:String) {
+    fun wakeUpSaver(localWakeUpSaveData: LocalWakeUpSaveData) {
         startLoading()
         Coroutines.io {
             try {
-                val sleepResponse = repository.wakeUpSaver(gender, program, thumbUrl, videoUrl)
+                val sleepResponse = repository.wakeUpSaver(localWakeUpSaveData)
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                        // all login code
+
                     }
                     return@main
                 }
@@ -108,5 +109,21 @@ class WakeUpViewModel(private val repository: Repository): BaseViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun setWakeUpVideoData(enhancerUrl: String) {
+        repository.setWakeUpVideoData(enhancerUrl)
+    }
+
+    fun getWakeUpVideoData(): String?{
+        return repository.getWakeUpVideoData()
+    }
+
+    fun setWakeUpThumbData(enhancerUrl: String) {
+        repository.setWakeUpThumbData(enhancerUrl)
+    }
+
+    fun getWakeUpThumbData(): String?{
+        return repository.getWakeUpThumbData()
     }
 }
