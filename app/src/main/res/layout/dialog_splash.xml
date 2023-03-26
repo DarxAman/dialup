@@ -72,7 +72,7 @@
             <Button
                 android:id="@+id/repeat_dialog_tts"
                 android:layout_width="110dp"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="#125A15"
@@ -86,7 +86,7 @@
             <Button
                 android:id="@+id/sleep_dialog_tts"
                 android:layout_width="110dp"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="#D51414"
@@ -165,8 +165,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView_1" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

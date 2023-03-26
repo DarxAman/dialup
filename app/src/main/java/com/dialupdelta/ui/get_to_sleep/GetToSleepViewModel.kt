@@ -8,6 +8,8 @@ import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepLis
 import com.dialupdelta.data.network.response.get_to_sleep_response.GetToSleepVideoData
 import com.dialupdelta.data.network.response.get_to_sleep_response.SaveGetToSleep
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.ProgramList
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancer
+import com.dialupdelta.data.network.response.wake_up_response.FetchWakeUpSaved
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.utils.ApiException
 import com.dialupdelta.utils.Coroutines
@@ -22,6 +24,8 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
     var getToSleepResponse = MutableLiveData<Boolean>()
     var getToSleepVideoResponse = MutableLiveData<Boolean>()
     var getSaveSleepResponse = MutableLiveData<SaveGetToSleep>()
+    var successWakeUp = MutableLiveData<FetchWakeUpSaved>()
+    var successSleepEnhancer = MutableLiveData<SavedSleepEnhancer>()
 
     init {
         getToSleepProgramList.value = ArrayList()
@@ -132,6 +136,44 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
                     stopLoading()
                     if (sleepResponse.status) {
                         getSaveSleepResponse.value = sleepResponse.result
+                    }
+                    return@main
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun fetchWakeUpSaved() {
+        startLoading()
+        Coroutines.io {
+            try {
+                val sleepResponse = repository.fetchWakeUpSaved()
+                Coroutines.main {
+                    stopLoading()
+                    if (sleepResponse.status) {
+                        successWakeUp.value = sleepResponse.result
+                    }
+                    return@main
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun savedSleepEnhancer() {
+        Coroutines.io {
+            try {
+                val sleepResponse = repository.savedSleepEnhancer()
+                Coroutines.main {
+                    if (sleepResponse.status) {
+                        successSleepEnhancer.value = sleepResponse.result
                     }
                     return@main
                 }

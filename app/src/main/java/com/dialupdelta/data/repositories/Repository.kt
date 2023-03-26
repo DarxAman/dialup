@@ -27,6 +27,7 @@ import com.dialupdelta.data.network.response.wake_up_response.FetchWakeUpSavedRe
 import com.dialupdelta.data.network.response.wake_up_response.WakeUpProgramResponse
 import com.dialupdelta.data.network.response.wake_up_response.WakeUpResponse
 import com.dialupdelta.data.preferences.PreferenceProvider
+import com.dialupdelta.ui.sleep_enhancer.LocalSaveSleepEnhancer
 import com.dialupdelta.ui.wakeup.LocalWakeUpSaveData
 
 class Repository(
@@ -94,12 +95,20 @@ class Repository(
         setGender(authData?.gender_id)
     }
 
-    private fun getAuthData(): AuthData? {
+     fun getAuthData(): AuthData? {
         return prefs.getAuthData()
     }
 
     fun getLogin():Boolean{
         return prefs.getLogIn()
+    }
+
+    fun saveSleepEnhancerData(localSaveSleepEnhancer: LocalSaveSleepEnhancer?){
+        prefs.saveSleepEnhancerData(localSaveSleepEnhancer)
+    }
+
+    fun getSleepEnhancerData():LocalSaveSleepEnhancer?{
+        return prefs.getSleepEnhancerData()
     }
 
     suspend fun getLanguageApi(): LanguageResponse {
@@ -310,14 +319,20 @@ class Repository(
         }
     }
 
-    suspend fun sleepEnhancerSaver(durationId:Int?, programId:Int?,audioId:Int?): SimpleResponse {
+    suspend fun sleepEnhancerSaver(localSaveSleepEnhancer: LocalSaveSleepEnhancer): SimpleResponse {
         return apiRequest {
             api.sleepEnhancerSaver(
                 getBaseURL(),
                 getAuthData()?.id,
-                durationId,
-                programId,
-                audioId
+                localSaveSleepEnhancer.time1,
+                localSaveSleepEnhancer.time2,
+                localSaveSleepEnhancer.program_1,
+                localSaveSleepEnhancer.program_2,
+                localSaveSleepEnhancer.duration_1,
+                localSaveSleepEnhancer.duration_2,
+                localSaveSleepEnhancer.audio_1,
+                localSaveSleepEnhancer.audio_2,
+                localSaveSleepEnhancer.volume
             )
         }
     }
@@ -378,7 +393,9 @@ class Repository(
                 localWakeUpSaveData.gender,
                 localWakeUpSaveData.program,
                 localWakeUpSaveData.thumbUrl,
-                localWakeUpSaveData.videoUrl
+                localWakeUpSaveData.videoUrl,
+                localWakeUpSaveData.time,
+                localWakeUpSaveData.repeatDays
             )
         }
     }

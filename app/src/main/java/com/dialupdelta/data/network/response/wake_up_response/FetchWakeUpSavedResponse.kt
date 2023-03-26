@@ -13,5 +13,7 @@ data class FetchWakeUpSaved (
     @SerializedName("gender") val gender : Int,
     @SerializedName("program") val program : Int,
     @SerializedName("thumbURL") val thumbURL : String,
-    @SerializedName("videoURL") val videoURL : String
+    @SerializedName("videoURL") val videoURL : String,
+    @SerializedName("time") val time : String,
+    @SerializedName("repeatDays") val repeatDays : String
 )

@@ -25,6 +25,7 @@ import com.dialupdelta.data.network.response.summary.GetSummaryResponse
 import com.dialupdelta.data.network.response.wake_up_response.FetchWakeUpSavedResponse
 import com.dialupdelta.data.network.response.wake_up_response.WakeUpProgramResponse
 import com.dialupdelta.data.network.response.wake_up_response.WakeUpResponse
+import com.dialupdelta.ui.sleep_enhancer.LocalSaveSleepEnhancer
 import com.github.simonpercic.oklog3.OkLogInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -191,9 +192,15 @@ interface MyApi {
     suspend fun sleepEnhancerSaver(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
         @Field("user_id") id: Int?,
-        @Field("duration") genderId: Int?,
-        @Field("program_id") programId: Int?,
-        @Field("audio_id") videoId: Int?,
+        @Field("t_1") t_1: String?,
+        @Field("t_2") t_2: String?,
+        @Field("program_1") program_1: String?,
+        @Field("program_2") program_2: String?,
+        @Field("duration_1") duration_1: String?,
+        @Field("duration_2") duration_2: String?,
+        @Field("audio_1") audio_1: String?,
+        @Field("audio_2") audio_2: String?,
+        @Field("volume") volume: String?,
     ): Response<SimpleResponse>
 
     @FormUrlEncoded
@@ -250,7 +257,9 @@ interface MyApi {
         @Field("gender") gender: Int?,
         @Field("program") program: Int?,
         @Field("thumbURL") thumbUrl: String?,
-        @Field("videoURL") videoUrl: String?
+        @Field("videoURL") videoUrl: String?,
+        @Field("time") time: String?,
+        @Field("repeatDays") repeatDays: String?
     ): Response<SimpleResponse>
 
 

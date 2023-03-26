@@ -175,6 +175,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         binding.saveWakeup.setOnClickListener {
             localWakeUpSaveData.thumbUrl = viewModel.getWakeUpThumbData()
             localWakeUpSaveData.videoUrl = viewModel.getWakeUpVideoData()
+            localWakeUpSaveData.repeatDays = chooseRepeatDays
             viewModel.wakeUpSaver(localWakeUpSaveData)
         }
     }
@@ -184,6 +185,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         val hour: Int = hourMin[0].toInt()
         val mins: Int = hourMin[1].toInt()
         val hoursInMins = hour * 60
+        localWakeUpSaveData.time = "${hoursInMins + mins}"
         return hoursInMins + mins
     }
 

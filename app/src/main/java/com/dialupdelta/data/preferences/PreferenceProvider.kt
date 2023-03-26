@@ -5,6 +5,7 @@ import android.content.Context.MODE_PRIVATE
 
 import android.content.SharedPreferences
 import com.dialupdelta.data.network.response.login_response.AuthData
+import com.dialupdelta.ui.sleep_enhancer.LocalSaveSleepEnhancer
 import com.google.gson.Gson
 
 private const val baseURL = "baseURL"
@@ -16,6 +17,7 @@ private const val age = "age"
 private const val sleepEnhancerUrl = "sleepEnhancerUrl"
 private const val wakeUpVideoData = "wakeUpVideoData"
 private const val wakeUpThumbData = "wakeUpThumbData"
+private const val sleepEnhancerData = "sleepEnhancerData"
 
 
 class PreferenceProvider(context: Context) {
@@ -111,6 +113,17 @@ class PreferenceProvider(context: Context) {
 
     fun getWakeUpThumbData():String?{
         return preference.getString(wakeUpThumbData, "")
+    }
+
+    fun saveSleepEnhancerData(localSaveSleepEnhancer: LocalSaveSleepEnhancer?){
+        preference.edit()
+            .putString(sleepEnhancerData, gson.toJson(localSaveSleepEnhancer))
+            .apply()
+    }
+
+    fun getSleepEnhancerData():LocalSaveSleepEnhancer?{
+        val json: String? = preference.getString(sleepEnhancerData, null)
+        return gson.fromJson(json, LocalSaveSleepEnhancer::class.java)
     }
 
 }

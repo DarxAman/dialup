@@ -22,7 +22,7 @@ class JournalFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_journal, container, false)
         return binding.root
     }
@@ -63,17 +63,16 @@ class JournalFragment : BaseFragment() {
         }, 19000)
 
         binding.rocketmiddle.setOnClickListener {
-            val animation = TranslateAnimation(010f, 0f, 0f, 50f)
-            animation.duration = 2000
-            animation.fillAfter = true
-            binding.rocketmiddle.animation = animation
+//            val animation = TranslateAnimation(010f, 0f, 0f, 50f)
+//            animation.duration = 2000
+//            animation.fillAfter = true
+//            binding.rocketmiddle.animation = animation
             startActivity(Intent(context, JournalActivity::class.java))
            // Handler(Looper.getMainLooper()).postDelayed({}, 2000)
         }
 
-        binding.rockettop.setOnClickListener {
+          binding.rockettop.setOnClickListener {
             binding.vidMainRocket.visibility = View.VISIBLE
-
             val mediaController = MediaController(requireActivity())
             mediaController.setAnchorView(binding.vidMainRocket)
 

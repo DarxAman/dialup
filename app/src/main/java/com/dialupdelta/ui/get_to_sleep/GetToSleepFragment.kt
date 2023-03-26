@@ -76,8 +76,9 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
         viewModel = ViewModelProvider(this, factory)[GetToSleepViewModel::class.java]
         setObserver(viewModel)
         viewModel.getToSleepList()
-
         viewModel.saveGetToSleepApi()
+        viewModel.savedSleepEnhancer()
+        viewModel.fetchWakeUpSaved()
 
         videoPlay()
         binding.leftArrowSleep.setOnClickListener {
@@ -129,6 +130,15 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
 
         viewModel.getToSleepVideoResponse.observe(viewLifecycleOwner) {
           getToSleepProgramDialogShow()
+        }
+
+        viewModel.successWakeUp.observe(viewLifecycleOwner) {
+              dat = it.time
+        }
+
+        viewModel.successSleepEnhancer.observe(viewLifecycleOwner) {
+            firstAlarm = it.duration_1
+            secondAlarm = it.duration_2
         }
 
         viewModel.getSaveSleepResponse.observe(viewLifecycleOwner){
@@ -194,8 +204,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             val iv2Wakeup: ImageView = dialog.findViewById(R.id.iv2_wakeup_)
 
             setImageToDashboard(ivWakeup, wakeupTrait)
-            //  user glide method setUserImage
-            //  Picasso.get().load(clickedImageURL).fit().centerCrop().noFade().into(iv2Wakeup)
 
             tcWakeup.text = dat
             val finishTime = player?.duration
