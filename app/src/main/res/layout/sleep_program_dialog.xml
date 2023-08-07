@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardFocus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/_12sdp"
+            app:cardElevation="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".ui.dashboard.Subliminal_program_Fragment">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/corner_videoview"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="2dp"
+                    app:cardBackgroundColor="#fff"
+                    app:cardCornerRadius="@dimen/_12sdp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/closebtndialog_sleep_program"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:background="#5A5555"
+                            android:elevation="4dp"
+                            android:src="@drawable/cross"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_scrollFlags="scroll" />
+
+                        <ImageView
+                            android:id="@+id/logo_program"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/logo_toolbar"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/dialog_title_program"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Openness"
+                            android:textColor="#025906"
+                            android:textSize="30sp"
+                            app:layout_constraintEnd_toEndOf="@+id/logo_program"
+                            app:layout_constraintStart_toStartOf="@+id/logo_program"
+                            app:layout_constraintTop_toBottomOf="@+id/logo_program" />
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_sleep_program"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/dialog_title_program">
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerSleepPrograms"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginEnd="8dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/textView37"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="16dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="@font/raleway_semibold"
+                                android:text="Note : Please long press on audio, which you want to play in video alarm"
+                                android:visibility="gone"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/recyclerNewSleep" />
+
+                            <ProgressBar
+                                android:id="@+id/progressBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                app:layout_constraintBottom_toBottomOf="@+id/recyclerNewSleep"
+                                app:layout_constraintEnd_toEndOf="@+id/recyclerNewSleep"
+                                app:layout_constraintStart_toStartOf="@+id/recyclerNewSleep"
+                                app:layout_constraintTop_toTopOf="@+id/recyclerNewSleep" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
