@@ -98,9 +98,11 @@ interface MyApi {
         @Field("otp") otp: String,
     ): Response<OtpResponse>
 
-    @GET("{baseURL}get_sleep_enhancer_programs")
+    @FormUrlEncoded
+    @POST("{baseURL}get_sleep_enhancer_programs")
     suspend fun getSleepEnhancerProgramList(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") user_id: Int?
     ): Response<SleepEnhancerProgramListResponse>
 
     @FormUrlEncoded
@@ -109,11 +111,14 @@ interface MyApi {
         @Path(value = "baseURL", encoded = true) baseURL: String?,
         @Field("program") program: Int?,
         @Field("duration") duration: Int,
+        @Field("user_id") user_id: Int?,
     ): Response<SleepEnhancerResponse>
 
-    @GET("{baseURL}get_sleep_programs_list")
+    @FormUrlEncoded
+    @POST("{baseURL}get_sleep_programs_list")
     suspend fun getToSleepList(
         @Path(value = "baseURL", encoded = true) baseURL: String?,
+        @Field("user_id") user_id: Int?
     ): Response<GetToSleepResponse>
 
     @FormUrlEncoded
@@ -122,7 +127,8 @@ interface MyApi {
         @Path(value = "baseURL", encoded = true) baseURL: String?,
         @Field("gender") gender: Int?,
         @Field("duration") duration: Int,
-        @Field("programs") program: Int?
+        @Field("programs") program: Int?,
+        @Field("user_id") user_id: Int?
     ): Response<GetToSleepListResponse>
 
     @FormUrlEncoded

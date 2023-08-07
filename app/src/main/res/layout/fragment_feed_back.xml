@@ -30,16 +30,24 @@
              android:textSize="17sp"
              android:textColor="@color/black"
              android:textStyle="bold"
+
              app:layout_constraintBottom_toBottomOf="parent"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintTop_toTopOf="parent" />
       </androidx.constraintlayout.widget.ConstraintLayout>
 
+      <WebView
+          android:id="@+id/webView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"/>
+
       <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/feedbackRecyclerView"
           app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
           android:layout_width="match_parent"
+          android:visibility="gone"
+
           android:layout_height="match_parent" />
    </LinearLayout>
 </layout>

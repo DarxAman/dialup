@@ -16,5 +16,5 @@ data class GetToSleepList (
     @SerializedName("id") val id : Int? = 1,
     @SerializedName("program_name") val program_name : String,
     @SerializedName("is_active") val is_active : Int,
-    @SerializedName("updated_at") val updated_at : String
+    @SerializedName("thumb") val thumb : String
 )

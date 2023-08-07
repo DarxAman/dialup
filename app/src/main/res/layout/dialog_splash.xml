@@ -117,6 +117,7 @@
             android:fontFamily="@font/raleway_bold"
             android:text="05:00"
             android:textColor="@color/white"
+            android:visibility="gone"
             android:textSize="@dimen/_22sdp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout18"
             app:layout_constraintEnd_toEndOf="parent"
@@ -146,7 +147,8 @@
                     android:id="@+id/imageView_1"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:background="@drawable/sleep_bell"
+                    android:src="@drawable/sleep_bell"
+                    android:layout_marginTop="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -183,7 +185,8 @@
                     android:id="@+id/imageView_2"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:background="@drawable/sleep_bell"
+                    android:src="@drawable/sleep_bell"
+                    android:layout_marginTop="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

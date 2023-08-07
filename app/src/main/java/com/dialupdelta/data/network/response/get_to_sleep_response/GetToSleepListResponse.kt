@@ -18,5 +18,6 @@ data class GetToSleepVideoData (
 data class GetToSleep (
     @SerializedName("id") val id : Int,
     @SerializedName("thumb_url") val thumb_url : String,
-    @SerializedName("video_url") val video_url : String
+    @SerializedName("video_url") val video_url : String,
+    @SerializedName("is_active") val is_active : String
 )

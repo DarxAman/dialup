@@ -35,15 +35,16 @@
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/playerView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:resize_mode="fit"
-            app:use_controller="false"
             app:show_buffering="never"
-            app:use_artwork="false" />
+            app:use_artwork="false"
+            app:use_controller="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -86,6 +87,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="2dp"

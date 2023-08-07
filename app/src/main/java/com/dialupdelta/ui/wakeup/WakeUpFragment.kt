@@ -548,6 +548,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         if (dialog != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialogwakeupandevening)
+
             val closeBtnDialog = dialog.findViewById(R.id.canceldialog) as ImageView
             val firstImage = dialog.findViewById(R.id.firstImage) as ImageView
             val secondImage = dialog.findViewById(R.id.secondImage) as ImageView
@@ -616,7 +617,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
     private fun dialogVideoPlay(videoPlay: PlayerView, wakeUp: WakeUp, position: Int) {
         videoPlay.setVisible()
         val videoSubUrl = wakeUp.list[position].sub1Url
-        val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
+        val completeVideoUrl = "http://app.dialupdelta.com/uploads/video/$videoSubUrl"
         val mediaItem: MediaItem = completeVideoUrl.let { MediaItem.fromUri(it) }
         player = SimpleExoPlayer.Builder(requireActivity()).build().also {
             if (it.isPlaying){

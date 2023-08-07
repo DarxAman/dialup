@@ -11,6 +11,7 @@ import androidx.lifecycle.observe
 import com.dialupdelta.R
 import com.dialupdelta.base.BaseActivity
 import com.dialupdelta.databinding.ActivityGetStartBinding
+import com.dialupdelta.ui.anim_login.AnimLoginActivity
 
 import com.dialupdelta.utils.setGone
 import com.dialupdelta.utils.setVisible
@@ -35,7 +36,8 @@ class GetStartActivity : BaseActivity() {
         viewModel = ViewModelProvider(this, factory)[GetStartViewModel::class.java]
         setObservers(viewModel)
         binding?.btnGetStarted?.setOnClickListener {
-            startActivity(Intent(this, LowVsHighActivity::class.java))
+//            startActivity(Intent(this, LowVsHighActivity::class.java))
+            startActivity(Intent(this, AnimLoginActivity::class.java))
             finish()
         }
         viewModel.getAgeGenderApi()

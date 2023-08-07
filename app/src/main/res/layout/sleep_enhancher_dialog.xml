@@ -92,7 +92,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="2dp"
-                    app:cardBackgroundColor="#eee"
+                    app:cardBackgroundColor="#fff"
                     app:cardCornerRadius="@dimen/_12sdp"
                     app:cardElevation="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -119,14 +119,13 @@
 
                         <ImageView
                             android:id="@+id/logo"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
                             android:layout_marginTop="16dp"
-                            android:src="@drawable/dialog_logo"
+                            android:background="@drawable/logo_toolbar"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/setting" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/dialog_title"
@@ -206,33 +205,42 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
+                            <ScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                           <androidx.constraintlayout.widget.ConstraintLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="match_parent">
+
+
+
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recyclerNewSleep"
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
+                                android:layout_height="match_parent"
                                 android:layout_marginStart="8dp"
                                 android:layout_marginTop="16dp"
                                 android:layout_marginEnd="8dp"
-                                android:layout_marginBottom="64dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
-                            <TextView
-                                android:id="@+id/textView37"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="16dp"
-                                android:layout_marginBottom="16dp"
-                                android:fontFamily="@font/raleway_semibold"
-                                android:text="Note : Please long press on video, which you want to play in video alarm"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/recyclerNewSleep" />
+                               <TextView
+                                   android:id="@+id/textView37"
+                                   android:layout_width="wrap_content"
+                                   android:layout_height="wrap_content"
+                                   android:layout_marginStart="16dp"
+                                   android:layout_marginTop="8dp"
+                                   android:layout_marginEnd="16dp"
+                                   android:layout_marginBottom="8dp"
+                                   android:fontFamily="@font/raleway_semibold"
+                                   android:visibility="gone"
+                                   android:text="Note : Please long press on audio, which you want to play in video alarm"
+                                   app:layout_constraintBottom_toBottomOf="parent"
+                                   app:layout_constraintEnd_toEndOf="parent"
+                                   app:layout_constraintStart_toStartOf="parent"
+                                   app:layout_constraintTop_toBottomOf="@+id/recyclerNewSleep" />
 
                             <ProgressBar
                                 android:id="@+id/progressBar"
@@ -243,7 +251,8 @@
                                 app:layout_constraintEnd_toEndOf="@+id/recyclerNewSleep"
                                 app:layout_constraintStart_toStartOf="@+id/recyclerNewSleep"
                                 app:layout_constraintTop_toTopOf="@+id/recyclerNewSleep" />
-
+                           </androidx.constraintlayout.widget.ConstraintLayout>
+                            </ScrollView>
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>

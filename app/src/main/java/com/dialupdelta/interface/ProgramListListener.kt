@@ -1,5 +1,5 @@
 package com.dialupdelta.`interface`
 
 interface ProgramListListener:AudioClickListener {
-   fun  setOnProgramItemClickListener(position:Int)
+   fun  setOnProgramItemClickListener(position:Int, image : String?)
 }

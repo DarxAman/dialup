@@ -1,11 +1,13 @@
 package com.dialupdelta.ui.sleep_enhancer
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.dialupdelta.base.BaseViewModel
 import com.dialupdelta.data.network.response.intro_video_response.IntroVideo
 import com.dialupdelta.data.network.response.login_response.AuthData
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.AudioDataList
 import com.dialupdelta.data.network.response.sleep_enhancer_list_response.ProgramList
+import com.dialupdelta.data.network.response.sleep_enhancer_list_response.SavedSleepEnhancerResponse
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.ui.wakeup.LocalWakeUpSaveData
 import com.dialupdelta.utils.ApiException
@@ -20,6 +22,7 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
     var audioDataList = MutableLiveData<AudioDataList>()
     var noDataFound = MutableLiveData<Boolean>()
     var durationTime = MutableLiveData<Int>()
+    var savedData: SavedSleepEnhancerResponse = SavedSleepEnhancerResponse()
 
 
     init {
@@ -86,7 +89,7 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                       // api success logic code
+
                     }
                     return@main
                 }
@@ -104,7 +107,7 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
                 val sleepResponse = repository.savedSleepEnhancer()
                 Coroutines.main {
                     if (sleepResponse.status) {
-                        // api success logic code
+
                     }
                     return@main
                 }

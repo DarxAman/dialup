@@ -8,6 +8,15 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- To set exact alarms -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- Alternative permission (use this if SCHEDULE_EXACT_ALARM is not available) -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+
 
     <application
         android:name=".MyApplication"
@@ -17,6 +26,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.DialUpDelta"
         tools:targetApi="31">
@@ -95,6 +105,13 @@
         <activity
             android:name=".ui.main_activity.MainActivity"
             android:exported="true" />
+        <receiver
+            android:name=".ui.sleep_enhancer.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <service android:name=".ui.sleep_enhancer.AlarmService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

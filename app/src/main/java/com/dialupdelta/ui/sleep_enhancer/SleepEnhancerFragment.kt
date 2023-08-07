@@ -7,26 +7,39 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import android.widget.*
+import androidx.appcompat.widget.ViewUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.dialupdelta.R
 import com.dialupdelta.`interface`.ProgramListListener
 import com.dialupdelta.base.BaseFragment
+import com.dialupdelta.data.preferences.PreferenceProvider
+import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.databinding.FragmentSleepEnhancerBinding
 import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerDialogAdapter
 import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerProgramListAdapter
+import com.dialupdelta.utils.CustomProgressDialog
 import com.dialupdelta.utils.setGone
 import com.dialupdelta.utils.setVisible
 import com.dialupdelta.utils.showToastMessage
+import org.json.JSONObject
 import org.kodein.di.generic.instance
 
 class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
@@ -42,15 +55,21 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private var negXdelta1 = 0.0f
     private var negXdelta2 = 0.0f
     private var currentVolume = 0
-    var showSetAlarmLeft = 0
-    var showSetAlarmRight = 0
+    private var showSetAlarmLeft = 0
+    private var showSetAlarmRight = 0
     private val localSaveSleepEnhancer = LocalSaveSleepEnhancer()
+//    private val prefs = PreferenceProvider(this)
     private lateinit var recyclerNewSleep:RecyclerView
     private lateinit var progressBar: ProgressBar
     private val factory: SleepEnhancerViewModelFactory by instance()
     private lateinit var viewModel: SleepEnhancerViewModel
-    lateinit var mediaPlayer: MediaPlayer
-
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
+    private var program1 = ""
+    private var program2 = ""
+    private var selectedThumb = ""
+    private var selectedAlarmProgram = 0
+    private var currentPosition = 0
+    private val repository: Repository by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,15 +89,21 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     }
 
     private fun initUI() {
+
+        showOptions()
+        showOptionRight()
+
         viewModel = ViewModelProvider(this, factory)[SleepEnhancerViewModel::class.java]
         setObserver(viewModel)
-        hideOptions()
-        hideOptionRight()
+//        hideOptions()
+//        hideOptionRight()
         viewModel.getSleepEnhancerProgramList()
+
+        viewModel.savedSleepEnhancer()
+        makeApiRequest()
 
         localSaveSleepEnhancer.time1 = answerForLeft.toString()
         localSaveSleepEnhancer.time2 = answerForRight.toString()
-
 
         binding.seekBar111.max = 100
         binding.seekBar111.progress = currentVolume
@@ -86,16 +111,44 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         binding.resetBtn.setOnClickListener {
             hideOptions()
             hideOptionRight()
-            answerForLeft = 0
-            answerForRight = 0
+            answerForLeft = 45
+            answerForRight = 135
             binding.showOptionCLickRight.visibility = View.VISIBLE
             binding.showOptionclick.visibility = View.VISIBLE
         }
 
-        binding.saveSleepEnhancer.setOnClickListener {
-            localSaveSleepEnhancer.user_id = viewModel.getAuthData()?.id.toString()
-            viewModel.sleepEnhancerSaver(localSaveSleepEnhancer)
+        binding.bottom1.setOnClickListener {
+
+            showProgramDialog("First Alarm", 1)
         }
+
+        binding.bottom2.setOnClickListener {
+            showProgramDialog("Second Alarm", 2)
+        }
+
+        binding.saveSleepEnhancer.setOnClickListener {
+            val time1 = answerForLeft.toString()
+            val time2 = answerForRight.toString()
+            val userId = viewModel.getAuthData()?.id.toString()
+
+            if (time1.isNotEmpty() && time2.isNotEmpty() && userId.isNotEmpty()
+                ) {
+
+                localSaveSleepEnhancer.time1 = time1
+                localSaveSleepEnhancer.time2 = time2
+                localSaveSleepEnhancer.user_id = userId
+                viewModel.sleepEnhancerSaver(localSaveSleepEnhancer)
+
+                Toast.makeText(context, "Alarm saved, please set it from Start Timer", Toast.LENGTH_SHORT).show()
+            } else {
+
+                Toast.makeText(context, "Not all values set", Toast.LENGTH_SHORT).show()
+
+//                Log.e("check", time1 + " - " + time2 + " dur - " + duration1 + " - " + duration2
+//                    + " prg - " + program1 + " - " + program2 + "al - " + localSaveSleepEnhancer.audio_1 + localSaveSleepEnhancer.audio_2)
+            }
+        }
+
 
         binding.showOptionclick.setOnClickListener {
             showOptions()
@@ -120,17 +173,8 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
                     progress: Int,
                     fromUser: Boolean
                 ) {
-//                    Toast.makeText(context, "0000000" + 1, Toast.LENGTH_SHORT).show()
-                    binding.seekBar111.progress = progress
                     localSaveSleepEnhancer.volume = progress.toString()
-
-                    // after development
-//                    val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("share", Context.MODE_PRIVATE)
-//                    val editor: SharedPreferences.Editor =  sharedPreferences.edit()
-////                    Global.ids1 = jsonObject1.getString("id")
-//                    editor.putString("Volume_Sleep_Enhancer", ""+ progress)
-//                    editor.apply()
-//                    editor.commit()
+                        binding.seekBar111.progress = progress
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -144,20 +188,46 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun setObserver(viewModel: SleepEnhancerViewModel) {
+    private fun showProgramDialog(alarmSelected : String, alarmNumber : Int) {
+
+        selectedAlarmProgram = alarmNumber
+
+        val dialog = Dialog(requireActivity())
+        dialog.setContentView(R.layout.sleep_program_dialog)
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+        val dialogTitle = dialog.findViewById(R.id.dialog_title_program) as TextView
+        dialogTitle.text = alarmSelected
+
+        val logo = dialog.findViewById(R.id.logo_program) as ImageView
+
+        progressBar = dialog.findViewById(R.id.progressBar) as ProgressBar
+        recyclerNewSleep = dialog.findViewById(R.id.recyclerSleepPrograms) as RecyclerView
+
         viewModel.successProgramList.observe(viewLifecycleOwner){
             val adapter = SleepEnhancerProgramListAdapter(requireContext(), viewModel.getSleepProgramList(), this)
-            binding.programRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-            binding.programRecyclerView.adapter = adapter
+            recyclerNewSleep.layoutManager = GridLayoutManager(requireContext(),2)
+            recyclerNewSleep.adapter = adapter
         }
+
+
+        val closeBtnDialog = dialog.findViewById(R.id.closebtndialog_sleep_program) as ImageView
+        closeBtnDialog.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setObserver(viewModel: SleepEnhancerViewModel) {
 
         viewModel.audioDataList.observe(viewLifecycleOwner){
             progressBar.setGone()
             if (it.list.isNotEmpty()){
                 recyclerNewSleep.adapter?.notifyDataSetChanged()
                 val adapter = SleepEnhancerDialogAdapter(requireActivity(),this, viewModel.getSleepAudioList()?.list)
-                recyclerNewSleep.layoutManager = GridLayoutManager(requireActivity(), 2)
+                recyclerNewSleep.layoutManager = GridLayoutManager(requireActivity(), 1)
                 recyclerNewSleep.adapter = adapter
             }
         }
@@ -169,7 +239,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         }
 
         viewModel.durationTime.observe(viewLifecycleOwner){
-            getDurationProgram(it)
+//            getDurationProgram(it)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -379,69 +449,88 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         binding.showAdd2.visibility = View.VISIBLE
     }
 
-    override fun setOnProgramItemClickListener(position: Int) {
-        sleepEnhancerDialog(position)
-
-    }
-
     override fun setOnAudioClickListener(position: Int) {
         sleepEnhancerPlayAudio(position)
     }
 
+    // audio choose button click listener
     override fun setOnAudioLongClickListener(position: Int) {
-        val audioBaseUrl = viewModel.getSleepAudioList()?.base_url
-        val audioSubUrl = viewModel.getSleepAudioList()?.list?.get(position)?.file_name
-        val completeUrl = audioBaseUrl+audioBaseUrl
 
+        val selectedImage = viewModel.getSleepProgramList()?.get(currentPosition)?.thumb.toString()
+
+        val audioBaseUrl = viewModel.getSleepAudioList()?.base_url_mp3
+        val audioSubUrl = viewModel.getSleepAudioList()?.list?.get(position)?.file_name
+        val completeUrl = audioBaseUrl+audioSubUrl
+
+        // save audio url tp the local storage
         if (localSaveSleepEnhancer.audio_1 == null){
-            localSaveSleepEnhancer.audio_1 = audioSubUrl
+            localSaveSleepEnhancer.audio_1 = completeUrl
             viewModel.getSleepEnhancerData()?.audio_1 = completeUrl
             val data = viewModel.getSleepEnhancerData()
             viewModel.saveSleepEnhancerData(data)
+            Toast.makeText(context, "Selected", Toast.LENGTH_SHORT).show()
         }
         else{
-            localSaveSleepEnhancer.audio_2 = audioSubUrl
+            localSaveSleepEnhancer.audio_2 = completeUrl
             viewModel.getSleepEnhancerData()?.audio_2 = completeUrl
             val data = viewModel.getSleepEnhancerData()
             viewModel.saveSleepEnhancerData(data)
+            Toast.makeText(context, "Selected", Toast.LENGTH_SHORT).show()
+        }
+
+        // save program to the local storage
+        if (selectedAlarmProgram == 1) {
+            localSaveSleepEnhancer.program_1 = viewModel.getSleepProgramList()?.get(currentPosition)?.thumb.toString()
+            program1 = viewModel.getSleepProgramList()?.get(position)?.id.toString()
+            Glide.with(requireContext()).load(viewModel.getSleepProgramList()?.get(currentPosition)?.thumb.toString()).into(binding.bottom1)
+
+            Log.e("tag: program1 : ", program1)
+        }
+        else{
+            localSaveSleepEnhancer.program_2 = viewModel.getSleepProgramList()?.get(currentPosition)?.thumb.toString()
+            program2 = viewModel.getSleepProgramList()?.get(position)?.id.toString()
+            Glide.with(requireContext()).load(viewModel.getSleepProgramList()?.get(currentPosition)?.thumb.toString()).into(binding.bottom2)
+
+            Log.e("tag: program2: ", program2)
         }
     }
 
     private fun sleepEnhancerDialog(position:Int){
-       val dialog = Dialog(requireActivity())
+
+        val data = viewModel.getSleepEnhancerDialogList(viewModel.getSleepProgramList()?.get(position)?.id, 10)
+//        Toast.makeText(context, ""+data, Toast.LENGTH_SHORT).show()
+
+        val dialog = Dialog(requireActivity())
        dialog.setContentView(R.layout.sleep_enhancher_dialog)
+
        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
        val dialogTitle = dialog.findViewById(R.id.dialog_title) as TextView
        val text10Min = dialog.findViewById(R.id.txt10Min) as TextView
        val text20Min = dialog.findViewById(R.id.txt20Min) as TextView
        val text30Min = dialog.findViewById(R.id.txt30Min) as TextView
-       progressBar = dialog.findViewById(R.id.progressBar) as ProgressBar
-       recyclerNewSleep = dialog.findViewById(R.id.recyclerNewSleep) as RecyclerView
+       val logo = dialog.findViewById(R.id.logo) as ImageView
 
-        if (localSaveSleepEnhancer.program_1 == null) {
-            localSaveSleepEnhancer.program_1 = viewModel.getSleepProgramList()?.get(position)?.id.toString()
-        }
-        else if (localSaveSleepEnhancer.program_1 != null) {
-            localSaveSleepEnhancer.program_2 = viewModel.getSleepProgramList()?.get(position)?.id.toString()
-        }
-        else if (localSaveSleepEnhancer.program_1 != null && localSaveSleepEnhancer.program_2 != null) {
-            localSaveSleepEnhancer.program_1 = viewModel.getSleepProgramList()?.get(position)?.id.toString()
-        }
-        else{
-            localSaveSleepEnhancer.program_2 = viewModel.getSleepProgramList()?.get(position)?.id.toString()
-        }
+        currentPosition = position
+
+        Glide.with(requireContext()).load(viewModel.getSleepProgramList()?.get(position)?.thumb.toString()).into(logo)
+        progressBar = dialog.findViewById(R.id.progressBar) as ProgressBar
+        recyclerNewSleep = dialog.findViewById(R.id.recyclerNewSleep) as RecyclerView
+
+//        Toast.makeText(context, viewModel.getSleepProgramList()?.get(position)?.id.toString(), Toast.LENGTH_SHORT).show()
 
         val closeBtnDialog = dialog.findViewById(R.id.closebtndialog) as ImageView
         closeBtnDialog.setOnClickListener {
+            if(mediaPlayer.isPlaying){
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+            }
+
             dialog.dismiss()
         }
        dialogTitle.text = viewModel.getSleepProgramList()?.get(position)?.program_name
        val program = viewModel.getSleepProgramList()?.get(position)?.id
        var duration = 10
        progressBar.setVisible()
-       viewModel.getSleepEnhancerDialogList(1, duration)
-
-
 
        text10Min.setOnClickListener {
            text10Min.setTextColor(Color.WHITE)
@@ -449,7 +538,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
            text30Min.setTextColor(Color.GRAY)
            progressBar.setVisible()
            duration = 10
-           viewModel.getSleepEnhancerDialogList(1, duration)
+           viewModel.getSleepEnhancerDialogList(program, duration)
        }
 
        text20Min.setOnClickListener {
@@ -459,7 +548,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
            progressBar.setVisible()
            duration = 20
 
-           viewModel.getSleepEnhancerDialogList(1, duration)
+           viewModel.getSleepEnhancerDialogList(program, duration)
        }
        text30Min.setOnClickListener {
            text10Min.setTextColor(Color.GRAY)
@@ -467,30 +556,37 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
            text30Min.setTextColor(Color.WHITE)
            progressBar.setVisible()
            duration = 30
-           viewModel.getSleepEnhancerDialogList(1, duration)
+           viewModel.getSleepEnhancerDialogList(program, duration)
        }
+        getDurationProgram(duration)
+
        dialog.show()
    }
-
 
     private fun getDurationProgram(duration:Int){
         if (localSaveSleepEnhancer.duration_1 == null) {
             localSaveSleepEnhancer.duration_1 = duration.toString()
+            Log.e("tag: DURATION1 : ", program2)
         }
         else if (localSaveSleepEnhancer.duration_1 != null) {
             localSaveSleepEnhancer.duration_2 = duration.toString()
+            Log.e("tag: duration2: ", program2)
         }
         else if (localSaveSleepEnhancer.duration_1 != null && localSaveSleepEnhancer.duration_2 != null) {
             localSaveSleepEnhancer.duration_1 = duration.toString()
+            Log.e("tag: duration1: ", program2)
         }
         else{
             localSaveSleepEnhancer.duration_1 = duration.toString()
+            Log.e("tag: duration2: ", program2)
         }
     }
 
     private fun sleepEnhancerPlayAudio(position:Int) {
-        mediaPlayer = MediaPlayer()
-        val audioBaseUrl = viewModel.getSleepAudioList()?.base_url
+
+        val customDialog = CustomProgressDialog(requireContext())
+        customDialog.showSweetDialog()
+        val audioBaseUrl = viewModel.getSleepAudioList()?.base_url_mp3
         val audioSubUrl = viewModel.getSleepAudioList()?.list?.get(position)?.file_name
         val audioUrl = audioBaseUrl+audioSubUrl
         val  uriAudioUrl = Uri.parse(audioUrl)
@@ -499,15 +595,88 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.stop()
                 mediaPlayer.reset()
-                mediaPlayer.release()
-            }
-            mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
-                it.start()
+//                mediaPlayer.release()
+                mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    it.start()
+                    customDialog.dismissSweet()
+                }
+            }else {
+                mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    it.start()
+                    customDialog.dismissSweet()
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        videoPlay()
+    }
+
+    override fun setOnProgramItemClickListener(position: Int, thumb : String?) {
+        sleepEnhancerDialog(position)
+    }
+
+    // Create a method to make the API request
+    fun makeApiRequest() {
+        val url = "http://app.dialupdelta.com/web/api/saved_sleep_enhancer"
+
+        val params = HashMap<String, String>()
+        params["user_id"] = repository.getAuthData()?.id.toString()
+
+        val request = object : StringRequest(
+            Method.POST, url,
+            Response.Listener { response ->
+                // Handle the response here
+                val jsonResponse = JSONObject(response)
+                val status = jsonResponse.getBoolean("status")
+                val message = jsonResponse.getString("msg")
+
+                if (status) {
+                    val result = jsonResponse.getJSONObject("result")
+                    val t1 = result.getString("t_1")
+                    binding.showAns.text = t1
+                    answerForLeft = Integer.parseInt(t1)
+                    val t2 = result.getString("t_2")
+                    binding.showAns2.text = t2
+                    answerForRight = Integer.parseInt(t2)
+                    val duration1 = result.getString("duration_1")
+                    val duration2 = result.getString("duration_2")
+                    val program1 = result.getString("program_1")
+                    val program2 = result.getString("program_2")
+                    Glide.with(requireContext()).load(program1.toString()).into(binding.bottom1)
+                    Glide.with(requireContext()).load(program2.toString()).into(binding.bottom2)
+
+                    val audio1 = result.getString("audio_1")
+                    val audio2 = result.getString("audio_2")
+                     currentVolume = result.getString("volume").toInt()
+                    binding.seekBar111.progress = currentVolume
+                    val userId = result.getString("user_id")
+
+                    // Process the retrieved data as needed
+                } else {
+                    // Handle the case where the status is false
+                    Toast.makeText(context, "No data saved", Toast.LENGTH_SHORT).show()
+                }
+            },
+            Response.ErrorListener { error ->
+                // Handle error cases here
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                return params
+            }
+        }
+
+        // Add the request to the Volley request queue
+        Volley.newRequestQueue(context).add(request)
+    }
+
 }

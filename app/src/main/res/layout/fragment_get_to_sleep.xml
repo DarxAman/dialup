@@ -52,7 +52,6 @@
                     android:background="@color/transparent"
                     android:orientation="horizontal"
                     app:cardBackgroundColor="@color/transparent"
-
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -278,33 +277,22 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent">
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/male_tts_cl"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
 
-                                android:padding="5dp"
+                            <TextView
+                                android:id="@+id/sleep_male"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_32sdp"
+                                android:fontFamily="@font/raleway_bold"
+                                android:gravity="center"
+                                android:text="Male"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline9"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline8"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
-
-                                <TextView
-                                    android:id="@+id/sleep_male"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/_32sdp"
-                                    android:fontFamily="@font/raleway_bold"
-                                    android:gravity="center"
-                                    android:text="Male"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent" />
 
 
-                            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                             <androidx.constraintlayout.widget.Guideline
@@ -328,30 +316,20 @@
                                 android:orientation="vertical"
                                 app:layout_constraintGuide_percent=".5" />
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/female_tts_cl"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                android:padding="5dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline15"
-                                app:layout_constraintStart_toEndOf="@+id/male_tts_cl"
-                                app:layout_constraintTop_toTopOf="parent">
 
-                                <TextView
-                                    android:id="@+id/sleep_female"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/_32sdp"
-                                    android:fontFamily="@font/raleway_semibold"
-                                    android:gravity="center"
-                                    android:text="Female"
-                                    android:textColor="#66FFFFFF"
-                                    android:textSize="20sp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
+                            <TextView
+                                android:id="@+id/sleep_female"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_32sdp"
+                                android:fontFamily="@font/raleway_semibold"
+                                android:gravity="center"
+                                android:text="Female"
+                                android:textColor="#66FFFFFF"
+                                android:textSize="20sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/guideline8"
+                                app:layout_constraintTop_toTopOf="parent" />
 
 
                             <androidx.constraintlayout.widget.Guideline
@@ -367,6 +345,7 @@
                                 android:layout_height="0dp"
                                 android:fontFamily="@font/raleway_bold"
                                 android:gravity="center"
+                                android:visibility="gone"
                                 android:text="5 min"
                                 android:textColor="#ffffff"
                                 android:textSize="20sp"
@@ -384,6 +363,7 @@
                                 android:gravity="center"
                                 android:text="9 min"
                                 android:textColor="#66FFFFFF"
+                                android:visibility="gone"
                                 android:textSize="20sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -410,6 +390,7 @@
                             android:id="@+id/rightArraow_sleep"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
+                            android:visibility="gone"
                             android:layout_marginEnd="32dp"
                             android:background="@drawable/exo_ic_chevron_right"
                             app:layout_constraintBottom_toBottomOf="@+id/leftArrow_sleep"
@@ -420,6 +401,7 @@
                             android:id="@+id/leftArrow_sleep"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
+                            android:visibility="gone"
                             android:layout_marginStart="32dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

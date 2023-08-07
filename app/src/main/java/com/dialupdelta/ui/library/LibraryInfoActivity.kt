@@ -40,7 +40,9 @@ class LibraryInfoActivity : BaseActivity() {
         binding.circleImageView.setUserImage(this, listData.author_url)
         binding.videoname.text = listData.mainlink
         binding.duration.text = "05:30"
-        binding.Description.text = listData.title
+        binding.Description.text = "Description : " +listData.title
+        binding.articleLink.text = "Article Link : "+listData.article_link
+        binding.articleName.text = "Article Name : "+listData.article_name
 
         binding.playBtn.setOnClickListener {
             val intent = Intent(this, LibraryPlayVideoActivity::class.java)

@@ -15,7 +15,11 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,8 +121,8 @@
                         android:layout_marginTop="32dp"
                         android:layout_marginEnd="16dp"
                         android:text="Gender"
-                        android:textSize="@dimen/_16sdp"
                         android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -143,8 +147,8 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="Age"
-                        android:textSize="@dimen/_16sdp"
                         android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -162,13 +166,14 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView23" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        style="@style/AppButton"
                         android:id="@+id/btnGetStarted"
+                        style="@style/AppButton"
                         android:layout_width="@dimen/_190sdp"
                         android:layout_height="@dimen/_40sdp"
                         android:layout_marginTop="@dimen/_24sdp"
                         android:text="@string/let_s_get_started" />
                 </LinearLayout>
+
                 <com.google.android.exoplayer2.ui.PlayerView
                     android:id="@+id/getStartedVideo"
                     android:layout_width="match_parent"
@@ -181,7 +186,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/ll_linear"
                     app:resize_mode="fill"
                     app:show_buffering="never"
-                    app:use_artwork="false"/>
+                    app:use_artwork="false" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

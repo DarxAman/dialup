@@ -28,7 +28,9 @@ data class LibraryModelList (
     @SerializedName("thumbnail_width") val thumbnail_width : Int,
     @SerializedName("thumbnail_url") val thumbnail_url : String,
     @SerializedName("html") val html : String,
-    @SerializedName("mainlink") val mainlink : String
+    @SerializedName("mainlink") val mainlink : String,
+    @SerializedName("article_name") val article_name : String,
+    @SerializedName("article_link") val article_link : String
 ):Serializable
 
 

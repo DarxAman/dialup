@@ -34,33 +34,33 @@ class JournalFragment : BaseFragment() {
 
     private fun initUi() {
         hideStatusBar(requireActivity())
-        val animation = TranslateAnimation(010f, 0f, 50f, 30f)
-        animation.duration = 2000
-        animation.fillAfter = true
-        binding.rockettop.animation = animation
-        binding.rockettop.animate().x(0f).y(-20f).translationYBy(-20f).duration = 1000
-        binding.clRocketBlast.visibility = View.INVISIBLE
-        binding.vidsRocketBlast.visibility = View.VISIBLE
-        val mediaController = MediaController(requireActivity())
-        mediaController.setAnchorView(binding.vidMainRocket)
+//        val animation = TranslateAnimation(010f, 0f, 50f, 30f)
+//        animation.duration = 2000
+//        animation.fillAfter = true
+//        binding.rockettop.animation = animation
+//        binding.rockettop.animate().x(0f).y(-20f).translationYBy(-20f).duration = 1000
+//        binding.clRocketBlast.visibility = View.INVISIBLE
+//        binding.vidsRocketBlast.visibility = View.VISIBLE
+//        val mediaController = MediaController(requireActivity())
+//        mediaController.setAnchorView(binding.vidMainRocket)
 
-        val uri = Uri.parse("android.resource://" + context?.packageName + "/R.raw/" + R.raw.rocketblast)
-        binding.vidsRocketBlast.setVideoURI(uri)
-        binding.vidsRocketBlast.requestFocus()
-        binding.vidsRocketBlast.start()
-        Handler(Looper.getMainLooper()).postDelayed({
-
-            val mediaController1 = MediaController(requireActivity())
-            mediaController1.setAnchorView(binding.vidsRocketBlast)
-            val uri1 = Uri.parse("android.resource://" + context?.packageName + "/R.raw/" + R.raw.rocketmp)
-            binding.vidsRocketBlast.setVideoURI(uri1)
-            binding.vidsRocketBlast.requestFocus()
-            binding.vidsRocketBlast.start()
-        }, 16000)
-        Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(context, TransitionActivity::class.java))
-            binding.vidsRocketBlast.stopPlayback()
-        }, 19000)
+//        val uri = Uri.parse("android.resource://" + context?.packageName + "/R.raw/" + R.raw.rocketblast)
+//        binding.vidsRocketBlast.setVideoURI(uri)
+//        binding.vidsRocketBlast.requestFocus()
+//        binding.vidsRocketBlast.start()
+//        Handler(Looper.getMainLooper()).postDelayed({
+//
+//            val mediaController1 = MediaController(requireActivity())
+//            mediaController1.setAnchorView(binding.vidsRocketBlast)
+//            val uri1 = Uri.parse("android.resource://" + context?.packageName + "/R.raw/" + R.raw.rocketmp)
+//            binding.vidsRocketBlast.setVideoURI(uri1)
+//            binding.vidsRocketBlast.requestFocus()
+//            binding.vidsRocketBlast.start()
+//        }, 16000)
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            startActivity(Intent(context, TransitionActivity::class.java))
+//            binding.vidsRocketBlast.stopPlayback()
+//        }, 19000)
 
         binding.rocketmiddle.setOnClickListener {
 //            val animation = TranslateAnimation(010f, 0f, 0f, 50f)

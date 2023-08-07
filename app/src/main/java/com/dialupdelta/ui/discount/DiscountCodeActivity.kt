@@ -23,6 +23,10 @@ class DiscountCodeActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_discount_code)
 
         initUI()
+
+        binding.skipBtnDiscount.setOnClickListener({
+            startActivity(Intent(this, PermissionActivity::class.java))
+        })
     }
 
     private fun initUI() {

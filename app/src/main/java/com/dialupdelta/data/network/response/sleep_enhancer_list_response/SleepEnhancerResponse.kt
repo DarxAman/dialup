@@ -9,11 +9,21 @@ data class SleepEnhancerResponse(
 )
 
 data class AudioDataList (
-    @SerializedName("list") val list : ArrayList<AudioFileList>,
-    @SerializedName("base_url") val base_url : String
+    @SerializedName("list") val list : ArrayList<SleepEnhancerItem>,
+    @SerializedName("saved_audios") val list_data : ArrayList<AudioFileList>,
+    @SerializedName("base_url_mp3") val base_url_mp3 : String,
+    @SerializedName("base_url_media") val base_url_image : String
+)
+
+data class SleepEnhancerItem(
+    @SerializedName("id") val id: String,
+    @SerializedName("image") val image: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("graph_image") val graph_image: String,
+    @SerializedName("file_name")  val file_name: String
 )
 
 data class AudioFileList (
-    @SerializedName("id") val id : Int,
-    @SerializedName("file_name") val file_name : String
+    @SerializedName("audio_1") val audio_1 : String,
+    @SerializedName("audio_2") val file_name : String
 )

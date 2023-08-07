@@ -51,7 +51,7 @@ class Repository(
         prefs.setLanguage(id)
     }
 
-    private fun getLanguage(): Int {
+    fun getLanguage(): Int {
         return prefs.getLanguage()
     }
 
@@ -198,7 +198,8 @@ class Repository(
     suspend fun getSleepEnhancerProgramList(): SleepEnhancerProgramListResponse {
         return apiRequest {
             api.getSleepEnhancerProgramList(
-                getBaseURL()
+                getBaseURL(),
+                getAuthData()?.id
             )
         }
     }
@@ -208,7 +209,8 @@ class Repository(
             api.getSleepEnhancerDialogList(
                 getBaseURL(),
                 program,
-                duration
+                duration,
+                getAuthData()?.id
             )
         }
     }
@@ -216,7 +218,8 @@ class Repository(
     suspend fun getToSleepList(): GetToSleepResponse {
         return apiRequest {
             api.getToSleepList(
-                getBaseURL()
+                getBaseURL(),
+                getAuthData()?.id
             )
         }
     }
@@ -227,7 +230,8 @@ class Repository(
                 getBaseURL(),
                 gender,
                 duration,
-                program
+                program,
+                getAuthData()?.id
             )
         }
     }
