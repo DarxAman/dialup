@@ -16,7 +16,7 @@
             android:id="@+id/appCompatImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/splash_image"
+            android:src="@drawable/logo_toolbar"
             app:layout_constraintBottom_toTopOf="@+id/textView33"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

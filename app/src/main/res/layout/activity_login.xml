@@ -14,9 +14,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_150sdp"
+            android:layout_height="@dimen/_140sdp"
             android:scaleType="centerCrop"
-            android:src="@drawable/header"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:src="@drawable/logo_toolbar"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
@@ -38,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp"
                     android:text="@string/sign_in"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_26ssp" />
 
@@ -46,6 +49,7 @@
                     android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:layout_marginTop="@dimen/_24sdp"
                     android:hint="@string/email"
                     android:imeOptions="actionNext"
@@ -68,6 +72,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
+                        android:fontFamily="@font/roboto_medium_numbers"
                         android:paddingStart="0dp"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"/>
@@ -84,6 +89,7 @@
                     android:layout_width="@dimen/_190sdp"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_marginTop="@dimen/_24sdp"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:text="@string/proceed" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -92,6 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp"
                     android:padding="@dimen/_8sdp"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:text="@string/forgot_password"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/_12ssp" />
@@ -101,6 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:text="@string/dont_have_account_sign_up"
                     android:textColor="@color/black_75"
                     android:textSize="@dimen/_14ssp" />
@@ -110,6 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
                     android:text="@string/by_signing_in_you_agree_to_our"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:textColor="@color/black_75"
                     android:textSize="@dimen/_14ssp" />
 
@@ -118,6 +127,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:text="@string/privacy_policy"
                     android:textColor="@color/black_75"
                     android:textSize="@dimen/_14ssp" />
@@ -125,6 +135,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginTop="@dimen/_24sdp">
 
                     <androidx.appcompat.widget.AppCompatImageView

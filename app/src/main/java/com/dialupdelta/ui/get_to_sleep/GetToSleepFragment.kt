@@ -11,8 +11,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +20,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.MediaController
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -36,26 +33,28 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.dialupdelta.R
-import com.dialupdelta.`interface`.ProgramClickPosition
 import com.dialupdelta.base.BaseFragment
 import com.dialupdelta.data.preferences.PreferenceProvider
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.databinding.FragmentGetToSleepBinding
+import com.dialupdelta.`interface`.ProgramClickPosition
 import com.dialupdelta.ui.get_to_sleep.adapter.NewAdapterGetToSleep
 import com.dialupdelta.ui.library.LibraryModulesActivity
 import com.dialupdelta.ui.login_signup.LoginActivity
 import com.dialupdelta.ui.sleep_enhancer.AlarmReceiver
-import com.dialupdelta.ui.sleep_enhancer.AlarmService
-import com.dialupdelta.ui.sleep_enhancer.LocalSaveSleepEnhancer
+import com.dialupdelta.ui.sleep_enhancer.CommonObject
+import com.dialupdelta.ui.splash.SplashActivity
 import com.dialupdelta.ui.transition.TransitionActivity
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import org.json.JSONObject
+import com.google.gson.Gson
 import org.kodein.di.generic.instance
+import java.io.Serializable
+import java.util.Calendar
 
-class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
+class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable {
     private  var wakeupTrait:String = ""
     private var userId: Int = 0
     private var genderSelected = 1
@@ -68,7 +67,9 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
     private var secondProgram = ""
     private var audio1 = ""
     private var audio2 = ""
-    private var dat = ""
+    private var dat = "0:00"
+    private var dat_image = ""
+    private var dat_url = ""
     private var programId = 1
     private lateinit var countTimer: CountDownTimer
     private lateinit var binding:FragmentGetToSleepBinding
@@ -97,8 +98,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
 
         makePostRequest()
 
-
-
 //        setAlarm(60*1000)
         videoPlay()
         binding.leftArrowSleep.setOnClickListener {
@@ -109,7 +108,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
 
         binding.logoutTts.setOnClickListener {
             prefs?.saveAuthData(null)
-            Intent(requireActivity(), LoginActivity::class.java).also {
+            Intent(requireActivity(), SplashActivity::class.java).also {
                 startActivity(it)
             }
         }
@@ -165,7 +164,11 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
         }
 
         viewModel.successWakeUp.observe(viewLifecycleOwner) {
-              dat = it.time
+            if(!it.time.isNullOrEmpty()){
+                dat = it.time
+            }
+            dat_image = it.thumbURL
+            dat_url = it.videoURL
         }
 
         viewModel.successSleepEnhancer.observe(viewLifecycleOwner) {
@@ -225,16 +228,17 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             // wakeup
             val ivWakeup: ImageView = dialog.findViewById(R.id.iv_wakeup_)
             val tcWakeup: TextView = dialog.findViewById(R.id.tc_wakeup_)
-            val iv2Wakeup: ImageView = dialog.findViewById(R.id.iv2_wakeup_)
 
             // set data for sleep enhancer
             tv1.text = firstAlarm
             tv2.text = secondAlarm
-            Glide.with(requireActivity()).load(firstProgram).into(imageView1)
-            Glide.with(requireActivity()).load(secondProgram).into(imageView2)
+            Glide.with(requireActivity()).load(firstProgram).placeholder(R.drawable.alarm_off).into(imageView1)
+            Glide.with(requireActivity()).load(secondProgram).placeholder(R.drawable.alarm_off).into(imageView2)
 
             // data set for wakeup
             tcWakeup.text = dat
+            Glide.with(requireActivity()).load(dat_image).placeholder(R.drawable.alarm_off).into(ivWakeup)
+
 
             // set the traits for evening program
             setImageToDashboard(ivWakeup, wakeupTrait)
@@ -310,10 +314,6 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             dialog.setContentView(R.layout.dialogonstarttimer)
             dialog.show()
 
-            // to black the background
-//            val constraintLayout18 : ConstraintLayout = dialog.findViewById(R.id.constraintLayout18)
-//            val constraintLayout19 : ConstraintLayout = dialog.findViewById(R.id.constraintLayout19)
-//            val constraintLayout20 : ConstraintLayout = dialog.findViewById(R.id.constraintLayout20)
             val cl_cl : ConstraintLayout = dialog.findViewById(R.id.cl_cl)
             val sleep_dialog_tts1: Button = dialog.findViewById(R.id.sleep_dialog_tts_s)
             // sleep enhancer
@@ -324,7 +324,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             // wakeup
             val iv_wakeup_: ImageView = dialog.findViewById(R.id.iv_wakeup_s)
             val tc_wakeup_: TextView = dialog.findViewById(R.id.tc_wakeup_s)
-            val iv2_wakeup_: ImageView = dialog.findViewById(R.id.iv2_wakeup_s)
+
             // close button
             val sleep_dialog_ttsclose : Button = dialog.findViewById(R.id.sleep_dialog_ttsclose)
 
@@ -336,27 +336,25 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
             // set sleep enhancer data
             tv_1.text = firstAlarm
             tv_2.text = secondAlarm
-            Glide.with(requireActivity()).load(firstProgram).into(imageView_1)
-            Glide.with(requireActivity()).load(secondProgram).into(imageView_2)
+            Glide.with(requireActivity()).load(firstProgram).placeholder(R.drawable.alarm_off).into(imageView_1)
+            Glide.with(requireActivity()).load(secondProgram).placeholder(R.drawable.alarm_off).into(imageView_2)
 
             // wakeup data
             setImageToDashboard(iv_wakeup_, wakeupTrait)
             tc_wakeup_.text = dat
-
-            // on alarm ring
-//            Handler(Looper.getMainLooper()).postDelayed({
-//                constraintLayout18.visibility = View.GONE
-//                constraintLayout19.visibility = View.GONE
-//                constraintLayout20.visibility = View.GONE
-//                cl_cl.setBackgroundColor(resources.getColor(R.color.black))
-//            }, 30000)
+            Glide.with(requireActivity()).load(dat_image).placeholder(R.drawable.alarm_off).into(iv_wakeup_)
 
             sleep_dialog_tts1.setOnClickListener {
                 dialog.dismiss()
             }
         }
         viewModel.getToSleepSave(genderSelected, durationSelected, programId, 1)
+
+        // set second audio alarm
         setAlarm((secondAlarm.toLong()) *  60*1000, audio2, 2)
+
+        // set wakeup alarm
+        setAlarmAtSpecificTime(dat, dat_url, 3)
     }
 
     private fun setImageToDashboard(imageView_3: ImageView, trait1: String) {
@@ -477,27 +475,72 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setAlarm(delay: Long, audioUrl : String, alarmNumber : Int) {
+
+
+        if(alarmNumber == 1 || alarmNumber == 2){
+            val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, AlarmReceiver::class.java).apply {
+                putExtra("URL_EXTRA", audioUrl) // Pass the URL as an extra parameter
+                putExtra("alarmNumber", ""+alarmNumber) // Pass the URL as an extra parameter
+
+            } // Create a new BroadcastReceiver class for handling alarms
+            val requestCode = generateUniqueRequestCode()
+            val pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
+
+            val currentTime = System.currentTimeMillis()
+            val triggerTime = currentTime + delay
+
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setAlarmAtSpecificTime(time: String, audioUrl: String, alarmNumber: Int) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        // Parse the time string to get hours and minutes
+        val timeParts = time.split(":")
+        val hours = timeParts[0].toInt()
+        val minutes = timeParts[1].toInt()
+
+        // Get the current date and time
+        val calendar = Calendar.getInstance()
+        val currentTimeMillis = System.currentTimeMillis()
+        calendar.timeInMillis = currentTimeMillis
+
+        // Set the alarm time to the specified hours and minutes
+        calendar.set(Calendar.HOUR_OF_DAY, hours)
+        calendar.set(Calendar.MINUTE, minutes)
+        calendar.set(Calendar.SECOND, 0)
+
+        // Check if the alarm time is in the past, if yes, set it for the next day
+        if (calendar.timeInMillis <= currentTimeMillis) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        // Create an intent for the BroadcastReceiver
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            putExtra("URL_EXTRA", audioUrl) // Pass the URL as an extra parameter
-            putExtra("alarmNumber", ""+alarmNumber) // Pass the URL as an extra parameter
-        } // Create a new BroadcastReceiver class for handling alarms
+            putExtra("URL_EXTRA", audioUrl)
+            putExtra("alarmNumber", "" + alarmNumber)
+
+        }
+
+        val commonObject = CommonObject()
+        commonObject.setFragmentManager(requireActivity().supportFragmentManager)
+
+        CommonObject.fragmentManagerContext = requireActivity().supportFragmentManager
+
         val requestCode = generateUniqueRequestCode()
         val pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
 
-        val currentTime = System.currentTimeMillis()
-        val triggerTime = currentTime + delay
-
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
-
-        // Start the AlarmService
-//        val serviceIntent = Intent(context, AlarmService::class.java).apply {
-//            putExtra("URL_EXTRA", audioUrl) // Pass the same URL to the service
-//            putExtra("alarmNumber", alarmNumber)
-//            putExtra("time", delay)
-//        }
-//        context?.startService(serviceIntent)
+        // Set the alarm using AlarmManager
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            pendingIntent
+        )
     }
+
 
     override fun onResume() {
         super.onResume()

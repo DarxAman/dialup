@@ -27,6 +27,11 @@ class NewAdapterGetToSleep(private var context: Context,private val getToSleepCl
         val sleepList = getToSleepList?.get(position)
         holder.apply {
             programItemText.text = sleepList?.program_name
+
+            if(sleepList?.thumb?.isNullOrEmpty() == false) {
+                Glide.with(context).load(sleepList?.thumb).placeholder(R.drawable.logo_toolbar)
+                    .into(getToSleep_image)
+            }
         }
 
         val isActive = getToSleepList?.get(position)?.is_active == 1
@@ -35,8 +40,6 @@ class NewAdapterGetToSleep(private var context: Context,private val getToSleepCl
         } else {
             holder.parentLayout.setBackgroundColor(Color.TRANSPARENT)
         }
-
-        Glide.with(context).load(sleepList?.thumb).into(holder.getToSleep_image)
 
     }
 

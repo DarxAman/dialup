@@ -3,8 +3,8 @@ package com.dialupdelta.ui.wakeup
 data class LocalWakeUpSaveData(
     var gender:Int? = 1,
     var program: Int? = 1,
-    var thumbUrl:String? = "default value",
-    var videoUrl:String? = "default value",
-    var time:String? = "default value",
-    var repeatDays:String? = "default value"
+    var thumbUrl:String? = "",
+    var videoUrl:String? = "",
+    var time:String? = "8:00",
+    var repeatDays:String? = "never"
 )

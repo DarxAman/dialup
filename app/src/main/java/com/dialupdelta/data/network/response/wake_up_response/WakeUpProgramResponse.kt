@@ -15,5 +15,6 @@ data class Result (
 data class WakeUpProgramList (
     @SerializedName("id") val id : Int,
     @SerializedName("program_name") val program_name : String,
-    @SerializedName("selected") val selected : Int
+    @SerializedName("selected") val selected : Int,
+    @SerializedName("thumb") val thumb : String
 )

@@ -1,0 +1,5 @@
+<!-- overlay_color.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The solid color here will be your overlay color. For transparency, set the alpha value to 0 (fully transparent). -->
+    <solid android:color="#000000ff" />
+</shape>

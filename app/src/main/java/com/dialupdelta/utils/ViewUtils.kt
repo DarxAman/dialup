@@ -73,7 +73,7 @@ fun ImageView.setUserImage(context: Context, imageUrl: String?) {
     if (isValidContextForGlide(context)) {
         Glide.with(context)
             .load(imageUrl)
-            .placeholder(R.drawable.new_user_place_holder)
+            .placeholder(R.drawable.logo_toolbar)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(this)
         this.background =

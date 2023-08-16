@@ -14,9 +14,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_150sdp"
+            android:layout_height="@dimen/_140sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:scaleType="centerCrop"
-            android:src="@drawable/header"
+            android:src="@drawable/logo_toolbar"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
@@ -38,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_32sdp"
                     android:text="@string/before_we_get_started"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_26ssp" />
 
@@ -46,6 +48,7 @@
                     android:id="@+id/edtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:layout_marginTop="@dimen/_24sdp"
                     android:hint="@string/what_s_your_name"
                     android:imeOptions="actionNext"
@@ -62,6 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/what_s_your_email"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress" />
 
@@ -82,6 +86,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/create_you_password"
+                        android:fontFamily="@font/roboto_medium_numbers"
                         android:paddingStart="0dp"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword" />
@@ -93,11 +98,12 @@
                     android:background="@color/textColorHint" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    style="@style/AppButton"
                     android:id="@+id/btnSignUp"
+                    style="@style/AppButton"
                     android:layout_width="@dimen/_190sdp"
-                    android:layout_height="@dimen/_40sdp"
+                    android:layout_height="68dp"
                     android:layout_marginTop="@dimen/_24sdp"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:text="@string/sign_up" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -105,6 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/roboto_medium_numbers"
                     android:text="@string/by_signing_up_you_agree_to_our_privacy_policy"
                     android:textColor="@color/black_75"
                     android:textSize="13sp" />

@@ -1,25 +1,33 @@
 package com.dialupdelta.ui.wakeup
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.MediaController
 import android.widget.TextView
+import android.widget.TimePicker
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.dialupdelta.R
 import com.dialupdelta.`interface`.ClickInterface
 import com.dialupdelta.`interface`.GetToSleepClickListener
@@ -30,6 +38,7 @@ import com.dialupdelta.databinding.ActivityJournalListBinding
 import com.dialupdelta.databinding.FragmentWakeUpBinding
 import com.dialupdelta.ui.journal.JournalViewModel
 import com.dialupdelta.ui.journal.JournalViewModelFactory
+import com.dialupdelta.utils.setGone
 import com.dialupdelta.utils.setUserImage
 import com.dialupdelta.utils.setVisible
 import com.google.android.exoplayer2.MediaItem
@@ -53,7 +62,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
     var newUrl: String = "0"
     lateinit var closeID: ImageView
     var timeNew: Int = 5
-    private var chooseRepeatDays = ""
+    private var chooseRepeatDays = "never"
     private var day = 0
     private var month: Int = 0
     private var year: Int = 0
@@ -62,6 +71,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
     private val localWakeUpSaveData = LocalWakeUpSaveData()
     lateinit var exo_fullscreen_icon: ImageView
     private var clickedVideoTime = "45sec"
+    private var choosedTime = "0:00"
     private val factory: WakeUpViewModelFactory by instance()
     private lateinit var viewModel: WakeUpViewModel
     override fun onCreateView(
@@ -87,33 +97,39 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         viewModel.fetchWakeUpSaved()
 
         //exo_fullscreen_icon = findViewById(R.id.exo_fullscreen_icon)
+
         binding.timeTv.setOnClickListener {
             val calendar: Calendar = Calendar.getInstance()
-            day = calendar.get(Calendar.DAY_OF_MONTH)
-            month = calendar.get(Calendar.MONTH)
-            year = calendar.get(Calendar.YEAR)
-            val mHour = calendar.get(Calendar.HOUR_OF_DAY)
-            val mMinute = calendar.get(Calendar.MINUTE)
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
-                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                calendar.set(Calendar.MINUTE, minute)
 
-                binding.timeTv.text = SimpleDateFormat("HH:mm").format(calendar.time)
-                var timeX = SimpleDateFormat("HH:mm").format(calendar.time)
-                hours = hour
-                minutes = minute
-                timeNew = toMins(timeX)
+            // Inflate the custom layout for the TimePickerDialog
+            val dialogView = View.inflate(requireContext(), R.layout.custom_time_picker_dialog, null)
+            val timePicker = dialogView.findViewById<TimePicker>(R.id.timePicker)
 
-            }
-            binding.timeTv.setOnClickListener {
-                TimePickerDialog.THEME_DEVICE_DEFAULT_DARK
+            // Create a custom dialog and set its view to the custom layout
+            val timePickerDialog = AlertDialog.Builder(
+                requireContext(),
+                R.style.CustomTimePickerDialogStyle // Use the custom style for the AlertDialog
+            )
+                .setView(dialogView)
+                .setPositiveButton("OK") { _, _ ->
+                    // Get the selected time from the TimePicker
+                    val hour = timePicker.currentHour
+                    val minute = timePicker.currentMinute
 
-                TimePickerDialog(
-                    context, R.style.MyTimePickerDialogTheme, timeSetListener, calendar.get(
-                        Calendar.HOUR_OF_DAY
-                    ), calendar.get(Calendar.MINUTE), true
-                ).show()
-            }
+                    // Update the TextView with the selected time
+                    calendar.set(Calendar.HOUR_OF_DAY, hour)
+                    calendar.set(Calendar.MINUTE, minute)
+
+                    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                    val selectedTime = timeFormat.format(calendar.time)
+                    binding.timeTv.text = selectedTime
+                    choosedTime = selectedTime
+                }
+                .setNegativeButton("Cancel", null)
+                .create()
+
+            // Show the custom TimePickerDialog
+            timePickerDialog.show()
         }
 
         binding.dayOfAlarm.setOnClickListener {
@@ -173,10 +189,18 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         }
 
         binding.saveWakeup.setOnClickListener {
-            localWakeUpSaveData.thumbUrl = viewModel.getWakeUpThumbData()
-            localWakeUpSaveData.videoUrl = viewModel.getWakeUpVideoData()
-            localWakeUpSaveData.repeatDays = chooseRepeatDays
-            viewModel.wakeUpSaver(localWakeUpSaveData)
+
+            if (chooseRepeatDays.isNotEmpty() && choosedTime.isNotEmpty()) {
+                localWakeUpSaveData.thumbUrl = viewModel.getWakeUpThumbData()
+                localWakeUpSaveData.videoUrl = viewModel.getWakeUpVideoData()
+                localWakeUpSaveData.repeatDays = chooseRepeatDays
+                localWakeUpSaveData.time = choosedTime
+                viewModel.wakeUpSaver(localWakeUpSaveData)
+
+                Toast.makeText(context, "Alarm saved, please set it from Start Timer", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context, "Time and Days are not set", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -376,7 +400,6 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 never.isChecked = true
                 dayOfAlarm.text = "never"
                 chooseRepeatDays = "never"
-
             }
         }
 
@@ -390,7 +413,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                     "$showval1,sun "
                 }
                 dayOfAlarm.text = showval1
-                chooseRepeatDays = showval
+                chooseRepeatDays = showval1
             }
         }
 
@@ -402,11 +425,11 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 showval1 = if (showval1 == "") {
                     "mon"
                 } else {
-                    "$showval1,mon "
+                    "$showval1, mon "
                 }
 
                 dayOfAlarm.text = showval1
-                chooseRepeatDays = showval
+                chooseRepeatDays = showval1
             }
         }
 
@@ -418,11 +441,11 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 showval1 = if (showval1 == "") {
                     "tue"
                 } else {
-                    "$showval1,tue "
+                    "$showval1, tue "
                 }
 
                 dayOfAlarm.text = showval1
-                chooseRepeatDays = showval
+                chooseRepeatDays = showval1
             }
         }
 
@@ -434,11 +457,11 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 showval1 = if (showval1 == "") {
                     "wed"
                 } else {
-                    "$showval1,wed "
+                    "$showval1, wed "
                 }
 
                 dayOfAlarm.text = showval1
-                chooseRepeatDays = showval
+                chooseRepeatDays = showval1
             }
         }
 
@@ -450,11 +473,11 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 showval1 = if (showval1 == "") {
                     "thu"
                 } else {
-                    "$showval1,thu "
+                    "$showval1, thu "
                 }
 
                 dayOfAlarm.text = showval1
-                chooseRepeatDays = showval
+                chooseRepeatDays = showval1
             }
         }
 
@@ -466,11 +489,11 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 showval1 = if (showval1 == "") {
                     "fri"
                 } else {
-                    "$showval1,fri "
+                    "$showval1, fri "
                 }
 
                 dayOfAlarm.text = showval1
-                chooseRepeatDays = showval
+                chooseRepeatDays = showval1
             }
         }
 
@@ -481,11 +504,11 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 showval1 = if (showval1 == "") {
                     "sat"
                 } else {
-                    "$showval1,sat "
+                    "$showval1, sat "
                 }
 
                 dayOfAlarm.text = showval1
-                chooseRepeatDays = showval
+                chooseRepeatDays = showval1
             }
         }
     }
@@ -523,7 +546,9 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         }
 
         viewModel.wakeUpProgramResponse.observe(viewLifecycleOwner){
-           openWakeUpDialog(it)
+            if (it?.list?.isEmpty() == false) {
+                openWakeUpDialog(it)
+            }
         }
 
         viewModel.successWakeUp.observe(viewLifecycleOwner){
@@ -533,6 +558,12 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
             else{
                 selectedFemale()
             }
+
+            binding.dayOfAlarm.text = it?.repeatDays ?: "never"
+            chooseRepeatDays = it.repeatDays
+
+            binding.timeTv.text = it?.time ?: "0:00"
+            choosedTime = it.time
         }
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
@@ -543,6 +574,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun openWakeUpDialog(wakeUp: WakeUp){
         val dialog = context?.let { Dialog(it, android.R.style.Theme_Holo_Light) }
         if (dialog != null) {
@@ -553,16 +585,27 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
             val firstImage = dialog.findViewById(R.id.firstImage) as ImageView
             val secondImage = dialog.findViewById(R.id.secondImage) as ImageView
             val thirdImage = dialog.findViewById(R.id.thirdImage) as ImageView
+            val mainImage = dialog.findViewById(R.id.mainImage) as ImageView
             val videoPlay = dialog.findViewById(R.id.videoPlay) as PlayerView
+            val button_set1 = dialog.findViewById(R.id.button_set1) as Button
+            val button_set2 = dialog.findViewById(R.id.button_set2) as Button
+            val button_set3 = dialog.findViewById(R.id.button_set3) as Button
 
-            firstImage.setUserImage(requireContext(), wakeUp.base_url_image+wakeUp.list[0].thumb1)
-            secondImage.setUserImage(requireContext(), wakeUp.base_url_image+wakeUp.list[1].thumb1)
-            thirdImage.setUserImage(requireContext(), wakeUp.base_url_image+wakeUp.list[2].thumb1)
+
+            if (wakeUp.list.size >= 1) {
+                firstImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].thumb1)
+                secondImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].thumb2)
+                thirdImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].thumb3)
+                mainImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].main_thumb)
+            }
+
+            videoPlay.setGone()
 
             var position: Int
+
             firstImage.setOnClickListener {
                  position = 0
-                dialogVideoPlay(videoPlay, wakeUp, position)
+                    dialogVideoPlay(videoPlay, wakeUp, position)
             }
 
             secondImage.setOnClickListener {
@@ -575,40 +618,56 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 dialogVideoPlay(videoPlay, wakeUp, position)
             }
 
-            firstImage.setOnLongClickListener{
+            mainImage.setOnClickListener {
+                position = 3
+                dialogVideoPlay(videoPlay, wakeUp, position)
+            }
+
+            button_set1.setOnClickListener {
                 val videoSubUrl = wakeUp.list[0].sub1Url
                 val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
                 val thumbSubUrl = wakeUp.list[0].thumb1
                 val completeThumbUrl = "${wakeUp.base_url_image}/$thumbSubUrl"
-                 viewModel.setWakeUpThumbData(completeThumbUrl)
-                 viewModel.setWakeUpVideoData(completeVideoUrl)
+                viewModel.setWakeUpThumbData(completeThumbUrl)
+                viewModel.setWakeUpVideoData(completeVideoUrl)
+                Toast.makeText(context, "Selected", Toast.LENGTH_SHORT).show()
                 true
             }
 
-            secondImage.setOnLongClickListener{
-                val videoSubUrl = wakeUp.list[1].sub1Url
+            button_set2.setOnClickListener {
+                val videoSubUrl = wakeUp.list[0].sub2Url
                 val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
                 viewModel.setWakeUpVideoData(completeVideoUrl)
 
-                val thumbSubUrl = wakeUp.list[1].thumb1
+                val thumbSubUrl = wakeUp.list[0].thumb2
                 val completeThumbUrl = "${wakeUp.base_url_image}/$thumbSubUrl"
                 viewModel.setWakeUpThumbData(completeThumbUrl)
+
+                Toast.makeText(context, "Selected", Toast.LENGTH_SHORT).show()
                 true
             }
 
-            thirdImage.setOnLongClickListener{
-                val videoSubUrl = wakeUp.list[2].sub1Url
+            button_set3.setOnClickListener {
+                val videoSubUrl = wakeUp.list[0].sub3Url
                 val completeVideoUrl = "${wakeUp.base_url_video}/$videoSubUrl"
                 viewModel.setWakeUpVideoData(completeVideoUrl)
 
-                val thumbSubUrl = wakeUp.list[2].thumb1
+                val thumbSubUrl = wakeUp.list[0].thumb3
                 val completeThumbUrl = "${wakeUp.base_url_image}/$thumbSubUrl"
                 viewModel.setWakeUpThumbData(completeThumbUrl)
+
+                Toast.makeText(context, "Selected", Toast.LENGTH_SHORT).show()
                 true
             }
 
             closeBtnDialog.setOnClickListener {
-                dialog.dismiss()
+                if (player?.isPlaying == true){
+                    player?.pause()
+                    player?.stop()
+                    dialog.dismiss()
+                }else{
+                    dialog.dismiss()
+                }
             }
             dialog.show()
         }
@@ -616,7 +675,18 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
 
     private fun dialogVideoPlay(videoPlay: PlayerView, wakeUp: WakeUp, position: Int) {
         videoPlay.setVisible()
-        val videoSubUrl = wakeUp.list[position].sub1Url
+
+        var videoSubUrl = ""
+        if(position == 0){
+             videoSubUrl = wakeUp.list[0].sub1Url
+        }else if(position == 1){
+            videoSubUrl = wakeUp.list[0].sub2Url
+        }else if(position == 2){
+            videoSubUrl = wakeUp.list[0].sub3Url
+        }else{
+            videoSubUrl = wakeUp.list[0].main_video
+        }
+
         val completeVideoUrl = "http://app.dialupdelta.com/uploads/video/$videoSubUrl"
         val mediaItem: MediaItem = completeVideoUrl.let { MediaItem.fromUri(it) }
         player = SimpleExoPlayer.Builder(requireActivity()).build().also {

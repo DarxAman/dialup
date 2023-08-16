@@ -1,0 +1,5 @@
+<!-- overlay_drawable.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Reference the overlay_color drawable here -->
+    <item android:drawable="@drawable/overlay_color" android:gravity="left"/>
+</layer-list>

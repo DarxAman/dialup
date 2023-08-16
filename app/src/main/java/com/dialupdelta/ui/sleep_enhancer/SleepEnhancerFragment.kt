@@ -141,11 +141,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
 
                 Toast.makeText(context, "Alarm saved, please set it from Start Timer", Toast.LENGTH_SHORT).show()
             } else {
-
                 Toast.makeText(context, "Not all values set", Toast.LENGTH_SHORT).show()
-
-//                Log.e("check", time1 + " - " + time2 + " dur - " + duration1 + " - " + duration2
-//                    + " prg - " + program1 + " - " + program2 + "al - " + localSaveSleepEnhancer.audio_1 + localSaveSleepEnhancer.audio_2)
             }
         }
 
@@ -651,8 +647,8 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
                     val duration2 = result.getString("duration_2")
                     val program1 = result.getString("program_1")
                     val program2 = result.getString("program_2")
-                    Glide.with(requireContext()).load(program1.toString()).into(binding.bottom1)
-                    Glide.with(requireContext()).load(program2.toString()).into(binding.bottom2)
+                    Glide.with(requireContext()).load(program1.toString()).placeholder(R.drawable.alarm_off).into(binding.bottom1)
+                    Glide.with(requireContext()).load(program2.toString()).placeholder(R.drawable.alarm_off).into(binding.bottom2)
 
                     val audio1 = result.getString("audio_1")
                     val audio2 = result.getString("audio_2")
