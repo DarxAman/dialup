@@ -6,7 +6,11 @@ import java.io.Serializable
 data class GetJournalList(
     @SerializedName("status") val status : Boolean,
     @SerializedName("msg") val msg : String,
-    @SerializedName("result") val result : List<JournalList>
+    @SerializedName("result") val result : JournalListResult
+)
+
+data class JournalListResult(
+    val list: List<JournalList>
 )
 
 data class JournalList (

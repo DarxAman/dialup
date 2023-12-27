@@ -2,11 +2,13 @@ package com.dialupdelta.ui.journal
 
 import androidx.lifecycle.MutableLiveData
 import com.dialupdelta.base.BaseViewModel
+import com.dialupdelta.data.network.response.get_journal_response.GetJournalList
 import com.dialupdelta.data.network.response.get_journal_response.JournalList
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.utils.ApiException
 import com.dialupdelta.utils.Coroutines
 import com.dialupdelta.utils.NoInternetException
+import org.json.JSONObject
 
 class JournalViewModel(private val repository: Repository):BaseViewModel() {
 
@@ -14,6 +16,7 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
     val successJournalList = MutableLiveData<Boolean>()
     val successJournal = MutableLiveData<Boolean>()
     val deleteJournal = MutableLiveData<Int>()
+    lateinit var dataForJournal : GetJournalList
 
     init {
         getJournalList.value = ArrayList()
@@ -22,6 +25,10 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
    fun getAllJournalList():ArrayList<JournalList>?{
        return getJournalList.value
    }
+
+    fun getJournalListResponse() : String{
+        return dataForJournal.msg
+    }
 
 
     fun getJournalList() {
@@ -32,7 +39,8 @@ class JournalViewModel(private val repository: Repository):BaseViewModel() {
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-                        getJournalList.value?.addAll(sleepResponse.result)
+                        getJournalList.value?.addAll(sleepResponse.result.list)
+                        dataForJournal = sleepResponse
                         successJournalList.value = true
                     }
                     return@main

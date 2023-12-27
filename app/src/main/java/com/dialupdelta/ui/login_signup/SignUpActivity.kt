@@ -26,6 +26,10 @@ class SignUpActivity : BaseActivity() {
         viewModel = ViewModelProvider(this, factory)[LoginSignUpViewModel::class.java]
         setObserver(viewModel)
 
+        binding.tvLogin.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+
         binding.btnSignUp.setOnClickListener {
             val userName = binding.edtName.text.toString()
             val userEmail = binding.edtEmail.text.toString()

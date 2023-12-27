@@ -14,7 +14,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_140sdp"
+            android:layout_height="@dimen/_130sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:scaleType="centerCrop"
             android:src="@drawable/logo_toolbar"
@@ -114,6 +114,15 @@
                     android:fontFamily="@font/roboto_medium_numbers"
                     android:text="@string/by_signing_up_you_agree_to_our_privacy_policy"
                     android:textColor="@color/black_75"
+                    android:textSize="13sp" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:fontFamily="@font/roboto_medium_numbers"
+                    android:text="Already Signup? Login here"
+                    android:textColor="#2196F3"
                     android:textSize="13sp" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

@@ -29,7 +29,7 @@ class NewAdapterGetToSleep(private var context: Context,private val getToSleepCl
             programItemText.text = sleepList?.program_name
 
             if(sleepList?.thumb?.isNullOrEmpty() == false) {
-                Glide.with(context).load(sleepList?.thumb).placeholder(R.drawable.logo_toolbar)
+                Glide.with(context).load(sleepList?.thumb).placeholder(R.drawable.logo_toolbar).fitCenter().error(R.drawable.logo_toolbar)
                     .into(getToSleep_image)
             }
         }

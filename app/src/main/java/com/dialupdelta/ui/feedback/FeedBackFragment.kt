@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.dialupdelta.R
 import com.dialupdelta.base.BaseFragment
+import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.databinding.FragmentFeedBackBinding
 import com.dialupdelta.`interface`.FeedBackItemClickListener
 import com.github.mikephil.charting.data.CandleEntry
@@ -23,6 +24,7 @@ class FeedBackFragment : BaseFragment(), FeedBackItemClickListener {
      private val candleStickChartList:ArrayList<CandleEntry> = ArrayList()
     private val factory: FeedBackViewModelFactory by instance()
     private lateinit var viewModel: FeedBackViewModel
+    private val repository: Repository by instance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,12 +44,14 @@ class FeedBackFragment : BaseFragment(), FeedBackItemClickListener {
         viewModel = ViewModelProvider(this, factory)[FeedBackViewModel::class.java]
         setObserver(viewModel)
 
+        val uid = repository.getAuthData()?.id.toString()
+
         binding.webView.webViewClient = MyBrowser()
 
         binding.webView.getSettings().setLoadsImagesAutomatically(true)
         binding.webView.getSettings().setJavaScriptEnabled(true);
         binding.webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        binding.webView.loadUrl("https://dialupdelta.com/feedbackData?userId=1")
+        binding.webView.loadUrl("https://dialupdelta.com/userFeedback?userID=$uid")
 
 
 //        val htmlContent = "<html><body><h1>Hello World!</h1></body></html>"

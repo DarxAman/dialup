@@ -21,7 +21,8 @@ private const val sleepEnhancerData = "sleepEnhancerData"
 
 
 class PreferenceProvider(context: Context) {
-    private var preference: SharedPreferences = context.getSharedPreferences("MySharedPref", MODE_PRIVATE)
+    private var preference: SharedPreferences =
+        context.getSharedPreferences("MySharedPref", MODE_PRIVATE)
     private val gson = Gson()
 
     fun getBaseURL(): String? {
@@ -37,7 +38,7 @@ class PreferenceProvider(context: Context) {
     }
 
     fun getGender(): Int {
-        return preference.getInt(gender, 0)
+        return preference.getInt(gender, 1)
     }
 
     fun setLanguage(id: Int) {
@@ -46,8 +47,8 @@ class PreferenceProvider(context: Context) {
             .apply()
     }
 
-    fun getLanguage():Int {
-        return preference.getInt(language, 0)
+    fun getLanguage(): Int {
+        return preference.getInt(language, 1)
     }
 
     fun setAge(id: Int?) {
@@ -58,8 +59,8 @@ class PreferenceProvider(context: Context) {
         }
     }
 
-    fun getAge():Int {
-        return preference.getInt(age, 0)
+    fun getAge(): Int {
+        return preference.getInt(age, 1)
     }
 
     fun saveAuthData(profile: AuthData?) {
@@ -68,60 +69,69 @@ class PreferenceProvider(context: Context) {
             .apply()
     }
 
+    fun clearData() {
+        val newPref = preference.edit()
+        newPref.clear()
+        newPref.putString(userCredential, "")
+        newPref.putString(login, "")
+        newPref.apply()
+
+    }
+
     fun getAuthData(): AuthData? {
         val json: String? = preference.getString(userCredential, null)
         return gson.fromJson(json, AuthData::class.java)
     }
 
-    fun setLogIn(value:Boolean){
-      preference.edit()
-          .putBoolean(login, value)
-          .apply()
+    fun setLogIn(value: Boolean) {
+        preference.edit()
+            .putBoolean(login, value)
+            .apply()
     }
 
-    fun getLogIn():Boolean{
+    fun getLogIn(): Boolean {
         return preference.getBoolean(login, false)
     }
 
 
-    fun setSleepEnhancerUrl(enhancerUrl:String){
+    fun setSleepEnhancerUrl(enhancerUrl: String) {
         preference.edit()
             .putString(sleepEnhancerUrl, enhancerUrl)
             .apply()
     }
 
-    fun getSleepEnhancerUrl():String?{
+    fun getSleepEnhancerUrl(): String? {
         return preference.getString(sleepEnhancerUrl, "")
     }
 
-    fun setWakeUpVideoData(localData:String){
+    fun setWakeUpVideoData(localData: String) {
         preference.edit()
             .putString(wakeUpVideoData, localData)
             .apply()
     }
 
-    fun getWakeUpVideoData():String?{
+    fun getWakeUpVideoData(): String? {
         return preference.getString(wakeUpVideoData, "")
     }
 
 
-    fun setWakeUpThumbData(localData:String){
+    fun setWakeUpThumbData(localData: String) {
         preference.edit()
             .putString(wakeUpThumbData, localData)
             .apply()
     }
 
-    fun getWakeUpThumbData():String?{
+    fun getWakeUpThumbData(): String? {
         return preference.getString(wakeUpThumbData, "")
     }
 
-    fun saveSleepEnhancerData(localSaveSleepEnhancer: LocalSaveSleepEnhancer?){
+    fun saveSleepEnhancerData(localSaveSleepEnhancer: LocalSaveSleepEnhancer?) {
         preference.edit()
             .putString(sleepEnhancerData, gson.toJson(localSaveSleepEnhancer))
             .apply()
     }
 
-    fun getSleepEnhancerData():LocalSaveSleepEnhancer?{
+    fun getSleepEnhancerData(): LocalSaveSleepEnhancer? {
         val json: String? = preference.getString(sleepEnhancerData, null)
         return gson.fromJson(json, LocalSaveSleepEnhancer::class.java)
     }

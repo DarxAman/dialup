@@ -89,7 +89,7 @@ class SleepEnhancerViewModel(private val repository: Repository):BaseViewModel()
                 Coroutines.main {
                     stopLoading()
                     if (sleepResponse.status) {
-
+                        savedSleepEnhancer()
                     }
                     return@main
                 }

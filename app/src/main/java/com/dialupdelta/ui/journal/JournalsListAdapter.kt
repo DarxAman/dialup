@@ -3,6 +3,7 @@ package com.dialupdelta.ui.journal
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -17,6 +18,7 @@ class JournalsListAdapter(
     private val journalList: ArrayList<JournalList>?
 ) : RecyclerView.Adapter<JournalsListAdapter.ViewHolder>() {
 
+    private var filteredJournalList: ArrayList<JournalList>? = ArrayList(journalList)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_journals, parent, false)
@@ -24,7 +26,7 @@ class JournalsListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val journal = journalList?.get(position)
+        val journal = filteredJournalList?.get(position)
         holder.apply {
             recyTitle.text = journal?.title
             recyContent.text = journal?.content
@@ -32,8 +34,27 @@ class JournalsListAdapter(
         }
     }
 
+    fun filter(query: String) {
+        filteredJournalList?.clear()
+        if (query.isEmpty()) {
+            // If the query is empty, show all items
+            if (journalList != null) {
+                filteredJournalList?.addAll(journalList)
+            }
+        } else {
+            // If the query is not empty, filter items that match the query
+            for (journal in journalList.orEmpty()) {
+                if (journal.title.contains(query, true) || journal.content.contains(query, true)) {
+                    filteredJournalList?.add(journal)
+                }
+            }
+        }
+        notifyDataSetChanged()
+    }
+
+
     override fun getItemCount(): Int {
-       return journalList?.size?:0
+       return filteredJournalList?.size?:0
     }
 
     fun removeJournalList(position: Int){
@@ -44,7 +65,7 @@ class JournalsListAdapter(
 
    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val recyclerCheck = itemView.findViewById<ImageView>(R.id.recyCheck)
+        val recyclerCheck = itemView.findViewById<CheckBox>(R.id.recyCheck)
         val recyTitle = itemView.findViewById<TextView>(R.id.recyTitle)
         val recyContent = itemView.findViewById<TextView>(R.id.recyContent)
         val recyDate = itemView.findViewById<TextView>(R.id.recyDate)

@@ -1,5 +1,6 @@
 package com.dialupdelta.ui.journal
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -25,6 +26,7 @@ class AddJournalActivity : BaseActivity() {
         initUI()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun initUI() {
         viewModel = ViewModelProvider(this, factory)[JournalViewModel::class.java]
         setObserver(viewModel)

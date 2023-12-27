@@ -95,6 +95,10 @@ class Repository(
         setGender(authData?.gender_id)
     }
 
+    fun clearLogin(){
+        prefs.setLogIn(false)
+    }
+
      fun getAuthData(): AuthData? {
         return prefs.getAuthData()
     }
@@ -240,7 +244,7 @@ class Repository(
         return apiRequest {
             api.getJournalList(
                 getBaseURL(),
-                getAuthData()?.id,
+                2,
             )
         }
     }
@@ -258,7 +262,7 @@ class Repository(
         return apiRequest {
             api.setInsertJournal(
                 getBaseURL(),
-                getAuthData()?.id,
+                2,
                 title,
                 content
             )

@@ -70,9 +70,9 @@ People who are high in this trait tend to be more adventurous and creative. Peop
     <string name="text_low_small">This trait features characteristics such as imagination and insight.1﻿ People who are high in this trait also tend to have a broad range of interests. They are curious about the world and other people and eager to learn new things and enjoy new experiences.
 
 People who are high in this trait tend to be more adventurous and creative. People low in this trait are often much more traditional and may struggle with abstract thinking.</string>
-    <string name="_1_2_1_2"><![CDATA[1/2 & 1/2]]></string>
-    <string name="_1_3_2_3"><![CDATA[1/3 & 2/3]]></string>
-    <string name="_2_3_1_3"><![CDATA[2/3 & 1/3]]></string>
+    <string name="_1_2_1_2">AB</string>
+    <string name="_1_3_2_3">ABB</string>
+    <string name="_2_3_1_3">AAB</string>
     <string name="title_activity_two">ActivityTwo</string>
     <string name="hello_world">Hello Square World!</string>
 

@@ -13,26 +13,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import android.widget.*
-import androidx.appcompat.widget.ViewUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
-import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.dialupdelta.R
-import com.dialupdelta.`interface`.ProgramListListener
 import com.dialupdelta.base.BaseFragment
-import com.dialupdelta.data.preferences.PreferenceProvider
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.databinding.FragmentSleepEnhancerBinding
+import com.dialupdelta.`interface`.ProgramListListener
+import com.dialupdelta.ui.get_to_sleep.GetToSleepFragment
 import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerDialogAdapter
 import com.dialupdelta.ui.sleep_enhancer.adapter.SleepEnhancerProgramListAdapter
 import com.dialupdelta.utils.CustomProgressDialog
@@ -70,6 +65,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private var selectedAlarmProgram = 0
     private var currentPosition = 0
     private val repository: Repository by instance()
+//    val customProgressDialog = CustomProgressDialog(requireContext())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +85,15 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     }
 
     private fun initUI() {
+
+//        val swipeRefreshLayout: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+
+            viewModel.savedSleepEnhancer()
+            reloadFragment()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
 
         showOptions()
         showOptionRight()
@@ -134,17 +139,13 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
             if (time1.isNotEmpty() && time2.isNotEmpty() && userId.isNotEmpty()
                 ) {
 
-                localSaveSleepEnhancer.time1 = time1
-                localSaveSleepEnhancer.time2 = time2
-                localSaveSleepEnhancer.user_id = userId
-                viewModel.sleepEnhancerSaver(localSaveSleepEnhancer)
+                saveApiCall(time1, time2, userId)
 
                 Toast.makeText(context, "Alarm saved, please set it from Start Timer", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Not all values set", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         binding.showOptionclick.setOnClickListener {
             showOptions()
@@ -182,6 +183,13 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun saveApiCall(time1: String, time2: String, userId: String) {
+        localSaveSleepEnhancer.time1 = time1
+        localSaveSleepEnhancer.time2 = time2
+        localSaveSleepEnhancer.user_id = userId
+        viewModel.sleepEnhancerSaver(localSaveSleepEnhancer)
     }
 
     private fun showProgramDialog(alarmSelected : String, alarmNumber : Int) {
@@ -253,7 +261,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         binding.arrowRight1.setOnClickListener {
             showSetAlarmLeft = 1
             left1count = 0
-            if (right1count <= 10) {
+            if (right1count <= 10 && answerForLeft + 5 <= 60) {
                 right1count+=5
                 answerForLeft += 5
                 binding.showAdd1.text = "(+$right1count)"
@@ -277,7 +285,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         binding.arrowLeft1.setOnClickListener {
             right1count = 0
             showSetAlarmLeft = 1
-            if (left1count >= -10) {
+            if (left1count >= -10 && answerForLeft - 5 >= 30) {
                 left1count-=5
                 answerForLeft -= 5
                 if (left1count < 0) {
@@ -373,7 +381,6 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
             animation.fillAfter = true
             binding.bottom1.startAnimation(animation)
         }
-
 
         // center second block
         binding.showAns2.setOnClickListener {
@@ -622,7 +629,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
 
     // Create a method to make the API request
     fun makeApiRequest() {
-        val url = "http://app.dialupdelta.com/web/api/saved_sleep_enhancer"
+        val url = "https://app.dialupdelta.com/web/api/saved_sleep_enhancer"
 
         val params = HashMap<String, String>()
         params["user_id"] = repository.getAuthData()?.id.toString()
@@ -664,7 +671,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
             },
             Response.ErrorListener { error ->
                 // Handle error cases here
-                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): MutableMap<String, String> {
                 return params
@@ -674,5 +681,18 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         // Add the request to the Volley request queue
         Volley.newRequestQueue(context).add(request)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    fun reloadFragment() {
+        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragmentTransaction.detach(this).commit()
+
+        val fragmentTransaction1 = requireActivity().supportFragmentManager.beginTransaction()
+        fragmentTransaction1.attach(this).commit()
+    }
+
 
 }
