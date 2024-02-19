@@ -13,7 +13,6 @@
             tools:context=".ui.sleep_enhancer.SleepEnhancerFragment">
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -50,12 +49,14 @@
                             android:id="@+id/title_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
                             android:text="@string/sleep_enhancer"
                             android:textColor="@color/white"
                             android:textSize="24sp"
-                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toTopOf="@+id/view_15"
+                            app:layout_constraintEnd_toStartOf="@+id/save_sleep_enhancer"
+                            app:layout_constraintStart_toEndOf="@+id/resetBtn"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
@@ -63,6 +64,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
+                            android:padding="5dp"
                             android:text="Set"
                             android:textColor="@color/white"
                             android:textSize="18sp"
@@ -78,7 +80,6 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
@@ -86,6 +87,16 @@
                             app:layout_constraintTop_toBottomOf="@+id/title_tv"
                             app:layout_constraintVertical_bias="1.0">
 
+                            <Button
+                                android:id="@+id/refereshBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="32dp"
+                                android:text="Refresh"
+                                android:textAllCaps="false"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
 
                             <ImageView
                                 android:id="@+id/vector1"
@@ -294,12 +305,13 @@
                             android:id="@+id/resetBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="32dp"
+                            android:padding="5dp"
+                            android:layout_marginStart="16dp"
                             android:text="Reset"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="@+id/title_tv"
-                            app:layout_constraintEnd_toStartOf="@+id/save_sleep_enhancer"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/title_tv" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>

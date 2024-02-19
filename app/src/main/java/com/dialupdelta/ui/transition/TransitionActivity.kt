@@ -17,7 +17,7 @@ class TransitionActivity : BaseActivity() {
     private lateinit var getToSleepFragment:GetToSleepFragment
     private lateinit var sleepEnhancerFragment: SleepEnhancerFragment
     private lateinit var wakeUpFragment: WakeUpFragment
-    private lateinit var journalFragment: JournalFragment
+//    private lateinit var journalFragment: JournalFragment
     private lateinit var feedBackFragment: FeedBackFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,7 @@ class TransitionActivity : BaseActivity() {
         getToSleepFragment = GetToSleepFragment()
         wakeUpFragment = WakeUpFragment()
         sleepEnhancerFragment = SleepEnhancerFragment()
-        journalFragment = JournalFragment()
+//        journalFragment = JournalFragment()
         feedBackFragment = FeedBackFragment()
 
         setCurrentFragment(getToSleepFragment)
@@ -40,7 +40,7 @@ class TransitionActivity : BaseActivity() {
                 R.id.sleepEnhancer->setCurrentFragment(sleepEnhancerFragment)
                 R.id.wakeUp->setCurrentFragment(wakeUpFragment)
                 R.id.feedBack->setCurrentFragment(feedBackFragment)
-                R.id.journal->setCurrentFragment(journalFragment)
+//                R.id.journal->setCurrentFragment(journalFragment)
 
             }
             true

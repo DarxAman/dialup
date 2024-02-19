@@ -1,5 +1,6 @@
 package com.dialupdelta.ui.get_to_sleep
 
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.dialupdelta.base.BaseViewModel
@@ -75,6 +76,7 @@ class GetToSleepViewModel(private val repository: Repository):BaseViewModel() {
                 val sleepResponse = repository.getToSleepVideoList(gender, duration, program)
                 Coroutines.main {
                     stopLoading()
+//                    Log.e("ero", ""+sleepResponse.result)
                     if (sleepResponse.status) {
                         getToSleepVideoList.value = sleepResponse.result
                         getToSleepVideoResponse.value = true

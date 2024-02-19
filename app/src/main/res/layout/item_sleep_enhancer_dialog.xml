@@ -16,15 +16,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageMp3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/logo_toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <Button
+            android:id="@+id/sampleMp3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sample"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/programItemText"
@@ -46,7 +45,7 @@
         android:id="@+id/chooseAudio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose"
+        android:text="Select"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/constraintLayout9"
         app:layout_constraintTop_toTopOf="parent"
@@ -60,7 +59,7 @@
         android:textColor="@color/black"
         android:textStyle="normal"
         android:fontFamily="@font/roboto_medium_numbers"
-        android:text="hhbjhh"
+        android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout9" />

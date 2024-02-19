@@ -1,6 +1,5 @@
 package com.dialupdelta.ui.get_to_sleep
 
-import AlarmService
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Dialog
@@ -8,6 +7,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,7 +24,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.MediaController
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -41,11 +44,13 @@ import com.dialupdelta.data.preferences.PreferenceProvider
 import com.dialupdelta.data.repositories.Repository
 import com.dialupdelta.databinding.FragmentGetToSleepBinding
 import com.dialupdelta.`interface`.ProgramClickPosition
+import com.dialupdelta.ui.get_to_sleep.adapter.GetClickedMp3
+import com.dialupdelta.ui.get_to_sleep.adapter.Mp3Recycler
 import com.dialupdelta.ui.get_to_sleep.adapter.NewAdapterGetToSleep
 import com.dialupdelta.ui.library.LibraryModulesActivity
-import com.dialupdelta.ui.login_signup.LoginActivity
 import com.dialupdelta.ui.sleep_enhancer.AlarmReceiver
 import com.dialupdelta.ui.sleep_enhancer.CommonObject
+import com.dialupdelta.ui.sleep_enhancer.adapter.DudSongsResponse
 import com.dialupdelta.ui.splash.SplashActivity
 import com.dialupdelta.ui.transition.TransitionActivity
 import com.dialupdelta.utils.CustomProgressDialog
@@ -59,10 +64,10 @@ import org.kodein.di.generic.instance
 import java.io.Serializable
 import java.util.Calendar
 
-class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, RingedAlarm {
+class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, RingedAlarm, GetClickedMp3 {
     private var wakeupTrait: String = ""
     private var userId: Int = 0
-    private var genderSelected = 1
+    private var genderSelected = 3
     private var durationSelected = 5
     private var checkFull = ""
     private var player: SimpleExoPlayer? = null
@@ -89,6 +94,8 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
     lateinit var imageView1 : ImageView
     lateinit var imageView2 : ImageView
     lateinit var ivWakeup : ImageView
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
+    val selectedCards = mutableSetOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -117,6 +124,18 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             }
         }
 
+        binding.backgroundMusicStop.setOnClickListener {
+            binding.bgcMCl.visibility = View.GONE
+            binding.loaderProgressBar.visibility = View.GONE
+
+            mediaPlayer.stop()
+            mediaPlayer.reset()
+
+            mediaPlayer.setOnCompletionListener {
+                binding.bgcMCl.visibility = View.GONE
+            }
+        }
+
         binding.logoutTts.setOnClickListener {
             repository.saveAuthData(null)
             repository.clearLogin()
@@ -133,7 +152,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             startActivity(Intent(context, LibraryModulesActivity::class.java))
         }
 
-        binding.skipSleep.setOnClickListener {
+        binding.constraintLayout2.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 dialogShowOnStartTimer()
             }
@@ -159,6 +178,8 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             selectedMale()
         }
 
+        getMp3()
+
         try {
             val dataForSleepEnhancer = viewModel.savedSleepEnhancer()!!
 
@@ -176,7 +197,8 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
         }
 
         viewModel.getToSleepVideoResponse.observe(viewLifecycleOwner) {
-            getToSleepProgramDialogShow()
+//            getToSleepProgramDialogShow()
+                getToSleepAudioProgram()
         }
 
         viewModel.successWakeUp.observe(viewLifecycleOwner) {
@@ -187,6 +209,32 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             dat_url = it.videoURL
         }
 
+       getRefreshedAlarm()
+
+        viewModel.getSaveSleepResponse.observe(viewLifecycleOwner) {
+            if (it.duration_id == 9) {
+                selected9Mint()
+            } else {
+                selected5Mint()
+            }
+            if (it.gender_id == 1) {
+                selectedMale()
+            } else {
+                selectedFemale()
+            }
+        }
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                progress?.showSweetDialog()
+            } else {
+                progress?.dismissSweet()
+            }
+        }
+    }
+
+    private fun getRefreshedAlarm() {
+//        val customDialog = CustomProgressDialog(requireContext())
+//        customDialog.showSweetDialog()
         viewModel.successSleepEnhancer.observe(viewLifecycleOwner) {
             if (it.t_1.equals("0")) {
                 firstAlarm = "0"
@@ -209,26 +257,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             }
 
         }
-
-        viewModel.getSaveSleepResponse.observe(viewLifecycleOwner) {
-            if (it.duration_id == 9) {
-                selected9Mint()
-            } else {
-                selected5Mint()
-            }
-            if (it.gender_id == 1) {
-                selectedMale()
-            } else {
-                selectedFemale()
-            }
-        }
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                progress?.showSweetDialog()
-            } else {
-                progress?.dismissSweet()
-            }
-        }
+//        customDialog.dismissSweet()
     }
 
     private fun getToSleepProgramDialogShow() {
@@ -346,11 +375,30 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             dialog.setContentView(R.layout.dialogonstarttimer)
             dialog.show()
 
+            val refreshbtn : Button = dialog.findViewById(R.id.refresh_alarm)
+
+            refreshbtn.setOnClickListener{
+                val customDialog = CustomProgressDialog(requireContext())
+                customDialog.showSweetDialog()
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                   customDialog.dismissSweet()
+                }, 1500)
+
+                getRefreshedAlarm()
+
+//                customDialog.dismissSweet()
+            }
+
             val cl_cl: ConstraintLayout = dialog.findViewById(R.id.cl_cl)
             val backDialogButton: Button = dialog.findViewById(R.id.backDialogButton)
+            val cancelAlarm: Button = dialog.findViewById(R.id.cancelAlarm)
+            
             backDialogButton.setOnClickListener {
+
                 cl_cl.visibility = View.VISIBLE
                 backDialogButton.visibility = View.GONE
+                refreshbtn.visibility = View.VISIBLE
             }
             cl_cl.visibility = View.VISIBLE
             // sleep enhancer
@@ -358,9 +406,16 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
              imageView_2 = dialog.findViewById(R.id.imageView_2s)
             val tv_1: TextView = dialog.findViewById(R.id.tv_1s)
             val tv_2: TextView = dialog.findViewById(R.id.tv_2s)
+            val cl1s: CardView = dialog.findViewById(R.id.cl_1s)
+            val cl2s: CardView = dialog.findViewById(R.id.cl_2s)
             // wakeup
              iv_wakeup_ = dialog.findViewById(R.id.iv_wakeup_s)
             val tc_wakeup_: TextView = dialog.findViewById(R.id.tc_wakeup_s)
+            val cl3s: CardView = dialog.findViewById(R.id.cl3s)
+            val constraintLayout19: ConstraintLayout = dialog.findViewById(R.id.constraintLayout19)
+
+            // cancel alarm logic
+            cancelAlarmLogic(cancelAlarm, cl1s, cl2s, cl3s, constraintLayout19, cl_cl)
 
             // close button
             val sleep_dialog_ttsclose: Button = dialog.findViewById(R.id.sleep_dialog_ttsclose)
@@ -384,8 +439,10 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             Glide.with(requireActivity()).load(dat_image).placeholder(R.drawable.alarm_off)
                 .into(iv_wakeup_)
 
+            // 30 sec hide main component
             Handler(Looper.getMainLooper()).postDelayed({
                cl_cl.visibility = View.GONE
+                refreshbtn.visibility = View.GONE
                 backDialogButton.visibility = View.VISIBLE
             }, 30000)
 
@@ -401,6 +458,122 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             // set wakeup alarm
             setAlarmAtSpecificTime(dat, dat_url, 3)
         }
+    }
+
+    private fun cancelAlarmLogic(
+        cancelAlarm: Button,
+        cl1s: CardView,
+        cl2s: CardView,
+        cl3s: CardView,
+        constraintLayout19: ConstraintLayout,
+        cl_cl: ConstraintLayout
+    ) {
+
+        cl1s.setOnClickListener {
+            manageCardSelection(1, cl1s, cl2s, cl3s, cancelAlarm)
+        }
+
+        cl2s.setOnClickListener {
+            manageCardSelection(2, cl1s, cl2s, cl3s, cancelAlarm)
+        }
+
+        cl3s.setOnClickListener {
+            manageCardSelection(3, cl1s, cl2s, cl3s, cancelAlarm)
+        }
+
+//        constraintLayout19.setOnClickListener {
+//            cancelAlarm.visibility = View.GONE
+//            resetCardBackgrounds(cl1s,cl2s, cl3s)
+//        }
+//
+//        cl_cl.setOnClickListener {
+//            cancelAlarm.visibility = View.GONE
+//            resetCardBackgrounds(cl1s,cl2s, cl3s)
+//        }
+
+        cancelAlarm.setOnClickListener {
+            if (selectedCards.isNotEmpty()) {
+                // Cancel alarms for each selected card
+                selectedCards.forEach { alarmId ->
+                    cancelAlarm(alarmId)
+                }
+
+                // Clear the selected cards after canceling alarms
+                selectedCards.clear()
+
+                // Reset UI
+                resetCardBackgrounds(cl1s, cl2s, cl3s)
+                cancelAlarm.visibility = View.GONE
+            } else {
+                // Handle the case where no cards are selected (optional)
+                Toast.makeText(requireContext(), "No alarms selected to cancel", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    // Function to manage card selection
+    private fun manageCardSelection(cardIndex: Int,
+                            cl1s: CardView,
+                            cl2s: CardView,
+                            cl3s: CardView,
+                            cancelAlarm: Button) {
+        if (selectedCards.contains(cardIndex)) {
+            // Deselect the card
+            selectedCards.remove(cardIndex)
+        } else {
+            // Select the card
+            selectedCards.add(cardIndex)
+        }
+
+        Log.e("cards - ", "$selectedCards")
+
+        // Update UI based on selected cards
+        updateUI(cl1s, cl2s, cl3s, cancelAlarm)
+    }
+
+    // Function to update UI based on selected cards
+    private fun updateUI( cl1s: CardView,
+                  cl2s: CardView,
+                  cl3s: CardView,
+                  cancelAlarm: Button
+    ) {
+        // Reset card backgrounds
+        resetCardBackgrounds(cl1s,cl2s, cl3s)
+
+        // Set background color for selected cards
+        selectedCards.forEach { cardIndex ->
+            when (cardIndex) {
+                1 -> cl1s.setCardBackgroundColor(Color.GRAY)
+                2 -> cl2s.setCardBackgroundColor(Color.GRAY)
+                3 -> cl3s.setCardBackgroundColor(Color.GRAY)
+            }
+        }
+
+        // Show/hide cancelAlarm based on selected cards
+        cancelAlarm.visibility = if (selectedCards.isNotEmpty()) View.VISIBLE else View.GONE
+    }
+
+    // Function to reset card backgrounds
+    private fun resetCardBackgrounds(cl1s: CardView,
+                             cl2s: CardView,
+                             cl3s: CardView) {
+        cl1s.setCardBackgroundColor(Color.parseColor("#121111"))
+        cl2s.setCardBackgroundColor(Color.parseColor("#121111"))
+        cl3s.setCardBackgroundColor(Color.parseColor("#121111"))
+    }
+
+    private fun cancelAlarm(alarmId: Int) {
+        val intent = Intent(requireContext(), AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            alarmId,
+            intent,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent)
     }
 
     private fun setImageToDashboard(imageView_3: ImageView, trait1: String) {
@@ -497,6 +670,8 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
         binding.transitionToSleepRecycler.setHasFixedSize(true)
         binding.transitionToSleepRecycler.layoutManager = GridLayoutManager(context, 2)
         binding.transitionToSleepRecycler.adapter = transitionToSleepAdapter
+
+
     }
 
     private fun videoPlay() {
@@ -536,13 +711,13 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
     private fun selectedFemale() {
         binding.sleepMale.setTextColor(Color.GRAY)
         binding.sleepFemale.setTextColor(Color.WHITE)
-        genderSelected = 2
+        genderSelected = 4
     }
 
     private fun selectedMale() {
         binding.sleepMale.setTextColor(Color.WHITE)
         binding.sleepFemale.setTextColor(Color.GRAY)
-        genderSelected = 1
+        genderSelected = 3
     }
 
     private fun selected5Mint() {
@@ -571,7 +746,7 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
                 ) // Pass the URL as an extra parameter
 
             } // Create a new BroadcastReceiver class for handling alarms
-            val requestCode = generateUniqueRequestCode()
+            val requestCode = alarmNumber
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 requestCode,
@@ -581,6 +756,8 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
 
             val currentTime = System.currentTimeMillis()
             val triggerTime = currentTime + delay
+
+            alarmManager.cancel(pendingIntent)
 
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
@@ -630,9 +807,11 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
 
         CommonObject.fragmentManagerContext = requireActivity().supportFragmentManager
 
-        val requestCode = generateUniqueRequestCode()
+        val requestCode = 3
         val pendingIntent =
             PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        alarmManager.cancel(pendingIntent)
 
         // Set the alarm using AlarmManager
         alarmManager.setExactAndAllowWhileIdle(
@@ -782,6 +961,124 @@ class GetToSleepFragment : BaseFragment(), ProgramClickPosition, Serializable, R
             Glide.with(requireActivity()).load(secondProgram).placeholder(R.drawable.alarm_off)
                 .into(ivWakeup)
         }
+    }
+
+    fun getMp3() {
+        val url = "https://app.dialupdelta.com/web/api/get_dud_songs"
+
+        // Create a POST request using Volley
+        val requestQueue: RequestQueue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(
+            Method.GET, url,
+            Response.Listener { response ->
+                // Handle response from the server
+                // You can parse the response if needed
+                Log.e("Response mp3", "$response")
+                val jsonObject = JSONObject(response);
+                if (jsonObject.getBoolean("status")) {
+
+                val gson = Gson()
+                val mp3response = gson.fromJson(response, DudSongsResponse::class.java)
+
+                val mp3Recycler = Mp3Recycler(requireActivity(), mp3response.result.data, this, mp3response.result.base_url)
+                binding.mp3Recycler.setHasFixedSize(true)
+                binding.mp3Recycler.layoutManager = GridLayoutManager(context, 2)
+                binding.mp3Recycler.adapter = mp3Recycler
+
+            }
+
+            },
+            Response.ErrorListener { error ->
+                // Handle errors
+                println("Error: $error")
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                return params
+            }
+        }
+
+        // Add the request to the RequestQueue
+        requestQueue.add(stringRequest)
+    }
+
+    override fun getClickedNumber(number: Int, url: String?) {
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.stop()
+            mediaPlayer.reset()
+        }
+        val customDialog = CustomProgressDialog(requireContext())
+        customDialog.showSweetDialog()
+
+        val  uriAudioUrl = Uri.parse(url)
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        try {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+//                mediaPlayer.release()
+                mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    it.start()
+                    customDialog.dismissSweet()
+                }
+            }else {
+                mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    it.start()
+                    customDialog.dismissSweet()
+                }
+            }
+
+            binding.bgcMCl.visibility = View.VISIBLE
+            binding.loaderProgressBar.visibility = View.VISIBLE
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getToSleepAudioProgram() {
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.stop()
+            mediaPlayer.reset()
+        }
+
+//        val videoBaseUrl = viewModel.getToSleepVideoData()?.base_url_video
+        val videoSubUrl = viewModel.getToSleepVideoData()?.list?.get(0)?.video_url
+        val videoBaseUrl = "https://app.dialupdelta.com/uploads/mp3/"
+        val completeVideoUrl = "$videoBaseUrl/$videoSubUrl"
+
+//        Toast.makeText(requireContext(), "$completeVideoUrl", Toast.LENGTH_LONG).show()
+
+        val customDialog = CustomProgressDialog(requireContext())
+        customDialog.showSweetDialog()
+
+        val  uriAudioUrl = Uri.parse(completeVideoUrl)
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        try {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.stop()
+                mediaPlayer.reset()
+//                mediaPlayer.release()
+                mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    it.start()
+                    customDialog.dismissSweet()
+                }
+            }else {
+                mediaPlayer.setDataSource(requireActivity(), uriAudioUrl)
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    it.start()
+                    customDialog.dismissSweet()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        customDialog.dismissSweet()
     }
 
 }

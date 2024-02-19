@@ -65,7 +65,6 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
     private var selectedAlarmProgram = 0
     private var currentPosition = 0
     private val repository: Repository by instance()
-//    val customProgressDialog = CustomProgressDialog(requireContext())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +112,15 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         binding.seekBar111.max = 100
         binding.seekBar111.progress = currentVolume
 
+        binding.refereshBtn.setOnClickListener{
+            viewModel.savedSleepEnhancer()
+            reloadFragment()
+        }
+
         binding.resetBtn.setOnClickListener {
+
+            binding.saveSleepEnhancer.setBackgroundColor(Color.TRANSPARENT)
+            binding.resetBtn.setBackgroundColor(Color.BLUE)
             hideOptions()
             hideOptionRight()
             answerForLeft = 45
@@ -135,6 +142,9 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
             val time1 = answerForLeft.toString()
             val time2 = answerForRight.toString()
             val userId = viewModel.getAuthData()?.id.toString()
+
+            binding.saveSleepEnhancer.setBackgroundColor(Color.BLUE)
+            binding.resetBtn.setBackgroundColor(Color.TRANSPARENT)
 
             if (time1.isNotEmpty() && time2.isNotEmpty() && userId.isNotEmpty()
                 ) {
@@ -230,7 +240,7 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
             progressBar.setGone()
             if (it.list.isNotEmpty()){
                 recyclerNewSleep.adapter?.notifyDataSetChanged()
-                val adapter = SleepEnhancerDialogAdapter(requireActivity(),this, viewModel.getSleepAudioList()?.list)
+                val adapter = SleepEnhancerDialogAdapter(requireActivity(),this, viewModel.getSleepAudioList()?.list, mediaPlayer)
                 recyclerNewSleep.layoutManager = GridLayoutManager(requireActivity(), 1)
                 recyclerNewSleep.adapter = adapter
             }
@@ -693,6 +703,4 @@ class SleepEnhancerFragment : BaseFragment(), ProgramListListener {
         val fragmentTransaction1 = requireActivity().supportFragmentManager.beginTransaction()
         fragmentTransaction1.attach(this).commit()
     }
-
-
 }

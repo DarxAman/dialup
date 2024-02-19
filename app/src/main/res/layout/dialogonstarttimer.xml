@@ -11,8 +11,21 @@
         android:layout_width="match_parent"
         android:id="@+id/main_cl"
         android:layout_height="match_parent"
-        android:background="@color/black"
-        android:layout_margin="@dimen/_8sdp">
+        android:background="@color/black">
+<!--        android:layout_margin="@dimen/_8sdp">-->
+
+        <Button
+            android:id="@+id/refresh_alarm"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="32dp"
+            android:text="Refresh"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:layout_width="88dp"
@@ -37,19 +50,22 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                app:cardBackgroundColor="@color/transparent"
+                app:cardUseCompatPadding="true"
                 app:layout_constraintBottom_toTopOf="@+id/constraintLayout18"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:cardBackgroundColor="@color/transparent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:cardUseCompatPadding="true">
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:id="@+id/qwerty"
-                android:layout_height="match_parent"
-
-               />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/qwerty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/logo_toolbar" />
             </androidx.cardview.widget.CardView>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout18"
@@ -64,22 +80,52 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:cardUseCompatPadding="true"
                     app:cardBackgroundColor="@color/black"
+                    app:cardUseCompatPadding="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/cancelAlarm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginHorizontal="8dp"
+                            android:text="Cancel Alarm"
+                            android:visibility="gone"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/black"
+                    app:cardUseCompatPadding="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline4"
-                    app:layout_constraintTop_toTopOf="parent" >
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <Button
-                    android:id="@+id/sleep_dialog_ttsclose"
-                    android:layout_width="110dp"
-                    android:layout_height="40dp"
-                    android:text="Close"
-                    android:layout_marginHorizontal="8dp"
-                    android:textAllCaps="false"
-                    android:textColor="#fff"
-             />
+                    <Button
+                        android:id="@+id/sleep_dialog_ttsclose"
+                        android:layout_width="110dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:text="Close"
+                        android:textAllCaps="false"
+                        android:textColor="#fff" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -97,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout20">
+                app:layout_constraintBottom_toTopOf="@+id/cl3s">
 
 
                 <androidx.cardview.widget.CardView
@@ -106,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     app:cardUseCompatPadding="true"
-                    app:cardBackgroundColor="#555555"
+                    app:cardBackgroundColor="#121111"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/cl_2s"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -150,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     app:cardUseCompatPadding="true"
-                    app:cardBackgroundColor="#555555"
+                    app:cardBackgroundColor="#121111"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/cl_3s"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -160,7 +206,6 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
 
                     <ImageView
                         android:id="@+id/imageView_2s"
@@ -272,15 +317,15 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/constraintLayout20"
+                android:id="@+id/cl3s"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
-                android:padding="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#555555"
+                android:padding="8dp"
+                app:cardBackgroundColor="#121111"
+                app:cardUseCompatPadding="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -290,49 +335,48 @@
                     android:layout_height="match_parent">
 
 
-                <ImageView
-                    android:id="@+id/iv_wakeup_s"
-                    android:layout_width="@dimen/_55sdp"
-                    android:layout_height="@dimen/_55sdp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/alarm_off"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tc_wakeup_s"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:id="@+id/iv_wakeup_s"
+                        android:layout_width="@dimen/_55sdp"
+                        android:layout_height="@dimen/_55sdp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/alarm_off"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tc_wakeup_s"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tc_wakeup_s"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/raleway_bold"
-                    android:text="00:00"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_26sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv2_wakeup_s"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/iv_wakeup_s"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.517" />
+                    <TextView
+                        android:id="@+id/tc_wakeup_s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/raleway_bold"
+                        android:text="00:00"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_26sdp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/iv2_wakeup_s"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/iv_wakeup_s"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.517" />
 
-                <ImageView
-                    android:id="@+id/iv2_wakeup_s"
-                    android:layout_width="@dimen/_60sdp"
-                    android:layout_height="@dimen/_60sdp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/tc_wakeup_s"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/logo_toolbar" />
+                    <ImageView
+                        android:id="@+id/iv2_wakeup_s"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_60sdp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/tc_wakeup_s"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/logo_toolbar" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

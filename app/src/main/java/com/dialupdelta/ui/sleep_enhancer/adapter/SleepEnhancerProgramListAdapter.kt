@@ -38,7 +38,7 @@ class SleepEnhancerProgramListAdapter(private val context: Context, private val 
             holder.parentLayout.setBackgroundColor(Color.TRANSPARENT)
         }
 
-        Glide.with(context).load(program?.thumb).into(holder.imageViewSleepProgram)
+        Glide.with(context).load(program?.thumb).fitCenter().into(holder.imageViewSleepProgram)
     }
 
     override fun getItemCount(): Int {

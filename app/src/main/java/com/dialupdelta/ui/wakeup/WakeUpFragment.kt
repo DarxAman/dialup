@@ -2,12 +2,10 @@ package com.dialupdelta.ui.wakeup
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,23 +19,18 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.dialupdelta.R
 import com.dialupdelta.`interface`.ClickInterface
 import com.dialupdelta.`interface`.GetToSleepClickListener
 import com.dialupdelta.`interface`.LongPressSleep2
 import com.dialupdelta.base.BaseFragment
 import com.dialupdelta.data.network.response.wake_up_response.WakeUp
-import com.dialupdelta.databinding.ActivityJournalListBinding
 import com.dialupdelta.databinding.FragmentWakeUpBinding
-import com.dialupdelta.ui.journal.JournalViewModel
-import com.dialupdelta.ui.journal.JournalViewModelFactory
 import com.dialupdelta.utils.setGone
 import com.dialupdelta.utils.setUserImage
 import com.dialupdelta.utils.setVisible
@@ -50,7 +43,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSleepClickListener {
-    private lateinit var binding:FragmentWakeUpBinding
+    private lateinit var binding: FragmentWakeUpBinding
     private lateinit var recyclerView: RecyclerView
     private var id45: MutableList<String> = ArrayList()
     private var traint45: MutableList<String> = ArrayList()
@@ -102,7 +95,8 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
             val calendar: Calendar = Calendar.getInstance()
 
             // Inflate the custom layout for the TimePickerDialog
-            val dialogView = View.inflate(requireContext(), R.layout.custom_time_picker_dialog, null)
+            val dialogView =
+                View.inflate(requireContext(), R.layout.custom_time_picker_dialog, null)
             val timePicker = dialogView.findViewById<TimePicker>(R.id.timePicker)
 
             // Create a custom dialog and set its view to the custom layout
@@ -197,8 +191,12 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 localWakeUpSaveData.time = choosedTime
                 viewModel.wakeUpSaver(localWakeUpSaveData)
 
-                Toast.makeText(context, "Alarm saved, please set it from Start Timer", Toast.LENGTH_SHORT).show()
-            }else{
+                Toast.makeText(
+                    context,
+                    "Alarm saved, please set it from Start Timer",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 Toast.makeText(context, "Time and Days are not set", Toast.LENGTH_SHORT).show()
             }
         }
@@ -234,7 +232,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
             dialog.show()
             recyclerView = dialog.findViewById(R.id.recyclerNewSleep)
 
-          //  apiVideosLast("45sec", title)
+            //  apiVideosLast("45sec", title)
             val adapterSleep1 = AdapterSleep(
                 requireActivity(),
                 id45,
@@ -269,7 +267,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 exo_fullscreen_icon.visibility = View.INVISIBLE
                 closeID.visibility = View.INVISIBLE
             }
-           // click()
+            // click()
             val logo: ImageView = dialog.findViewById(R.id.logo)
 
             when (title) {
@@ -277,23 +275,25 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                     traits = "E"
                     logo.setImageResource(R.drawable.setting_e)
                     dialog_title.setTextColor(Color.parseColor("#FF0000"))
-                   // apiVideosLast("45dec", "E")
+                    // apiVideosLast("45dec", "E")
 
                 }
+
                 "A" -> {
                     traits = "A"
                     logo.setImageResource(R.drawable.setting_a)
                     dialog_title.setTextColor(Color.parseColor("#F9CA14"))
-                   // apiVideosLast("45dec", "A")
+                    // apiVideosLast("45dec", "A")
                 }
 
                 "N" -> {
                     traits = "N"
                     logo.setImageResource(R.drawable.setting_n)
                     dialog_title.setTextColor(Color.parseColor("#808080"))
-                  //  apiVideosLast("45dec", "N")
+                    //  apiVideosLast("45dec", "N")
 
                 }
+
                 "O" -> {
                     traits = "O"
                     logo.setImageResource(R.drawable.setting_o)
@@ -301,11 +301,12 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
 
                     //apiVideosLast("45dec", "O")
                 }
+
                 "C" -> {
                     traits = "C"
                     logo.setImageResource(R.drawable.setting_c)
                     dialog_title.setTextColor(Color.parseColor("#0000FF"))
-                 //   apiVideosLast("45dec", "C")
+                    //   apiVideosLast("45dec", "C")
 
                 }
             }
@@ -326,21 +327,22 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 url45,
                 this,
                 this,
-                "o")
+                "o"
+            )
 
             cl45.setOnClickListener {
                 clickedVideoTime = "45sec"
-               // apiVideosLast("45dec", traits)
+                // apiVideosLast("45dec", traits)
                 tv45.setTextColor(Color.parseColor("#008000"))
                 tv90.setTextColor(Color.BLUE)
 
             }
 
             cl90.setOnClickListener {
-               clickedVideoTime = "90sec"
+                clickedVideoTime = "90sec"
                 tv90.setTextColor(Color.parseColor("#008000"))
                 tv45.setTextColor(Color.BLUE)
-              //  apiVideosLast("90sec", traits)
+                //  apiVideosLast("90sec", traits)
             }
 
             recyclerView.setHasFixedSize(true)
@@ -528,34 +530,34 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
     override fun longPressId(urlLong: String?, trait: String?) {
 
     }
+
     override fun urlGet(url: String?, clickImageUrl: String?) {
 
     }
 
     override fun getToSleepProgramItemListener(position: Int) {
-         localWakeUpSaveData.program = viewModel.getWakeUpProgramList()?.get(position)?.id
+        localWakeUpSaveData.program = viewModel.getWakeUpProgramList()?.get(position)?.id
         viewModel.getWakeList(localWakeUpSaveData.gender, localWakeUpSaveData.program)
     }
 
     private fun setObserver(viewModel: WakeUpViewModel) {
 
-        viewModel.successWakeUpProgram.observe(viewLifecycleOwner){
+        viewModel.successWakeUpProgram.observe(viewLifecycleOwner) {
             val adapter = WakeUpAdapter(requireContext(), this, viewModel.getWakeUpProgramList())
-            binding.wakeUpRecyclerView.layoutManager  =  GridLayoutManager(context, 2)
+            binding.wakeUpRecyclerView.layoutManager = GridLayoutManager(context, 2)
             binding.wakeUpRecyclerView.adapter = adapter
         }
 
-        viewModel.wakeUpProgramResponse.observe(viewLifecycleOwner){
+        viewModel.wakeUpProgramResponse.observe(viewLifecycleOwner) {
             if (it?.list?.isEmpty() == false) {
                 openWakeUpDialog(it)
             }
         }
 
-        viewModel.successWakeUp.observe(viewLifecycleOwner){
-            if (it.gender == 1){
+        viewModel.successWakeUp.observe(viewLifecycleOwner) {
+            if (it.gender == 3) {
                 selectedMale()
-            }
-            else{
+            } else {
                 selectedFemale()
             }
 
@@ -575,7 +577,7 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun openWakeUpDialog(wakeUp: WakeUp){
+    private fun openWakeUpDialog(wakeUp: WakeUp) {
         val dialog = context?.let { Dialog(it, android.R.style.Theme_Holo_Light) }
         if (dialog != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -593,34 +595,47 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
 
 
             if (wakeUp.list.size >= 1) {
-                firstImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].thumb1)
-                secondImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].thumb2)
-                thirdImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].thumb3)
-                mainImage.setUserImage(requireContext(), wakeUp.base_url_image + wakeUp.list[0].main_thumb)
+                firstImage.setUserImage(
+                    requireContext(),
+                    wakeUp.base_url_image + wakeUp.list[0].thumb1
+                )
+                secondImage.setUserImage(
+                    requireContext(),
+                    wakeUp.base_url_image + wakeUp.list[0].thumb2
+                )
+                thirdImage.setUserImage(
+                    requireContext(),
+                    wakeUp.base_url_image + wakeUp.list[0].thumb3
+                )
+                mainImage.setUserImage(
+                    requireContext(),
+                    wakeUp.base_url_image + wakeUp.list[0].main_thumb
+                )
             }
 
             videoPlay.setGone()
 
             var position: Int
+            player = SimpleExoPlayer.Builder(requireActivity()).build()
 
             firstImage.setOnClickListener {
-                 position = 0
-                    dialogVideoPlay(videoPlay, wakeUp, position)
+                position = 0
+                dialogVideoPlay(videoPlay, wakeUp, position, closeBtnDialog, dialog, player!!)
             }
 
             secondImage.setOnClickListener {
                 position = 1
-                dialogVideoPlay(videoPlay, wakeUp, position)
+                dialogVideoPlay(videoPlay, wakeUp, position, closeBtnDialog, dialog, player!!)
             }
 
             thirdImage.setOnClickListener {
                 position = 2
-                dialogVideoPlay(videoPlay, wakeUp, position)
+                dialogVideoPlay(videoPlay, wakeUp, position, closeBtnDialog, dialog, player!!)
             }
 
             mainImage.setOnClickListener {
                 position = 3
-                dialogVideoPlay(videoPlay, wakeUp, position)
+                dialogVideoPlay(videoPlay, wakeUp, position, closeBtnDialog, dialog, player!!)
             }
 
             button_set1.setOnClickListener {
@@ -660,57 +675,60 @@ class WakeUpFragment : BaseFragment(), ClickInterface, LongPressSleep2, GetToSle
                 true
             }
 
-            closeBtnDialog.setOnClickListener {
-                if (player?.isPlaying == true){
-                    player?.pause()
-                    player?.stop()
-                    dialog.dismiss()
-                }else{
-                    dialog.dismiss()
-                }
-            }
             dialog.show()
         }
     }
 
-    private fun dialogVideoPlay(videoPlay: PlayerView, wakeUp: WakeUp, position: Int) {
+    private fun dialogVideoPlay(
+        videoPlay: PlayerView,
+        wakeUp: WakeUp,
+        position: Int,
+        closeBtnDialog: ImageView,
+        dialog: Dialog,
+        player: SimpleExoPlayer
+    ) {
         videoPlay.setVisible()
-
         var videoSubUrl = ""
-        if(position == 0){
-             videoSubUrl = wakeUp.list[0].sub1Url
-        }else if(position == 1){
+        if (position == 0) {
+            videoSubUrl = wakeUp.list[0].sub1Url
+        } else if (position == 1) {
             videoSubUrl = wakeUp.list[0].sub2Url
-        }else if(position == 2){
+        } else if (position == 2) {
             videoSubUrl = wakeUp.list[0].sub3Url
-        }else{
+        } else {
             videoSubUrl = wakeUp.list[0].main_video
         }
 
-        val completeVideoUrl = "http://app.dialupdelta.com/uploads/video/$videoSubUrl"
+        val completeVideoUrl =
+            "https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_30mb.mp4"
         val mediaItem: MediaItem = completeVideoUrl.let { MediaItem.fromUri(it) }
-        player = SimpleExoPlayer.Builder(requireActivity()).build().also {
-            if (it.isPlaying){
-                it.pause()
-                it.stop()
-            }
-            videoPlay.player = it
-            it.setMediaItem(mediaItem)
-            it.prepare()
-            it.play()
-            player?.volume = 10f
+
+        if (player!!.isPlaying) {
+            player!!.pause()
+            player!!.stop()
+        }
+        videoPlay.player = this.player
+        player!!.setMediaItem(mediaItem)
+        player!!.prepare()
+        player!!.play()
+        player?.volume = 10f
+
+        closeBtnDialog.setOnClickListener {
+            player?.pause()
+            player?.stop()
+            dialog.dismiss()
         }
     }
 
-    private fun selectedFemale(){
+    private fun selectedFemale() {
         binding.male.setTextColor(Color.GRAY)
         binding.female.setTextColor(Color.WHITE)
-        localWakeUpSaveData.gender = 2
+        localWakeUpSaveData.gender = 4
     }
 
-    private fun selectedMale(){
+    private fun selectedMale() {
         binding.male.setTextColor(Color.WHITE)
         binding.female.setTextColor(Color.GRAY)
-        localWakeUpSaveData.gender = 1
+        localWakeUpSaveData.gender = 3
     }
 }
